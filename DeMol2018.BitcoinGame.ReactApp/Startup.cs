@@ -1,7 +1,9 @@
+using DeMol2018.BitcoinGame.DAL;
 using DeMol2018.BitcoinGame.ReactApp.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -19,6 +21,9 @@ namespace DeMol2018.BitcoinGame.ReactApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = Configuration.GetConnectionString("BitcoinGameDatabase");
+            services.AddDbContext<BitcoinGameDbContext>(options => options.UseSqlServer(connectionString));
+
             services.AddSignalR();
             services.AddMvc();
         }

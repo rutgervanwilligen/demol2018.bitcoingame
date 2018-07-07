@@ -13,3 +13,5 @@ node_modules/
 
 obj/
 bin/
+
+**/appsettings.Production.json
