@@ -14,6 +14,7 @@ namespace DeMol2018.BitcoinGame.DAL
         public DbSet<RoundEntity> Rounds { get; set; }
         public DbSet<TransactionEntity> Transactions { get; set; }
         public DbSet<WalletEntity> Wallets { get; set; }
+        public DbSet<GameEntity> Games { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,6 +35,22 @@ namespace DeMol2018.BitcoinGame.DAL
             modelBuilder
                 .Entity<RoundEntity>()
                 .Property(x => x.EndTime)
+                .HasColumnType("datetime2")
+                .IsRequired();
+
+            modelBuilder
+                .Entity<RoundEntity>()
+                .HasOne(x => x.Game)
+                .WithMany(x => x.Rounds)
+                .HasForeignKey(x => x.GameId);
+
+            modelBuilder
+                .Entity<GameEntity>()
+                .HasKey(x => x.Id);
+            
+            modelBuilder
+                .Entity<GameEntity>()
+                .Property(x => x.StartTime)
                 .HasColumnType("datetime2")
                 .IsRequired();
 

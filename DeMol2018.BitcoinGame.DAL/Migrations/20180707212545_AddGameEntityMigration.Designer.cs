@@ -11,9 +11,10 @@ using System;
 namespace DeMol2018.BitcoinGame.DAL.Migrations
 {
     [DbContext(typeof(BitcoinGameDbContext))]
-    partial class BitcoinGameDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180707212545_AddGameEntityMigration")]
+    partial class AddGameEntityMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
