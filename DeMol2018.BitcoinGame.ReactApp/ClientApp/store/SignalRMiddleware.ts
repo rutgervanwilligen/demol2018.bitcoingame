@@ -4,7 +4,7 @@ import { ApplicationState, reducers } from "./index";
 import { Store } from "redux";
 
 // Declare connection
-let connection = new signalR.HubConnection("http://localhost:5000/bitcoinGameHub");
+let connection = new signalR.HubConnection("http://localhost:63426/bitcoinGameHub");
 
 export function signalRInvokeMiddleware(store: any) {
     return (next: any) => async (action: any) => {
@@ -15,7 +15,7 @@ export function signalRInvokeMiddleware(store: any) {
         switch (action.type) {
         case "MAKE_TRANSACTION":
             console.log("lekker invoken");
-            connection.invoke("MakeTransaction", action.receiverId, action.amount).then(function () {
+            connection.invoke("MakeTransaction", action.receiverId, action.amount, action.amount).then(function () {
                 console.log("fulfilled");
             }).catch(function () {
                 console.log("rejected");
