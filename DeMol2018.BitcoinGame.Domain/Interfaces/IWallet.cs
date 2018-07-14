@@ -1,4 +1,5 @@
-﻿using DeMol2018.BitcoinGame.Domain.Models;
+﻿using System;
+using DeMol2018.BitcoinGame.Domain.Models;
 
 namespace DeMol2018.BitcoinGame.Domain.Interfaces
 {

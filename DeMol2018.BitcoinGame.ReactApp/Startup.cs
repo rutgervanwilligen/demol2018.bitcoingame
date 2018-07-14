@@ -1,3 +1,4 @@
+using DeMol2018.BitcoinGame.Application.Services;
 using DeMol2018.BitcoinGame.DAL;
 using DeMol2018.BitcoinGame.ReactApp.Controllers;
 using Microsoft.AspNetCore.Builder;
@@ -24,6 +25,11 @@ namespace DeMol2018.BitcoinGame.ReactApp
             var connectionString = Configuration.GetConnectionString("BitcoinGameDatabase");
             services.AddDbContext<BitcoinGameDbContext>(options => options.UseSqlServer(connectionString));
 
+            services.AddTransient<GameService>();
+            services.AddTransient<GameRoundService>();
+            services.AddTransient<PlayerService>();
+            services.AddTransient<TransactionService>();
+            
             services.AddSignalR();
             services.AddMvc();
         }

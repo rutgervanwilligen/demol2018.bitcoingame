@@ -1,4 +1,5 @@
 ﻿using DeMol2018.BitcoinGame.DAL.Entities;
+using DeMol2018.BitcoinGame.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeMol2018.BitcoinGame.DAL
@@ -44,6 +45,12 @@ namespace DeMol2018.BitcoinGame.DAL
                 .WithMany(x => x.Rounds)
                 .HasForeignKey(x => x.GameId);
 
+            modelBuilder
+                .Entity<RoundEntity>()
+                .HasMany(x => x.Transactions)
+                .WithOne(x => x.Round)
+                .HasForeignKey(x => x.RoundId);
+            
             modelBuilder
                 .Entity<GameEntity>()
                 .HasKey(x => x.Id);

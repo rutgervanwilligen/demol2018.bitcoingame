@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DeMol2018.BitcoinGame.DAL.Entities
 {
     [Table("Wallets")]
-    public class WalletEntity
+    public class WalletEntity : Entity
     {
         public int Id { get; set; }
 

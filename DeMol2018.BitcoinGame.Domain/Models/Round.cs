@@ -14,11 +14,11 @@ namespace DeMol2018.BitcoinGame.Domain.Models
         public bool HasEnded => HasStarted 
                                 && DateTime.UtcNow > EndTime;
 
-        private IEnumerable<Transaction> Transactions { get; set; }
+        public IEnumerable<Transaction> Transactions { get; set; }
+        public int Id { get; set; }
 
-        public Round(int roundNumber)
+        public Round()
         {
-            RoundNumber = roundNumber;
             HasStarted = false;
         }
 

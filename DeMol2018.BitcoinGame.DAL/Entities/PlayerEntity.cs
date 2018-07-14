@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace DeMol2018.BitcoinGame.DAL.Entities
 {
     [Table("Players")]
-    public class PlayerEntity
+    public class PlayerEntity : Entity
     {
         public Guid Id { get; set; }
 

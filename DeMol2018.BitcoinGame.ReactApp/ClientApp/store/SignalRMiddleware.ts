@@ -5,6 +5,7 @@ import { Store } from "redux";
 
 // Declare connection
 let connection = new signalR.HubConnection("http://localhost:63426/bitcoinGameHub");
+//let connection = new signalR.HubConnection("https://bitcoin.demol2018.nl/bitcoinGameHub");
 
 export function signalRInvokeMiddleware(store: any) {
     return (next: any) => async (action: any) => {

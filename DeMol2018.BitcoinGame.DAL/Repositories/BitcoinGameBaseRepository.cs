@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using DeMol2018.BitcoinGame.DAL.Entities;
 using DeMol2018.BitcoinGame.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeMol2018.BitcoinGame.DAL.Repositories
 {
-    public abstract class BitcoinGameBaseRepository<T> : IBaseRepository<T> where T : class
+    public abstract class BitcoinGameBaseRepository<T> : IBaseRepository<T> where T : Entity
     {
+        private readonly BitcoinGameDbContext _dbContext;
         private readonly DbSet<T> _dbSet;
 
-        protected BitcoinGameBaseRepository(DbContext context)
+        protected BitcoinGameBaseRepository(BitcoinGameDbContext context)
         {
+            _dbContext = context;
             _dbSet = context.Set<T>();
         }
 
@@ -43,6 +46,11 @@ namespace DeMol2018.BitcoinGame.DAL.Repositories
         public void Delete(T t)
         {
             _dbSet.Remove(t);
+        }
+
+        public void SaveChanges()
+        {
+            _dbContext.SaveChanges();
         }
     }
 }
