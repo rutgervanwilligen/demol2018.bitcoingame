@@ -36,6 +36,17 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
         
     });
     
+    connection.on('LoginResult', data => {
+       
+        console.log('login result: ' + data);
+        
+        store.dispatch({
+            type: 'RECEIVE_LOGIN_RESULT',
+            loginSuccessful: data.loginSuccessful,
+            playerGuid: data.playerGuid
+        });
+    });
+    
     connection.on('RoundUpdate', data => {
 
         console.log('middleware dispatch');

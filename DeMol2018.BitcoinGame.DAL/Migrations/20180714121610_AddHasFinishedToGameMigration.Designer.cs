@@ -4,14 +4,16 @@ using DeMol2018.BitcoinGame.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DeMol2018.BitcoinGame.DAL.Migrations
 {
     [DbContext(typeof(BitcoinGameDbContext))]
-    partial class BitcoinGameDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180714121610_AddHasFinishedToGameMigration")]
+    partial class AddHasFinishedToGameMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,8 +40,6 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<int>("LoginCode");
 
                     b.Property<string>("Name")
                         .IsRequired();
@@ -77,11 +77,11 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
 
                     b.Property<int>("Amount");
 
-                    b.Property<Guid>("ReceiverId");
+                    b.Property<int>("ReceiverId");
 
                     b.Property<int>("RoundId");
 
-                    b.Property<Guid>("SenderId");
+                    b.Property<int>("SenderId");
 
                     b.HasKey("Id");
 
@@ -96,14 +96,11 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
 
             modelBuilder.Entity("DeMol2018.BitcoinGame.DAL.Entities.WalletEntity", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Address");
-
-                    b.Property<Guid?>("PlayerId");
-
-                    b.Property<int>("Type");
+                    b.Property<Guid>("PlayerId");
 
                     b.HasKey("Id");
 
@@ -142,7 +139,8 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                 {
                     b.HasOne("DeMol2018.BitcoinGame.DAL.Entities.PlayerEntity", "Player")
                         .WithMany("Wallets")
-                        .HasForeignKey("PlayerId");
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

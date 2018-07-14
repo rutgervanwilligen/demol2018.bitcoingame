@@ -9,6 +9,7 @@ namespace DeMol2018.BitcoinGame.DAL.Entities
     public class PlayerEntity : Entity
     {
         public Guid Id { get; set; }
+        public int LoginCode { get; set; }
 
         [Required]
         public string Name { get; set; }

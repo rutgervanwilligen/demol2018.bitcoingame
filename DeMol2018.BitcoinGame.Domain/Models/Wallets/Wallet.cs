@@ -8,11 +8,12 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
     public abstract class Wallet : IWallet
     {
         public Guid Id { get; set; }
+        public int Address { get; set; }
 
         protected readonly List<Transaction> _successfulTransactions;
         protected readonly List<Transaction> _failedTransactions;
 
-        public Wallet()
+        protected Wallet()
         {
             Id = new Guid();
             _successfulTransactions = new List<Transaction>();

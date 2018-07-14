@@ -12,10 +12,10 @@ namespace DeMol2018.BitcoinGame.DAL.Entities
         public int RoundId { get; set; }
         public virtual RoundEntity Round { get; set; }
 
-        public int SenderId { get; set; }
+        public Guid SenderId { get; set; }
         public virtual WalletEntity SenderWallet { get; set; }
 
-        public int ReceiverId { get; set; }
+        public Guid ReceiverId { get; set; }
         public virtual WalletEntity ReceiverWallet { get; set; }
     }
 }

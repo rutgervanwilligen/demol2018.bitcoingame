@@ -10,11 +10,25 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
     {
         private readonly TransactionService _transactionService;
         private readonly GameService _gameService;
+        private readonly PlayerService _playerService;
 
-        public BitcoinGameHub(TransactionService transactionService, GameService gameService)
+        public BitcoinGameHub(
+                TransactionService transactionService,
+                GameService gameService,
+                PlayerService playerService)
         {
             _gameService = gameService;
             _transactionService = transactionService;
+            _playerService = playerService;
+        }
+
+        public Task Login(string name, int code)
+        {
+            var loginResult = _playerService.Login(name, code);
+
+            return Clients.Caller.SendAsync("LoginResult",
+                loginResult.HasValue,
+                loginResult.HasValue ? loginResult.Value.ToString() : "");
         }
         
         public Task MakeTransaction(int senderWalletId, int receiverWalletId, int amount)

@@ -6,5 +6,10 @@ namespace DeMol2018.BitcoinGame.DAL.Repositories
     {
         public WalletRepository(BitcoinGameDbContext context)
             : base(context) { }
+        
+        
+        
+        
+        
     }
 }
