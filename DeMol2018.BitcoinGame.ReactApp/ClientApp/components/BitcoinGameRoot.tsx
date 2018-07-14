@@ -3,6 +3,7 @@ import RoundCountdownTimer from "./RoundCountdownTimer";
 import * as BitcoinGameStore from "../store/BitcoinGame";
 import {connect} from "react-redux";
 import {ApplicationState} from "../store";
+import Login from "./Login";
 
 type BitcoinGameProps =
     BitcoinGameStore.BitcoinGameState
@@ -20,6 +21,16 @@ class BitcoinGameRoot extends React.Component<BitcoinGameProps> {
     }
 
     public render() {
+        const isLoggedIn = this.props.isLoggedIn;
+
+        if (!isLoggedIn) {
+            return (
+                <div>
+                    <Login />
+                </div>
+            )
+        }
+
         return (
             <div>
                 <RoundCountdownTimer />

@@ -10,4 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DeMol2018.BitcoinGame.Domain\DeMol2018.BitcoinGame.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Migrations" />
+  </ItemGroup>
 </Project>

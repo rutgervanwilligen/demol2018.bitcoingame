@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeMol2018.BitcoinGame.DAL.Migrations
 {
     [DbContext(typeof(BitcoinGameDbContext))]
-    [Migration("20180714162412_AddSomeMoreMigration")]
-    partial class AddSomeMoreMigration
+    [Migration("20180714190254_AddUserNameAndCodeMigration")]
+    partial class AddUserNameAndCodeMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

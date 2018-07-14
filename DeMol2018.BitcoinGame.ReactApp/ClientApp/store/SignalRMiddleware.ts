@@ -2,6 +2,7 @@
 
 import { ApplicationState, reducers } from "./index";
 import { Store } from "redux";
+import {CaseInsensitiveMap} from "awesome-typescript-loader/dist/checker/fs";
 
 // Declare connection
 let connection = new signalR.HubConnection("http://localhost:63426/bitcoinGameHub");
@@ -15,11 +16,18 @@ export function signalRInvokeMiddleware(store: any) {
         
         switch (action.type) {
         case "MAKE_TRANSACTION":
-            console.log("lekker invoken");
             connection.invoke("MakeTransaction", action.receiverId, action.amount, action.amount).then(function () {
-                console.log("fulfilled");
+                console.log("make transaction fulfilled");
             }).catch(function () {
-                console.log("rejected");
+                console.log("make transaction rejected");
+            });
+            break;
+
+        case "LOGIN":
+            connection.invoke("Login", action.name, action.code).then(function () {
+                console.log("login fulfilled");
+            }).catch(function () {
+                console.log("login rejected");
             });
             break;
         }

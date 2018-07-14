@@ -26,9 +26,10 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
         {
             var loginResult = _playerService.Login(name, code);
 
-            return Clients.Caller.SendAsync("LoginResult",
-                loginResult.HasValue,
-                loginResult.HasValue ? loginResult.Value.ToString() : "");
+            return Clients.Caller.SendAsync("LoginResult", new {
+                loginSuccessful = loginResult.HasValue,
+                playerGuid = loginResult.HasValue ? loginResult.Value.ToString() : ""
+            });
         }
         
         public Task MakeTransaction(int senderWalletId, int receiverWalletId, int amount)

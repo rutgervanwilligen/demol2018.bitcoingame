@@ -13,7 +13,13 @@ export interface LoginState {
 // ACTIONS - These are serializable (hence replayable) descriptions of state transitions.
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 
-interface LoginResultAction {
+interface LoginAction {
+    type: 'LOGIN',
+    name: string,
+    code: string;
+}
+
+interface ReceiveLoginAction {
     type: 'RECEIVE_LOGIN_RESULT',
     loginSuccessful: boolean,
     playerGuid: string;
@@ -21,13 +27,20 @@ interface LoginResultAction {
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = LoginResultAction;
+type KnownAction = ReceiveLoginAction | LoginAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
+    login: (name: string, code: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        dispatch({
+            type: 'LOGIN',
+            name: name,
+            code: code
+        });
+    },
     receiveLoginResult: (loginSuccessful: boolean, playerGuid: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({
             type: 'RECEIVE_LOGIN_RESULT',

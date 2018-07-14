@@ -5,6 +5,8 @@ import { AppThunkAction } from './';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface BitcoinGameState {
+    isLoggedIn: boolean;
+    playerGuid: string;
     currentRoundNumber: number;
     currentRoundEndTime?: Date;
     currentBalance?: number;
@@ -20,6 +22,12 @@ interface MakeTransactionAction {
     receiverId: number;
 }
 
+interface ReceiveLoginResultAction {
+    type: 'RECEIVE_LOGIN_RESULT';
+    loginSuccessful: boolean;
+    playerGuid: string;
+}
+
 interface ReceiveRoundUpdateAction {
     type: 'RECEIVE_ROUND_UPDATE';
     roundData: any;
@@ -32,7 +40,7 @@ interface ReceiveRoundEndTimeAction {
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = MakeTransactionAction | ReceiveRoundEndTimeAction | ReceiveRoundUpdateAction;
+type KnownAction = MakeTransactionAction | ReceiveRoundEndTimeAction | ReceiveRoundUpdateAction | ReceiveLoginResultAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -52,6 +60,8 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
 const unloadedState: BitcoinGameState = {
+    isLoggedIn: false,
+    playerGuid: '',
     currentRoundNumber: 0,
     currentRoundEndTime: undefined,
     currentBalance: undefined
@@ -60,6 +70,12 @@ const unloadedState: BitcoinGameState = {
 export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
     switch (action.type) {
+        case 'RECEIVE_LOGIN_RESULT':
+            return {
+                ...state,
+                isLoggedIn: action.loginSuccessful,
+                playerGuid: action.loginSuccessful ? action.playerGuid : ''
+            };
         case 'MAKE_TRANSACTION':
             return {
                 ...state,
