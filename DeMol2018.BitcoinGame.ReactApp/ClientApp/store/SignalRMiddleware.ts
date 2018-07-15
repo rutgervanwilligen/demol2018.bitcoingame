@@ -15,21 +15,21 @@ export function signalRInvokeMiddleware(store: any) {
         console.log('middleware update -- ' + action.type);
         
         switch (action.type) {
-        case "MAKE_TRANSACTION":
-            connection.invoke("MakeTransaction", action.receiverId, action.amount, action.amount).then(function () {
-                console.log("make transaction fulfilled");
-            }).catch(function () {
-                console.log("make transaction rejected");
-            });
-            break;
+            case "MAKE_TRANSACTION":
+                connection.invoke("MakeTransaction", action.receiverId, action.amount, action.amount).then(function () {
+                    console.log("make transaction fulfilled");
+                }).catch(function () {
+                    console.log("make transaction rejected");
+                });
+                break;
 
-        case "LOGIN":
-            connection.invoke("Login", action.name, action.code).then(function () {
-                console.log("login fulfilled");
-            }).catch(function () {
-                console.log("login rejected");
-            });
-            break;
+            case "LOGIN":
+                connection.invoke("Login", action.name, action.code).then(function () {
+                    console.log("login fulfilled");
+                }).catch(function () {
+                    console.log("login rejected");
+                });
+                break;
         }
 
         return next(action);

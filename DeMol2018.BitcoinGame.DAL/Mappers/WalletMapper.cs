@@ -36,19 +36,19 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
             switch (walletEntity.Type)
             {
                 case WalletEntity.WalletType.JokerWallet:
-                    return (JokerWallet) null;
+                    return new JokerWallet {
+                        Id = walletEntity.Id,
+                        Address = walletEntity.Address
+                    };
                 case WalletEntity.WalletType.PlayerWallet:
-                    return (PlayerWallet) null;
+                    return new PlayerWallet {
+                        Id = walletEntity.Id,
+                        Address = walletEntity.Address,
+                        Player = walletEntity.Player.ToDomainModel()
+                    };
                 default:
                     throw new Exception("Unexpected wallet type in database");
             }
-            
-//            return new Wallet {
-//                Id = walletEntity.Id,
-//                Amount = walletEntity.Amount,
-//                Sender = walletEntity.SenderWallet.ToDomainModel(),
-//                Receiver = walletEntity.ReceiverWallet.ToDomainModel()
-//            };
         }
     }
 }

@@ -9,5 +9,6 @@ namespace DeMol2018.BitcoinGame.Domain.Models
         public Wallet Sender { get; set; }
         public Wallet Receiver { get; set; }
         public int Amount { get; set; }
+        public Round Round { get; set; }
     }
 }

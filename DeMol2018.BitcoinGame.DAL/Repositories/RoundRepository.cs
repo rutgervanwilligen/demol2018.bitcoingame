@@ -7,4 +7,6 @@ namespace DeMol2018.BitcoinGame.DAL.Repositories
         public RoundRepository(BitcoinGameDbContext context)
             : base(context) { }
     }
+    
+    
 }

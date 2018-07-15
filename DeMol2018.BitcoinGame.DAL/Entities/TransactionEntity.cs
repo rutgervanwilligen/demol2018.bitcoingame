@@ -6,7 +6,9 @@ namespace DeMol2018.BitcoinGame.DAL.Entities
     [Table("Transactions")]
     public class TransactionEntity : Entity
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+        
         public int Amount { get; set; }
 
         public int RoundId { get; set; }

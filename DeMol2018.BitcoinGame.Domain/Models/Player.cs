@@ -6,6 +6,6 @@ namespace DeMol2018.BitcoinGame.Domain.Models
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public string LoginCode { get; set; }
+        public int LoginCode { get; set; }
     }
 }

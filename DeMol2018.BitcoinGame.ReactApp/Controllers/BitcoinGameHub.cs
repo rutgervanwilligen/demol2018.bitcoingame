@@ -34,8 +34,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
         
         public Task MakeTransaction(int senderWalletId, int receiverWalletId, int amount)
         {
-            //_transactionService.MakeTransaction(senderWalletId, receiverWalletId, amount);
-            _gameService.StartNewGame();
+            _transactionService.MakeTransaction(senderWalletId, receiverWalletId, amount);
             
             List<String> connectionIdToIgnore = new List<String>();
             return Clients.All.SendAsync("IncrementCounter");
