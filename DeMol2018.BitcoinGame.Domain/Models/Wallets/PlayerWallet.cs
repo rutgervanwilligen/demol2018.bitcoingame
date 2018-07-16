@@ -2,11 +2,11 @@
 {
     public class PlayerWallet : Wallet
     {
-        
         public Player Player { get; set; }
         
         public PlayerWallet() : base()
         {
+            StartAmount = 1000;
         }
 
         public override bool WalletIsClosed()

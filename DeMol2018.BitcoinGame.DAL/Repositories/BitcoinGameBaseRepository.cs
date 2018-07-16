@@ -11,16 +11,22 @@ namespace DeMol2018.BitcoinGame.DAL.Repositories
     {
         private readonly BitcoinGameDbContext _dbContext;
         private readonly DbSet<T> _dbSet;
+        private IQueryable<T> _dbSetWithDefaultIncludes;
 
+        protected void AddDefaultIncludes(Expression<Func<T, object>> expression) {
+            _dbSetWithDefaultIncludes = _dbSetWithDefaultIncludes.Include(expression);
+        }
+            
         protected BitcoinGameBaseRepository(BitcoinGameDbContext context)
         {
             _dbContext = context;
             _dbSet = context.Set<T>();
+            _dbSetWithDefaultIncludes = _dbSet;
         }
 
         public IQueryable<T> GetAll()
         {
-            return _dbSet.AsQueryable();
+            return _dbSetWithDefaultIncludes;
         }
 
         public T FindBy(Expression<Func<T, bool>> predicate)

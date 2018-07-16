@@ -5,6 +5,9 @@ namespace DeMol2018.BitcoinGame.DAL.Repositories
     public class PlayerRepository : BitcoinGameBaseRepository<PlayerEntity>
     {
         public PlayerRepository(BitcoinGameDbContext context)
-            : base(context) { }
+            : base(context)
+        {
+            AddDefaultIncludes(x => x.Wallets);
+        }
     }
 }

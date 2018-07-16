@@ -14,7 +14,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
             GameRepository = new GameRepository(dbContext);
         }
         
-        public void StartNewGame()
+        public Game StartNewGame()
         {
             var newGame = new Game();
 
@@ -22,6 +22,8 @@ namespace DeMol2018.BitcoinGame.Application.Services
             
             GameRepository.Add(gameEntity);
             GameRepository.SaveChanges();
+
+            return newGame;
         }
         
         public Game FindCurrentGame()

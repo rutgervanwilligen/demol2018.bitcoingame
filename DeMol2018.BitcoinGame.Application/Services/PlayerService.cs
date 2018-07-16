@@ -1,6 +1,8 @@
 ﻿using System;
 using DeMol2018.BitcoinGame.DAL;
+using DeMol2018.BitcoinGame.DAL.Mappers;
 using DeMol2018.BitcoinGame.DAL.Repositories;
+using DeMol2018.BitcoinGame.Domain.Models;
 
 namespace DeMol2018.BitcoinGame.Application.Services
 {
@@ -13,12 +15,15 @@ namespace DeMol2018.BitcoinGame.Application.Services
             PlayerRepository = new PlayerRepository(dbContext);
         }
 
-        public Guid? Login(string name, int code)
+        public Player Login(string name, int code)
         {
-            var player = PlayerRepository.FindBy(x => x.Name == name
-                                         && x.LoginCode == code);
+            return PlayerRepository.FindBy(x => x.Name == name
+                                         && x.LoginCode == code).ToDomainModel();
+        }
 
-            return player?.Id;
+        public Player GetById(Guid invokerId)
+        {
+            return PlayerRepository.GetBy(x => x.Id == invokerId).ToDomainModel();
         }
     }
 }

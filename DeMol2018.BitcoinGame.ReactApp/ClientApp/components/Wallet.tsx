@@ -10,9 +10,8 @@ type WalletProps =
 class Wallet extends React.Component<WalletProps> {
     public render() {
         return  <div className="wallet">
-                    <h2>Ronde { this.props.currentRoundNumber }</h2>
-                    <h3>Tijd tot einde ronde: { this.props.currentRoundEndTime }</h3>
-                    <button onClick={() => this.props.makeTransaction(10, 10)}>Hoi</button>
+                    <h2>Mijn walletadres: { this.props.usersWalletAddress }</h2>
+                    <h2>Mijn saldo: { this.props.currentBalance }</h2>
                 </div>;
     }
 }

@@ -5,11 +5,10 @@ namespace DeMol2018.BitcoinGame.DAL.Repositories
     public class WalletRepository : BitcoinGameBaseRepository<WalletEntity>
     {
         public WalletRepository(BitcoinGameDbContext context)
-            : base(context) { }
-        
-        
-        
-        
-        
+            : base(context)
+        {
+            AddDefaultIncludes(x => x.ReceivedTransactions);
+            AddDefaultIncludes(x => x.SentTransactions);
+        }
     }
 }

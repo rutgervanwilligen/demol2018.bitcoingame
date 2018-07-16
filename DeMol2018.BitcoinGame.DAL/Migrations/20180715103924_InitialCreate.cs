@@ -12,7 +12,7 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                 name: "Games",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWID()"),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     HasFinished = table.Column<bool>(nullable: false)
                 },
@@ -25,7 +25,7 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                 name: "Players",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWID()"),
                     LoginCode = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: false)
                 },
@@ -59,9 +59,10 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                 name: "Wallets",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWID()"),
                     Address = table.Column<int>(nullable: false),
                     Type = table.Column<int>(nullable: false),
+                    StartAmount = table.Column<int>(nullable: false),
                     PlayerId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
@@ -79,7 +80,7 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                 name: "Transactions",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(nullable: false),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWID()"),
                     Amount = table.Column<int>(nullable: false),
                     RoundId = table.Column<int>(nullable: false),
                     SenderId = table.Column<Guid>(nullable: false),

@@ -11,8 +11,7 @@ class RoundCountdownTimer extends React.Component<RoundCountdownTimerProps> {
     public render() {
         return  <div className="roundCountdownTimer">
                     <h2>Ronde { this.props.currentRoundNumber }</h2>
-                    <h3>Tijd tot einde ronde: { this.props.currentRoundEndTime }</h3>
-                    <button onClick={() => this.props.makeTransaction(10, 10)}>Hoi</button>
+                    <h2>Eindtijd ronde: { this.props.currentRoundEndTime} </h2>
                 </div>;
     }
 }

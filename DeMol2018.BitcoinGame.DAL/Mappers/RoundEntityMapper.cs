@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using DeMol2018.BitcoinGame.DAL.Entities;
 using DeMol2018.BitcoinGame.Domain.Models;
 
@@ -11,7 +10,10 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
         {
             return new RoundEntity {
                 Id = round.Id,
-                StartTime = round.StartTime
+                StartTime = round.StartTime,
+                GameId = round.Game.Id,
+                EndTime = round.EndTime,
+                RoundNumber = round.RoundNumber
             };
         }
 
@@ -20,7 +22,10 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
             return new Round {
                 Id = roundEntity.Id,
                 StartTime = roundEntity.StartTime,
-                Transactions = roundEntity.Transactions.Select(x => x.ToDomainModel())
+                RoundNumber = roundEntity.RoundNumber,
+                Transactions = roundEntity.Transactions == null
+                    ? Enumerable.Empty<Transaction>()
+                    : roundEntity.Transactions.Select(x => x.ToDomainModel())
             };
         }
     }

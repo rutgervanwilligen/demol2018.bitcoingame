@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeMol2018.BitcoinGame.DAL.Migrations
 {
     [DbContext(typeof(BitcoinGameDbContext))]
-    [Migration("20180714190254_AddUserNameAndCodeMigration")]
-    partial class AddUserNameAndCodeMigration
+    [Migration("20180716104325_AddAdminStatusMigration")]
+    partial class AddAdminStatusMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,8 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
             modelBuilder.Entity("DeMol2018.BitcoinGame.DAL.Entities.GameEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<bool>("HasFinished");
 
@@ -39,7 +40,10 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
             modelBuilder.Entity("DeMol2018.BitcoinGame.DAL.Entities.PlayerEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NEWID()");
+
+                    b.Property<bool>("IsAdmin");
 
                     b.Property<int>("LoginCode");
 
@@ -75,7 +79,8 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
             modelBuilder.Entity("DeMol2018.BitcoinGame.DAL.Entities.TransactionEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<int>("Amount");
 
@@ -99,11 +104,14 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
             modelBuilder.Entity("DeMol2018.BitcoinGame.DAL.Entities.WalletEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<int>("Address");
 
                     b.Property<Guid?>("PlayerId");
+
+                    b.Property<int>("StartAmount");
 
                     b.Property<int>("Type");
 

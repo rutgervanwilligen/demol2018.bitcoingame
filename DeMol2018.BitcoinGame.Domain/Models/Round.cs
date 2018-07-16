@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DeMol2018.BitcoinGame.Domain.Models
 {
     public class Round
     {
+        public int Id { get; set; }
         public int RoundNumber { get; set; }
-
+        public Game Game { get; set; }
+        
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
 
@@ -15,11 +18,11 @@ namespace DeMol2018.BitcoinGame.Domain.Models
                                 && DateTime.UtcNow > EndTime;
 
         public IEnumerable<Transaction> Transactions { get; set; }
-        public int Id { get; set; }
 
         public Round()
         {
             HasStarted = false;
+            Transactions = Enumerable.Empty<Transaction>();
         }
 
         public void Start(TimeSpan roundLength)

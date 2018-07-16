@@ -6,10 +6,12 @@ import { AppThunkAction } from './';
 
 export interface BitcoinGameState {
     isLoggedIn: boolean;
+    isAdmin: boolean;
     playerGuid: string;
     currentRoundNumber: number;
     currentRoundEndTime?: Date;
     currentBalance?: number;
+    usersWalletAddress?: number;
 }
 
 // -----------------
@@ -19,18 +21,22 @@ export interface BitcoinGameState {
 interface MakeTransactionAction {
     type: 'MAKE_TRANSACTION';
     amount: number;
-    receiverId: number;
+    receiverAddress: number;
 }
 
 interface ReceiveLoginResultAction {
     type: 'RECEIVE_LOGIN_RESULT';
     loginSuccessful: boolean;
+    isAdmin: boolean;
     playerGuid: string;
+    usersWalletAddress?: number;
+    usersCurrentBalance?: number;
 }
 
-interface ReceiveRoundUpdateAction {
-    type: 'RECEIVE_ROUND_UPDATE';
-    roundData: any;
+interface ReceiveNewRoundResultAction {
+    type: 'RECEIVE_NEW_ROUND_RESULT';
+    newRoundNumber: number;
+    newRoundEndTime: Date
 }
 
 interface ReceiveRoundEndTimeAction {
@@ -40,7 +46,7 @@ interface ReceiveRoundEndTimeAction {
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = MakeTransactionAction | ReceiveRoundEndTimeAction | ReceiveRoundUpdateAction | ReceiveLoginResultAction;
+type KnownAction = MakeTransactionAction | ReceiveRoundEndTimeAction | ReceiveNewRoundResultAction | ReceiveLoginResultAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -51,7 +57,7 @@ export const actionCreators = {
         dispatch({
             type: 'MAKE_TRANSACTION',
             amount: amount,
-            receiverId: receiverId
+            receiverAddress: receiverId
         });
     }
 };
@@ -61,28 +67,39 @@ export const actionCreators = {
 
 const unloadedState: BitcoinGameState = {
     isLoggedIn: false,
+    isAdmin: false,
     playerGuid: '',
     currentRoundNumber: 0,
     currentRoundEndTime: undefined,
-    currentBalance: undefined
+    currentBalance: undefined,
+    usersWalletAddress: undefined
 };
 
 export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
     switch (action.type) {
         case 'RECEIVE_LOGIN_RESULT':
+            console.log("acctiiieee");
+            console.log(action);
             return {
                 ...state,
                 isLoggedIn: action.loginSuccessful,
-                playerGuid: action.loginSuccessful ? action.playerGuid : ''
+                isAdmin: action.isAdmin,
+                playerGuid: action.loginSuccessful ? action.playerGuid : '',
+                usersWalletAddress: action.usersWalletAddress,
+                currentBalance: action.usersCurrentBalance
             };
         case 'MAKE_TRANSACTION':
             return {
                 ...state,
                 currentBalance: state.currentBalance === undefined ? 0 : state.currentBalance - action.amount
             };
-        case 'RECEIVE_ROUND_UPDATE':
-            return state;
+        case 'RECEIVE_NEW_ROUND_RESULT':
+            return {
+                ...state,
+                currentRoundNumber: action.newRoundNumber,
+                currentRoundEndTime: action.newRoundEndTime
+            };
         case 'RECEIVE_ROUND_END_TIME':
             // Only accept the incoming data if it matches the most recent request. This ensures we correctly
             // handle out-of-order responses.

@@ -22,7 +22,8 @@ interface LoginAction {
 interface ReceiveLoginAction {
     type: 'RECEIVE_LOGIN_RESULT',
     loginSuccessful: boolean,
-    playerGuid: string;
+    playerGuid: string,
+    usersWalletAddress?: number;
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
@@ -41,11 +42,12 @@ export const actionCreators = {
             code: code
         });
     },
-    receiveLoginResult: (loginSuccessful: boolean, playerGuid: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    receiveLoginResult: (loginSuccessful: boolean, playerGuid: string, usersWalletAddress?: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({
             type: 'RECEIVE_LOGIN_RESULT',
             loginSuccessful: loginSuccessful,
-            playerGuid: playerGuid
+            playerGuid: playerGuid,
+            usersWalletAddress: usersWalletAddress
         });
     }
 };
@@ -64,7 +66,8 @@ export const reducer: Reducer<LoginState> = (state: LoginState, incomingAction: 
         case 'RECEIVE_LOGIN_RESULT':
             return {
                 loggedIn: action.loginSuccessful,
-                playerGuid: action.loginSuccessful ? action.playerGuid : ""
+                playerGuid: action.loginSuccessful ? action.playerGuid : "",
+                usersWalletAddress: action.loginSuccessful ? action.usersWalletAddress : undefined
             };
 //            }
 //            break;

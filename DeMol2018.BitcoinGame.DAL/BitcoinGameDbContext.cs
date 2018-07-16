@@ -24,6 +24,11 @@ namespace DeMol2018.BitcoinGame.DAL
                 .HasKey(x => x.Id);
 
             modelBuilder
+                .Entity<PlayerEntity>()
+                .Property(x => x.Id)
+                .HasDefaultValueSql("NEWID()");
+            
+            modelBuilder
                 .Entity<RoundEntity>()
                 .HasKey(x => x.Id);
 
@@ -57,6 +62,11 @@ namespace DeMol2018.BitcoinGame.DAL
             
             modelBuilder
                 .Entity<GameEntity>()
+                .Property(x => x.Id)
+                .HasDefaultValueSql("NEWID()");
+            
+            modelBuilder
+                .Entity<GameEntity>()
                 .Property(x => x.StartTime)
                 .HasColumnType("datetime2")
                 .IsRequired();
@@ -64,6 +74,11 @@ namespace DeMol2018.BitcoinGame.DAL
             modelBuilder
                 .Entity<WalletEntity>()
                 .HasKey(x => x.Id);
+            
+            modelBuilder
+                .Entity<WalletEntity>()
+                .Property(x => x.Id)
+                .HasDefaultValueSql("NEWID()");
 
             modelBuilder
                 .Entity<WalletEntity>()
@@ -74,6 +89,11 @@ namespace DeMol2018.BitcoinGame.DAL
             modelBuilder
                 .Entity<TransactionEntity>()
                 .HasKey(x => x.Id);
+            
+            modelBuilder
+                .Entity<TransactionEntity>()
+                .Property(x => x.Id)
+                .HasDefaultValueSql("NEWID()");
 
             modelBuilder
                 .Entity<TransactionEntity>()

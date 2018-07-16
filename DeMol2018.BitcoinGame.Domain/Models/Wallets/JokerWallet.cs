@@ -9,6 +9,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
         
         public JokerWallet() : base()
         {
+            StartAmount = 0;
         }
 
         public override bool WalletIsClosed()
@@ -19,7 +20,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
 
         public IEnumerable<JokerWinner> GetJokerWinners()
         {
-            return _successfulTransactions
+            return ReceivedTransactions
                 .GroupBy(x => x.Sender.Id)
                 .Select(x => new JokerWinner {
                     PlayerId = x.Key,

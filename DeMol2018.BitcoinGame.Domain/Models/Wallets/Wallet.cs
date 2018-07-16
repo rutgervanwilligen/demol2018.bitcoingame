@@ -9,15 +9,16 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
     {
         public Guid Id { get; set; }
         public int Address { get; set; }
+        public int StartAmount { get; set; }
 
-        protected readonly List<Transaction> _successfulTransactions;
-        protected readonly List<Transaction> _failedTransactions;
+        public List<Transaction> ReceivedTransactions;
+        public List<Transaction> SentTransactions;
 
         protected Wallet()
         {
             Id = new Guid();
-            _successfulTransactions = new List<Transaction>();
-            _failedTransactions = new List<Transaction>();
+            ReceivedTransactions = new List<Transaction>();
+            SentTransactions = new List<Transaction>();
         }
 
         public abstract bool WalletIsClosed();
@@ -26,17 +27,20 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
         {
             if (!WalletIsClosed())
             {
-                _successfulTransactions.Add(transaction);
+                ReceivedTransactions.Add(transaction);
             }
             else
             {
-                _failedTransactions.Add(transaction);
+                SentTransactions.Add(transaction);
             }
         }
 
         public int GetBalance()
         {
-            return _successfulTransactions.Sum(x => x.Amount);
+            var receivedAmount = ReceivedTransactions.Sum(x => x.Amount);
+            var sentAmount = SentTransactions.Sum(x => x.Amount);
+
+            return StartAmount + receivedAmount - sentAmount;
         }
 
         public void WriteTransactions()

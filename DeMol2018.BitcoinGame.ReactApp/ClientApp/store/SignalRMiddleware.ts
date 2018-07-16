@@ -1,19 +1,15 @@
 ﻿import * as signalR from "@aspnet/signalr";
 
-import { ApplicationState, reducers } from "./index";
+import { ApplicationState } from "./index";
 import { Store } from "redux";
-import {CaseInsensitiveMap} from "awesome-typescript-loader/dist/checker/fs";
 
 // Declare connection
 let connection = new signalR.HubConnection("http://localhost:63426/bitcoinGameHub");
 //let connection = new signalR.HubConnection("https://bitcoin.demol2018.nl/bitcoinGameHub");
 
-export function signalRInvokeMiddleware(store: any) {
+export function signalRInvokeMiddleware() {
     return (next: any) => async (action: any) => {
 
-        console.log(action);
-        console.log('middleware update -- ' + action.type);
-        
         switch (action.type) {
             case "MAKE_TRANSACTION":
                 connection.invoke("MakeTransaction", action.receiverId, action.amount, action.amount).then(function () {
@@ -30,6 +26,17 @@ export function signalRInvokeMiddleware(store: any) {
                     console.log("login rejected");
                 });
                 break;
+                
+            case "START_NEW_ROUND":
+                connection.invoke("StartNewRound", action.invokerId, action.lengthOfNewRoundInMinutes).then(function () {
+                    
+                }).catch(function () {
+                    
+                });
+                break;
+            default:
+                console.log("Unknown action (" + action.type + "). SignalR hub is not invoked.");
+                break;
         }
 
         return next(action);
@@ -37,31 +44,30 @@ export function signalRInvokeMiddleware(store: any) {
 }
 
 export function signalRRegisterCommands(store: Store<ApplicationState>) {
-    
-    connection.on('IncrementCounter', data => {
-    
-        console.log('increment');
-        
-    });
-    
+
     connection.on('LoginResult', data => {
        
-        console.log('login result: ' + data);
+        console.log('login result:');
+        console.log(data);
         
         store.dispatch({
             type: 'RECEIVE_LOGIN_RESULT',
             loginSuccessful: data.loginSuccessful,
-            playerGuid: data.playerGuid
+            playerGuid: data.playerGuid,
+            usersWalletAddress: data.usersWalletAddress,
+            usersCurrentBalance: data.usersCurrentBalance,
+            isAdmin: data.isAdmin
         });
     });
     
-    connection.on('RoundUpdate', data => {
+    connection.on('StartNewRoundResult', data => {
 
-        console.log('middleware dispatch');
+        console.log('start new round result');
         
         store.dispatch({
-            type: 'ROUND_UPDATE',
-            roundData: data
+            type: 'RECEIVE_NEW_ROUND_RESULT',
+            newRoundNumber: data.newRoundNumber,
+            newRoundEndTime: data.newRoundEndTime
         });
     });
 

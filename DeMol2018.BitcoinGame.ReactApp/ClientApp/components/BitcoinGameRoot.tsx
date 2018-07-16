@@ -4,6 +4,9 @@ import * as BitcoinGameStore from "../store/BitcoinGame";
 import {connect} from "react-redux";
 import {ApplicationState} from "../store";
 import Login from "./Login";
+import Wallet from "./Wallet";
+import MakeTransaction from "./MakeTransaction";
+import AdminPanel from "./AdminPanel";
 
 type BitcoinGameProps =
     BitcoinGameStore.BitcoinGameState
@@ -22,6 +25,7 @@ class BitcoinGameRoot extends React.Component<BitcoinGameProps> {
 
     public render() {
         const isLoggedIn = this.props.isLoggedIn;
+        const isAdmin = this.props.isAdmin;
 
         if (!isLoggedIn) {
             return (
@@ -30,10 +34,21 @@ class BitcoinGameRoot extends React.Component<BitcoinGameProps> {
                 </div>
             )
         }
+        
+        if (isAdmin) {
+            return (
+                <div>
+                    <RoundCountdownTimer />
+                    <AdminPanel />
+                </div>
+            )
+        } 
 
         return (
             <div>
                 <RoundCountdownTimer />
+                <Wallet />
+                <MakeTransaction />
             </div>
         );
     }

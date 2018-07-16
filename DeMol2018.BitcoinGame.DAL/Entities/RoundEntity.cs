@@ -8,6 +8,7 @@ namespace DeMol2018.BitcoinGame.DAL.Entities
     public class RoundEntity : Entity
     {
         public int Id { get; set; }
+        public int RoundNumber { get; set; }
 
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
