@@ -34,5 +34,17 @@ namespace DeMol2018.BitcoinGame.Application.Services
 
             return round;
         }
+
+        public Round GetCurrentRound()
+        {
+            var currentGame = GameService.FindCurrentGame() ?? GameService.StartNewGame();
+
+            if (!currentGame.Rounds.Any())
+            {
+                return null;
+            }
+
+            return currentGame.Rounds.OrderByDescending(x => x.RoundNumber).First();
+        }
     }
 }

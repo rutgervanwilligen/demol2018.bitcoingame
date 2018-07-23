@@ -7,7 +7,7 @@ namespace DeMol2018.BitcoinGame.Domain.Interfaces
     {
         bool WalletIsClosed();
         void AddTransaction(Transaction transaction);
-        int GetBalance();
+        int GetCurrentBalanceInRound(int currentRoundNumber);
         void WriteTransactions();
     }
 }

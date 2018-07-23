@@ -10,8 +10,8 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
         {
             return new RoundEntity {
                 Id = round.Id,
-                StartTime = round.StartTime,
                 GameId = round.Game.Id,
+                StartTime = round.StartTime,
                 EndTime = round.EndTime,
                 RoundNumber = round.RoundNumber
             };
@@ -22,6 +22,7 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
             return new Round {
                 Id = roundEntity.Id,
                 StartTime = roundEntity.StartTime,
+                EndTime = roundEntity.EndTime,
                 RoundNumber = roundEntity.RoundNumber,
                 Transactions = roundEntity.Transactions == null
                     ? Enumerable.Empty<Transaction>()

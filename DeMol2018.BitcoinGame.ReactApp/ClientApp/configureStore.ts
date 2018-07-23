@@ -16,7 +16,7 @@ export default function configureStore(initialState?: ApplicationState) : Store<
 
     // Combine all reducers and instantiate the app-wide store instance
     const allReducers = buildRootReducer(reducers);
-    const store = createStoreWithMiddleware(allReducers, initialState) as Store<ApplicationState>;
+    const store = (<any>createStoreWithMiddleware)(allReducers, initialState) as Store<ApplicationState>;
 
     signalRRegisterCommands(store);
 

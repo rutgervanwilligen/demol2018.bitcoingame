@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using DeMol2018.BitcoinGame.Application.Services;
+using DeMol2018.BitcoinGame.ReactApp.ResultObjects;
 using Microsoft.AspNetCore.SignalR;
 
 namespace DeMol2018.BitcoinGame.ReactApp.Controllers
@@ -29,21 +29,26 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
         {
             var player = _playerService.Login(name, code);
 
-            if (player != null)
+            if (player == null)
             {
-                var wallet = _walletService.GetWalletByPlayerId(player.Id);
-                
-                return Clients.Caller.SendAsync("LoginResult", new {
-                    loginSuccessful = true,
-                    isAdmin = player.IsAdmin,
-                    playerGuid = player.Id,
-                    usersWalletAddress = wallet.Address,
-                    usersCurrentBalance = wallet.GetBalance()
+                return Clients.Caller.SendAsync("LoginResult", new LoginResult {
+                    LoginSuccessful = false
                 });
             }
 
-            return Clients.Caller.SendAsync("LoginResult", new {
-                loginSuccessful = false
+            var wallet = _walletService.GetWalletByPlayerId(player.Id);
+            var currentRound = _roundService.GetCurrentRound();
+
+            return Clients.Caller.SendAsync("LoginResult", new LoginResult {
+                LoginSuccessful = true,
+                IsAdmin = player.IsAdmin,
+                PlayerGuid = player.Id,
+                UpdatedState = new UpdatedStateResult {
+                    UserWalletAddress = wallet.Address,
+                    UserCurrentBalance = wallet.GetCurrentBalanceInRound(currentRound.RoundNumber),
+                    CurrentRoundEndTime = currentRound.EndTime,
+                    CurrentRoundNumber = currentRound.RoundNumber
+                }
             });
         }
 
@@ -67,14 +72,13 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             });
         }
         
-        public Task MakeTransaction(int senderWalletId, int receiverWalletId, int amount)
+        public Task MakeTransaction(Guid invokerId, int receiverWalletAddress, int amount)
         {
-            _transactionService.MakeTransaction(senderWalletId, receiverWalletId, amount);
-            
-            var connectionIdToIgnore = new List<String>();
-            return Clients.All.SendAsync("IncrementCounter");
-//            connectionIdToIgnore.Add(Context.ConnectionId);
-//            return Clients.AllExcept(connectionIdToIgnore).SendAsync("IncrementCounter");
+            var senderWallet = _walletService.GetWalletByPlayerId(invokerId);
+
+            _transactionService.MakeTransaction(senderWallet.Address, receiverWalletAddress, amount);
+
+            return Clients.Caller.SendAsync("IncrementCounter");
         }
     }
 }

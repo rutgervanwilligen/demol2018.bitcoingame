@@ -34,7 +34,7 @@ class Wallet extends React.Component<MakeTransactionProps> {
                 <input className="ïnputField" placeholder='Hoeveelheid' ref={this.setAmountInputRef} />
                 <label>Ontvangstadres</label>
                 <input className="ïnputField" placeholder='Ontvangstadres' ref={this.setReceiverAddressInputRef} />
-                <button onClick={() => this.props.makeTransaction(+this.amountInput.value, +this.receiverAddressInput.value)}>Verstuur</button>
+                <button onClick={() => this.props.makeTransaction(this.props.playerGuid, +this.receiverAddressInput.value, +this.amountInput.value )}>Verstuur</button>
             </div>
         );
     }

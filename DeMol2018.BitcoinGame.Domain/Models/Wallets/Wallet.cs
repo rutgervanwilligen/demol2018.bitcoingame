@@ -35,10 +35,16 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             }
         }
 
-        public int GetBalance()
+        public int GetCurrentBalanceInRound(int currentRoundNumber)
         {
-            var receivedAmount = ReceivedTransactions.Sum(x => x.Amount);
-            var sentAmount = SentTransactions.Sum(x => x.Amount);
+            // All received amounts excluding the current round
+            var receivedAmount = ReceivedTransactions
+                .Where(x => x.Round.RoundNumber < currentRoundNumber)
+                .Sum(x => x.Amount);
+
+            // All sent amounds including the current round
+            var sentAmount = SentTransactions
+                .Sum(x => x.Amount);
 
             return StartAmount + receivedAmount - sentAmount;
         }

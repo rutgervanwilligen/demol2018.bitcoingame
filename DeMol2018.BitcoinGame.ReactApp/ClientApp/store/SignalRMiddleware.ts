@@ -12,7 +12,7 @@ export function signalRInvokeMiddleware() {
 
         switch (action.type) {
             case "MAKE_TRANSACTION":
-                connection.invoke("MakeTransaction", action.receiverId, action.amount, action.amount).then(function () {
+                connection.invoke("MakeTransaction", action.invokerId, action.receiverAddress, action.amount).then(function () {
                     console.log("make transaction fulfilled");
                 }).catch(function () {
                     console.log("make transaction rejected");
@@ -45,18 +45,20 @@ export function signalRInvokeMiddleware() {
 
 export function signalRRegisterCommands(store: Store<ApplicationState>) {
 
-    connection.on('LoginResult', data => {
+    connection.on('LoginResult', loginResult => {
        
         console.log('login result:');
-        console.log(data);
+        console.log(loginResult);
         
         store.dispatch({
             type: 'RECEIVE_LOGIN_RESULT',
-            loginSuccessful: data.loginSuccessful,
-            playerGuid: data.playerGuid,
-            usersWalletAddress: data.usersWalletAddress,
-            usersCurrentBalance: data.usersCurrentBalance,
-            isAdmin: data.isAdmin
+            loginSuccessful: loginResult.loginSuccessful,
+            playerGuid: loginResult.playerGuid,
+            isAdmin: loginResult.isAdmin,
+            userWalletAddress: loginResult.updatedState.userWalletAddress,
+            userCurrentBalance: loginResult.updatedState.userCurrentBalance,
+            currentRoundNumber: loginResult.updatedState.currentRoundNumber,
+            currentRoundEndTime: loginResult.updatedState.currentRoundEndTime
         });
     });
     

@@ -20,8 +20,9 @@ export interface BitcoinGameState {
 
 interface MakeTransactionAction {
     type: 'MAKE_TRANSACTION';
-    amount: number;
+    invokerId: string;
     receiverAddress: number;
+    amount: number;
 }
 
 interface ReceiveLoginResultAction {
@@ -29,8 +30,10 @@ interface ReceiveLoginResultAction {
     loginSuccessful: boolean;
     isAdmin: boolean;
     playerGuid: string;
-    usersWalletAddress?: number;
-    usersCurrentBalance?: number;
+    userWalletAddress?: number;
+    userCurrentBalance?: number;
+    currentRoundNumber: number;
+    currentRoundEndTime?: Date;
 }
 
 interface ReceiveNewRoundResultAction {
@@ -53,11 +56,12 @@ type KnownAction = MakeTransactionAction | ReceiveRoundEndTimeAction | ReceiveNe
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-    makeTransaction: (amount: number, receiverId: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    makeTransaction: (invokerId: string, receiverAddress: number, amount: number): AppThunkAction<KnownAction> => (dispatch, getState) => {
         dispatch({
             type: 'MAKE_TRANSACTION',
-            amount: amount,
-            receiverAddress: receiverId
+            invokerId: invokerId,
+            receiverAddress: receiverAddress,
+            amount: amount
         });
     }
 };
@@ -77,17 +81,19 @@ const unloadedState: BitcoinGameState = {
 
 export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
+    console.log("acctiiieee");
+    console.log(action);
     switch (action.type) {
         case 'RECEIVE_LOGIN_RESULT':
-            console.log("acctiiieee");
-            console.log(action);
             return {
                 ...state,
                 isLoggedIn: action.loginSuccessful,
                 isAdmin: action.isAdmin,
                 playerGuid: action.loginSuccessful ? action.playerGuid : '',
-                usersWalletAddress: action.usersWalletAddress,
-                currentBalance: action.usersCurrentBalance
+                usersWalletAddress: action.userWalletAddress,
+                currentBalance: action.userCurrentBalance,
+                currentRoundEndTime: action.currentRoundEndTime,
+                currentRoundNumber: action.currentRoundNumber
             };
         case 'MAKE_TRANSACTION':
             return {
