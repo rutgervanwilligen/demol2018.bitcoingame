@@ -13,8 +13,6 @@ namespace DeMol2018.BitcoinGame.DAL.Entities
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
 
-        public virtual ICollection<TransactionEntity> Transactions { get; set; }
-
         public Guid GameId { get; set; }
         public virtual GameEntity Game { get; set; }
     }

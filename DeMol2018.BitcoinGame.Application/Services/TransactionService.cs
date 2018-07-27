@@ -28,10 +28,12 @@ namespace DeMol2018.BitcoinGame.Application.Services
                 throw new InvalidTransactionException("There is no active round. Transaction failed.");
             }
             
-            var senderWallet = WalletRepository.GetBy(x => x.Address == senderWalletAddress).ToDomainModel();
-            var receiverWallet = WalletRepository.FindBy(x => x.Address == receiverWalletAddress)?.ToDomainModel();
+            var senderWalletEntity = WalletRepository.GetBy(x => x.Address == senderWalletAddress);
+            var senderWallet = senderWalletEntity.ToDomainModel();
+            var receiverWalletEntity = WalletRepository.FindBy(x => x.Address == receiverWalletAddress);
+            var receiverWallet = receiverWalletEntity?.ToDomainModel();
 
-            senderWallet.MakeTransaction(
+            var outgoingTransaction = senderWallet.MakeTransaction(
                 receiverWallet?.Id,
                 amount,
                 currentGame.Id,
@@ -39,22 +41,25 @@ namespace DeMol2018.BitcoinGame.Application.Services
                 currentRound.RoundNumber,
                 receiverWallet == null ? receiverWalletAddress : (int?)null);
             
-            WalletRepository.Update(senderWallet.ToEntity());
+            senderWalletEntity.OutgoingTransactions.Add(outgoingTransaction.ToEntity());
+            
+            WalletRepository.Update(senderWalletEntity);
             WalletRepository.SaveChanges();
 
-            if (receiverWallet == null)
-            {
+            if (receiverWallet == null) {
                 return;
             }
 
-            receiverWallet.AddIncomingTransaction(
+            var incomingTransaction = receiverWallet.AddIncomingTransaction(
                 currentGame.Id,
                 currentRound.Id,
                 currentRound.RoundNumber,
                 amount,
                 senderWallet.Id);
             
-            WalletRepository.Update(receiverWallet.ToEntity());
+            receiverWalletEntity.IncomingTransactions.Add(incomingTransaction.ToEntity());
+            
+            WalletRepository.Update(receiverWalletEntity);
             WalletRepository.SaveChanges();
         }
     }

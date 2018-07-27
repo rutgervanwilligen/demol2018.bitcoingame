@@ -12,7 +12,6 @@ namespace DeMol2018.BitcoinGame.DAL
 
         public DbSet<PlayerEntity> Players { get; set; }
         public DbSet<RoundEntity> Rounds { get; set; }
-        public DbSet<TransactionEntity> Transactions { get; set; }
         public DbSet<WalletEntity> Wallets { get; set; }
         public DbSet<GameEntity> Games { get; set; }
 
@@ -53,12 +52,6 @@ namespace DeMol2018.BitcoinGame.DAL
                 .HasOne(x => x.Game)
                 .WithMany(x => x.Rounds)
                 .HasForeignKey(x => x.GameId);
-
-            modelBuilder
-                .Entity<RoundEntity>()
-                .HasMany(x => x.Transactions)
-                .WithOne(x => x.Round)
-                .HasForeignKey(x => x.RoundId);
             
             modelBuilder
                 .Entity<GameEntity>()

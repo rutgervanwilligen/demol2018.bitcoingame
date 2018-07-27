@@ -42,23 +42,26 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             throw new NotImplementedException();
         }
 
-        public void AddIncomingTransaction(
+        public IncomingTransaction AddIncomingTransaction(
             Guid gameId,
             Guid roundId,
             int roundNumber,
             int amount,
             Guid senderWalletId)
         {
-            IncomingTransactions.Add(new IncomingTransaction {
+            var incomingTransaction = new IncomingTransaction {
                 GameId = gameId,
                 RoundId = roundId,
                 RoundNumber = roundNumber,
                 Amount = amount,
                 SenderWalletId = senderWalletId
-            });
+            };
+
+            IncomingTransactions.Add(incomingTransaction);
+            return incomingTransaction;
         }
         
-        public void MakeTransaction(
+        public OutgoingTransaction MakeTransaction(
                 Guid? receiverWalletId,
                 int amount,
                 Guid currentGameId,
@@ -71,16 +74,20 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             if (amount > currentBalance) {
                 throw new InsufficientFundsException("Balance is too low to make transaction.");
             }
-            
-            OutgoingTransactions.Add(new OutgoingTransaction {
+
+            var outgoingTransaction = new OutgoingTransaction {
                 Amount = amount,
                 ReceiverWalletId = receiverWalletId,
                 RoundId = currentRoundId,
                 GameId = currentGameId,
-                InvalidReceiverAddress = receiverWalletId == null 
+                RoundNumber = currentRoundNumber,
+                InvalidReceiverAddress = receiverWalletId == null
                     ? invalidReceiverAddress
                     : null
-            });
+            };
+
+            OutgoingTransactions.Add(outgoingTransaction);
+            return outgoingTransaction;
         }
     }
 

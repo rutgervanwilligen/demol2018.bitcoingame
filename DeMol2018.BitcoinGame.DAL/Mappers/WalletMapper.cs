@@ -18,7 +18,7 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                         Id = playerWallet.Id,
                         Address = playerWallet.Address,
                         StartAmount = playerWallet.StartAmount,
-                        PlayerId = playerWallet.Player.Id,
+                        PlayerId = playerWallet.PlayerId,
                         Type = WalletEntity.WalletType.PlayerWallet.ToString(),
                         OutgoingTransactions = playerWallet.OutgoingTransactions.Select(x => x.ToEntity()).ToList(),
                         IncomingTransactions = playerWallet.IncomingTransactions.Select(x => x.ToEntity()).ToList()
@@ -52,10 +52,16 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                         IncomingTransactions = walletEntity.IncomingTransactions?.Select(x => x.ToDomainModel()).ToList() ?? new List<IncomingTransaction>()
                     };
                 case WalletEntity.WalletType.PlayerWallet:
+                    if (!walletEntity.PlayerId.HasValue)
+                    {
+                        throw new Exception("Inconsistent player wallet found in database");
+                    }
+                    
                     return new PlayerWallet {
                         Id = walletEntity.Id,
                         Address = walletEntity.Address,
                         StartAmount = walletEntity.StartAmount,
+                        PlayerId = walletEntity.PlayerId.Value,
                         IncomingTransactions = walletEntity.IncomingTransactions?.Select(x => x.ToDomainModel()).ToList() ?? new List<IncomingTransaction>(),
                         OutgoingTransactions = walletEntity.OutgoingTransactions?.Select(x => x.ToDomainModel()).ToList() ?? new List<OutgoingTransaction>()
                     };

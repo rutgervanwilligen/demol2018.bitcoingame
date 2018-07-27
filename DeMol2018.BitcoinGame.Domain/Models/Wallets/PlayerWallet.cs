@@ -1,10 +1,12 @@
-﻿namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
+﻿using System;
+
+namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
 {
     public class PlayerWallet : Wallet
     {
-        public Player Player { get; set; }
+        public Guid PlayerId { get; set; }
         
-        public PlayerWallet() : base()
+        public PlayerWallet()
         {
             StartAmount = 1000;
         }

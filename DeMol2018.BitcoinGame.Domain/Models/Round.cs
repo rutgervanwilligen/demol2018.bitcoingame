@@ -14,9 +14,10 @@ namespace DeMol2018.BitcoinGame.Domain.Models
         public DateTime EndTime { get; set; }
 
         public bool HasStarted { get; set; }
-        public bool HasEnded => HasStarted 
-                                && DateTime.UtcNow > EndTime;
+        public bool HasEnded => DateTime.UtcNow > EndTime;
 
+        public bool IsActive => HasStarted && !HasEnded;
+        
         public Round()
         {
             HasStarted = false;

@@ -39,7 +39,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
         {
             var currentGame = GameService.FindCurrentGame() ?? GameService.StartNewGame();
 
-            if (!currentGame.Rounds.Any()) {
+            if (!currentGame.Rounds.Any(x => x.IsActive)) {
                 return null;
             }
 
