@@ -17,12 +17,9 @@ namespace DeMol2018.BitcoinGame.Domain.Models
         public bool HasEnded => HasStarted 
                                 && DateTime.UtcNow > EndTime;
 
-        public List<Transaction> Transactions { get; set; }
-
         public Round()
         {
             HasStarted = false;
-            Transactions = new List<Transaction>();
         }
 
         public void Start(TimeSpan roundLength)

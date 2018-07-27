@@ -15,8 +15,8 @@ namespace DeMol2018.BitcoinGame.DAL.Entities
         
         public int StartAmount { get; set; }
         
-        public virtual ICollection<TransactionEntity> SentTransactions { get; set; }
-        public virtual ICollection<TransactionEntity> ReceivedTransactions { get; set; }
+        public virtual ICollection<OutgoingTransactionEntity> OutgoingTransactions { get; set; }
+        public virtual ICollection<IncomingTransactionEntity> IncomingTransactions { get; set; }
 
         public Guid? PlayerId { get; set; }
         public virtual PlayerEntity Player { get; set; }

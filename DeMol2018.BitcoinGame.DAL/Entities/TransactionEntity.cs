@@ -11,6 +11,8 @@ namespace DeMol2018.BitcoinGame.DAL.Entities
         
         public int Amount { get; set; }
         public int RoundNumber { get; set; }
+        
+        public Guid GameId { get; set; }
 
         public Guid RoundId { get; set; }
         public virtual RoundEntity Round { get; set; }

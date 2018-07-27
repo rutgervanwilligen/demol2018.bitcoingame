@@ -11,14 +11,14 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
         public int Address { get; set; }
         public int StartAmount { get; set; }
 
-        public List<Transaction> ReceivedTransactions;
-        public List<Transaction> SentTransactions;
+        public List<IncomingTransaction> IncomingTransactions;
+        public List<OutgoingTransaction> OutgoingTransactions;
 
         protected Wallet()
         {
             Id = new Guid();
-            ReceivedTransactions = new List<Transaction>();
-            SentTransactions = new List<Transaction>();
+            IncomingTransactions = new List<IncomingTransaction>();
+            OutgoingTransactions = new List<OutgoingTransaction>();
         }
 
         public abstract bool WalletIsClosed();
@@ -26,12 +26,12 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
         public int GetCurrentBalanceInRound(int currentRoundNumber)
         {
             // All received amounts excluding the current round
-            var receivedAmount = ReceivedTransactions
+            var receivedAmount = IncomingTransactions
                 .Where(x => x.RoundNumber < currentRoundNumber)
                 .Sum(x => x.Amount);
 
             // All sent amounds including the current round
-            var sentAmount = SentTransactions
+            var sentAmount = OutgoingTransactions
                 .Sum(x => x.Amount);
 
             return StartAmount + receivedAmount - sentAmount;
@@ -39,7 +39,55 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
 
         public void WriteTransactions()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
+        }
+
+        public void AddIncomingTransaction(
+            Guid gameId,
+            Guid roundId,
+            int roundNumber,
+            int amount,
+            Guid senderWalletId)
+        {
+            IncomingTransactions.Add(new IncomingTransaction {
+                GameId = gameId,
+                RoundId = roundId,
+                RoundNumber = roundNumber,
+                Amount = amount,
+                SenderWalletId = senderWalletId
+            });
+        }
+        
+        public void MakeTransaction(
+                Guid? receiverWalletId,
+                int amount,
+                Guid currentGameId,
+                Guid currentRoundId,
+                int currentRoundNumber,
+                int? invalidReceiverAddress)
+        {
+            var currentBalance = GetCurrentBalanceInRound(currentRoundNumber);
+
+            if (amount > currentBalance) {
+                throw new InsufficientFundsException("Balance is too low to make transaction.");
+            }
+            
+            OutgoingTransactions.Add(new OutgoingTransaction {
+                Amount = amount,
+                ReceiverWalletId = receiverWalletId,
+                RoundId = currentRoundId,
+                GameId = currentGameId,
+                InvalidReceiverAddress = receiverWalletId == null 
+                    ? invalidReceiverAddress
+                    : null
+            });
+        }
+    }
+
+    public class InsufficientFundsException : Exception
+    {
+        public InsufficientFundsException(string message) : base(message)
+        {            
         }
     }
 }

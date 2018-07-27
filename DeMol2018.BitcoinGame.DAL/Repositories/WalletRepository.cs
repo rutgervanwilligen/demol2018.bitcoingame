@@ -7,8 +7,8 @@ namespace DeMol2018.BitcoinGame.DAL.Repositories
         public WalletRepository(BitcoinGameDbContext context)
             : base(context)
         {
-            AddDefaultIncludes(x => x.ReceivedTransactions);
-            AddDefaultIncludes(x => x.SentTransactions);
+            AddDefaultIncludes(x => x.IncomingTransactions);
+            AddDefaultIncludes(x => x.OutgoingTransactions);
         }
     }
 }

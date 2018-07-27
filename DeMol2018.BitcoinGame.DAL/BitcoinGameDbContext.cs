@@ -91,36 +91,36 @@ namespace DeMol2018.BitcoinGame.DAL
                 .HasForeignKey(x => x.PlayerId);
 
             modelBuilder
-                .Entity<TransactionEntity>()
+                .Entity<OutgoingTransactionEntity>()
                 .HasKey(x => x.Id);
+
+            modelBuilder
+                .Entity<OutgoingTransactionEntity>()
+                .Property(x => x.Id)
+                .ValueGeneratedOnAdd();
+
+            modelBuilder
+                .Entity<OutgoingTransactionEntity>()
+                .HasOne(x => x.SenderWallet)
+                .WithMany(x => x.OutgoingTransactions)
+                .HasForeignKey(x => x.SenderWalletId)
+                .OnDelete(DeleteBehavior.Cascade);
             
             modelBuilder
-                .Entity<TransactionEntity>()
+                .Entity<IncomingTransactionEntity>()
+                .HasKey(x => x.Id);
+
+            modelBuilder
+                .Entity<IncomingTransactionEntity>()
                 .Property(x => x.Id)
-                .HasDefaultValueSql("NEWID()");
+                .ValueGeneratedOnAdd();
 
             modelBuilder
-                .Entity<TransactionEntity>()
-                .HasOne(x => x.Round)
-                .WithMany(x => x.Transactions)
-                .IsRequired()
-                .HasForeignKey(x => x.RoundId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-            modelBuilder
-                .Entity<TransactionEntity>()
-                .HasOne(x => x.SenderWallet)
-                .WithMany(x => x.SentTransactions)
-                .IsRequired()
-                .HasForeignKey(x => x.SenderId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder
-                .Entity<TransactionEntity>()
+                .Entity<IncomingTransactionEntity>()
                 .HasOne(x => x.ReceiverWallet)
-                .WithMany(x => x.ReceivedTransactions)
-                .HasForeignKey(x => x.ReceiverId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .WithMany(x => x.IncomingTransactions)
+                .HasForeignKey(x => x.ReceiverWalletId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

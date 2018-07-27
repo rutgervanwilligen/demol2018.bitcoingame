@@ -11,21 +11,18 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
         private readonly TransactionService _transactionService;
         private readonly PlayerService _playerService;
         private readonly WalletService _walletService;
-        private readonly GameService _gameService;
         private readonly RoundService _roundService;
 
         public BitcoinGameHub(
                 TransactionService transactionService,
                 PlayerService playerService,
                 WalletService walletService,
-                GameService gameService,
                 RoundService roundService)
         {
             _transactionService = transactionService;
             _playerService = playerService;
             _walletService = walletService;
             _roundService = roundService;
-            _gameService = gameService;
         }
 
         public Task Login(string name, int code)
@@ -88,12 +85,22 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
 
             var senderWallet = _walletService.GetWalletByPlayerId(invokerId);
 
-            var transaction = _transactionService.MakeTransaction(senderWallet.Address, receiverWalletAddress, amount);
+            try
+            {
+                _transactionService.MakeTransaction(senderWallet.Address, receiverWalletAddress, amount);
+            }
+            catch (InvalidTransactionException)
+            {                
+                return Clients.Caller.SendAsync("MakeTransactionResult", new {
+                    transactionSuccessful = false,
+                    userCurrentBalance = senderWallet.GetCurrentBalanceInRound(currentRound.RoundNumber)
+                });
+            }
 
             var updatedSenderWallet = _walletService.GetWalletByPlayerId(invokerId);
 
             return Clients.Caller.SendAsync("MakeTransactionResult", new {
-                transactionSuccessful = transaction != null,
+                transactionSuccessful = true,
                 userCurrentBalance = updatedSenderWallet.GetCurrentBalanceInRound(currentRound.RoundNumber)
             });
         }

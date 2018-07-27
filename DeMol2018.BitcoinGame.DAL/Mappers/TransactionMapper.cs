@@ -5,11 +5,39 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
 {
     public static class TransactionMapper
     {
-        public static TransactionEntity ToEntity(this Transaction transaction)
+        public static IncomingTransactionEntity ToEntity(this IncomingTransaction transaction)
         {
-            return new TransactionEntity {
-                SenderId = transaction.SenderId,
-                ReceiverId = transaction.ReceiverId,
+            return new IncomingTransactionEntity {
+                Id = transaction.Id,
+//                ReceiverWalletId = transaction.ReceiverWalletId,
+                SenderWalletId = transaction.SenderWalletId,
+                GameId = transaction.GameId,
+                RoundId = transaction.RoundId,
+                RoundNumber = transaction.RoundNumber,
+                Amount = transaction.Amount
+            };
+        }
+
+        public static IncomingTransaction ToDomainModel(this IncomingTransactionEntity transactionEntity)
+        {
+            return new IncomingTransaction {
+                Id = transactionEntity.Id,
+                Amount = transactionEntity.Amount,
+//                ReceiverWalletId = transactionEntity.ReceiverWalletId,
+                SenderWalletId = transactionEntity.SenderWalletId,
+                GameId = transactionEntity.GameId,
+                RoundId = transactionEntity.RoundId,
+                RoundNumber = transactionEntity.RoundNumber
+            };
+        }
+        
+        public static OutgoingTransactionEntity ToEntity(this OutgoingTransaction transaction)
+        {
+            return new OutgoingTransactionEntity {
+                Id = transaction.Id,
+                SenderWalletId = transaction.SenderWalletId,
+                ReceiverWalletId = transaction.ReceiverWalletId,
+                GameId = transaction.GameId,
                 RoundId = transaction.RoundId,
                 RoundNumber = transaction.RoundNumber,
                 Amount = transaction.Amount,
@@ -17,14 +45,15 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
             };
         }
 
-        public static Transaction ToDomainModel(this TransactionEntity transactionEntity)
+        public static OutgoingTransaction ToDomainModel(this OutgoingTransactionEntity transactionEntity)
         {
-            return new Transaction {
+            return new OutgoingTransaction {
                 Id = transactionEntity.Id,
                 Amount = transactionEntity.Amount,
                 InvalidReceiverAddress = transactionEntity.InvalidReceiverAddress,
-                SenderId = transactionEntity.SenderId,
-                ReceiverId = transactionEntity.ReceiverId,
+                SenderWalletId = transactionEntity.SenderWalletId,
+                ReceiverWalletId = transactionEntity.ReceiverWalletId,
+                GameId = transactionEntity.GameId,
                 RoundId = transactionEntity.RoundId,
                 RoundNumber = transactionEntity.RoundNumber
             };
