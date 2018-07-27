@@ -1,12 +1,8 @@
-﻿using System;
-using DeMol2018.BitcoinGame.Domain.Models;
-
-namespace DeMol2018.BitcoinGame.Domain.Interfaces
+﻿namespace DeMol2018.BitcoinGame.Domain.Interfaces
 {
     public interface IWallet
     {
         bool WalletIsClosed();
-        void AddTransaction(Transaction transaction);
         int GetCurrentBalanceInRound(int currentRoundNumber);
         void WriteTransactions();
     }

@@ -17,7 +17,9 @@ namespace DeMol2018.BitcoinGame.Application.Services
 
         public Wallet GetWalletByPlayerId(Guid playerId)
         {
-            return WalletRepository.GetBy(x => x.PlayerId == playerId).ToDomainModel();
+            return WalletRepository
+                .GetBy(x => x.PlayerId == playerId)
+                .ToDomainModel();
         }
     }
 }

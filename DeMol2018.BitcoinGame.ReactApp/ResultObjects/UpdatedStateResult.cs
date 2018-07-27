@@ -6,7 +6,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.ResultObjects
     {
         public int UserWalletAddress { get; set; }
         public int UserCurrentBalance { get; set; }
-        public int CurrentRoundNumber { get; set; }
-        public DateTime CurrentRoundEndTime { get; set; }
+        public int? CurrentRoundNumber { get; set; }
+        public DateTime? CurrentRoundEndTime { get; set; }
     }
 }

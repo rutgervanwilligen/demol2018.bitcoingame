@@ -23,7 +23,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
             var currentGame = GameService.FindCurrentGame() ?? GameService.StartNewGame();
 
             var round = new Round {
-                Game = currentGame,
+                GameId = currentGame.Id,
                 RoundNumber = currentGame.Rounds.Any() ? currentGame.Rounds.Max(x => x.RoundNumber) + 1 : 1
             };
             
@@ -39,8 +39,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
         {
             var currentGame = GameService.FindCurrentGame() ?? GameService.StartNewGame();
 
-            if (!currentGame.Rounds.Any())
-            {
+            if (!currentGame.Rounds.Any()) {
                 return null;
             }
 

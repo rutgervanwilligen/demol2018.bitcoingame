@@ -23,23 +23,11 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
 
         public abstract bool WalletIsClosed();
 
-        public void AddTransaction(Transaction transaction)
-        {
-            if (!WalletIsClosed())
-            {
-                ReceivedTransactions.Add(transaction);
-            }
-            else
-            {
-                SentTransactions.Add(transaction);
-            }
-        }
-
         public int GetCurrentBalanceInRound(int currentRoundNumber)
         {
             // All received amounts excluding the current round
             var receivedAmount = ReceivedTransactions
-                .Where(x => x.Round.RoundNumber < currentRoundNumber)
+                .Where(x => x.RoundNumber < currentRoundNumber)
                 .Sum(x => x.Amount);
 
             // All sent amounds including the current round

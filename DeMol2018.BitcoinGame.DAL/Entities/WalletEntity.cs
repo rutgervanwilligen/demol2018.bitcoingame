@@ -11,7 +11,7 @@ namespace DeMol2018.BitcoinGame.DAL.Entities
         public Guid Id { get; set; }
         
         public int Address { get; set; }
-        public WalletType Type { get; set; }
+        public string Type { get; set; }
         
         public int StartAmount { get; set; }
         

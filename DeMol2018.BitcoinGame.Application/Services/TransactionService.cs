@@ -9,36 +9,39 @@ namespace DeMol2018.BitcoinGame.Application.Services
     {
         private WalletRepository WalletRepository { get; set; }
         private TransactionRepository TransactionRepository { get; set; }
+        private RoundService RoundService { get; set; }
 
-        public TransactionService(BitcoinGameDbContext dbContext)
+        public TransactionService(RoundService roundService, BitcoinGameDbContext dbContext)
         {
             TransactionRepository = new TransactionRepository(dbContext);
             WalletRepository = new WalletRepository(dbContext);
+            RoundService = roundService;
         }
 
-        public void MakeTransaction(int senderWalletAddress, int receiverWalletAddress, int amount)
+        public Transaction MakeTransaction(int senderWalletAddress, int receiverWalletAddress, int amount)
         {
-            var senderWallet = WalletRepository.GetBy(x => x.Address == senderWalletAddress).ToDomainModel();
+            var currentRound = RoundService.GetCurrentRound();
 
-            var receiverWalletEntity = WalletRepository.FindBy(x => x.Address == receiverWalletAddress);
-
-            if (receiverWalletEntity != null)
+            if (currentRound == null)
             {
-                var receiverWallet = receiverWalletEntity.ToDomainModel();
-                
-                var transaction = new Transaction {
-                    Amount = amount,
-                    Sender = senderWallet,
-                    Receiver = receiverWallet
-                };
-
-                TransactionRepository.Add(transaction.ToEntity());
-                TransactionRepository.SaveChanges();
+                return null;
             }
             
-            
+            var senderWallet = WalletRepository.GetBy(x => x.Address == senderWalletAddress).ToDomainModel();
+            var receiverWallet = WalletRepository.FindBy(x => x.Address == receiverWalletAddress)?.ToDomainModel();
+
+            var transaction = new Transaction {
+                Amount = amount,
+                SenderId = senderWallet.Id,
+                ReceiverId = receiverWallet?.Id,
+                RoundId = currentRound.Id,
+                InvalidReceiverAddress = receiverWallet == null ? receiverWalletAddress : (int?)null
+            };
+
+            TransactionRepository.Add(transaction.ToEntity());
+            TransactionRepository.SaveChanges();
+
+            return transaction;
         }
-        
-        
     }
 }

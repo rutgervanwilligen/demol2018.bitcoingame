@@ -65,7 +65,8 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
     connection.on('StartNewRoundResult', data => {
 
         console.log('start new round result');
-        
+        console.log(data);
+
         store.dispatch({
             type: 'RECEIVE_NEW_ROUND_RESULT',
             newRoundNumber: data.newRoundNumber,
@@ -73,6 +74,17 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
         });
     });
 
-    connection.start();
+    connection.on('MakeTransactionResult', makeTransactionResult => {
 
+        console.log('make transaction result');
+        console.log(makeTransactionResult);
+
+        store.dispatch({
+            type: 'RECEIVE_MAKE_TRANSACTION_RESULT',
+            transactionSuccessful: makeTransactionResult.transactionSuccessful,
+            userCurrentBalance: makeTransactionResult.userCurrentBalance
+        });
+    });
+
+    connection.start();
 }

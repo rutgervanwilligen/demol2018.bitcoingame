@@ -16,7 +16,7 @@ namespace DeMol2018.BitcoinGame.DAL.Repositories
         protected void AddDefaultIncludes(Expression<Func<T, object>> expression) {
             _dbSetWithDefaultIncludes = _dbSetWithDefaultIncludes.Include(expression);
         }
-            
+
         protected BitcoinGameBaseRepository(BitcoinGameDbContext context)
         {
             _dbContext = context;

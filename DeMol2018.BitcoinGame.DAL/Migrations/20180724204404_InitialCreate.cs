@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DeMol2018.BitcoinGame.DAL.Migrations
@@ -27,7 +26,8 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWID()"),
                     LoginCode = table.Column<int>(nullable: false),
-                    Name = table.Column<string>(nullable: false)
+                    Name = table.Column<string>(nullable: false),
+                    IsAdmin = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -38,8 +38,8 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                 name: "Rounds",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWID()"),
+                    RoundNumber = table.Column<int>(nullable: false),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     GameId = table.Column<Guid>(nullable: false)
@@ -61,7 +61,7 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWID()"),
                     Address = table.Column<int>(nullable: false),
-                    Type = table.Column<int>(nullable: false),
+                    Type = table.Column<string>(nullable: true),
                     StartAmount = table.Column<int>(nullable: false),
                     PlayerId = table.Column<Guid>(nullable: true)
                 },
@@ -82,9 +82,10 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false, defaultValueSql: "NEWID()"),
                     Amount = table.Column<int>(nullable: false),
-                    RoundId = table.Column<int>(nullable: false),
+                    RoundId = table.Column<Guid>(nullable: false),
                     SenderId = table.Column<Guid>(nullable: false),
-                    ReceiverId = table.Column<Guid>(nullable: false)
+                    ReceiverId = table.Column<Guid>(nullable: true),
+                    InvalidReceiverAddress = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {

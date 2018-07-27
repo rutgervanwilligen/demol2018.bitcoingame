@@ -1,5 +1,4 @@
 ﻿using DeMol2018.BitcoinGame.DAL.Entities;
-using DeMol2018.BitcoinGame.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DeMol2018.BitcoinGame.DAL
@@ -27,10 +26,15 @@ namespace DeMol2018.BitcoinGame.DAL
                 .Entity<PlayerEntity>()
                 .Property(x => x.Id)
                 .HasDefaultValueSql("NEWID()");
-            
+
             modelBuilder
                 .Entity<RoundEntity>()
                 .HasKey(x => x.Id);
+
+            modelBuilder
+                .Entity<RoundEntity>()
+                .Property(x => x.Id)
+                .HasDefaultValueSql("NEWID()");
 
             modelBuilder
                 .Entity<RoundEntity>()
@@ -115,7 +119,6 @@ namespace DeMol2018.BitcoinGame.DAL
                 .Entity<TransactionEntity>()
                 .HasOne(x => x.ReceiverWallet)
                 .WithMany(x => x.ReceivedTransactions)
-                .IsRequired()
                 .HasForeignKey(x => x.ReceiverId)
                 .OnDelete(DeleteBehavior.Restrict);
         }

@@ -1,17 +1,19 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using DeMol2018.BitcoinGame.DAL.Entities;
 using DeMol2018.BitcoinGame.Domain.Models;
 
 namespace DeMol2018.BitcoinGame.DAL.Mappers
 {
-    public static class GameEntityMapper
+    public static class GameMapper
     {
         public static GameEntity ToEntity(this Game game)
         {
             return new GameEntity {
                 Id = game.Id,
                 StartTime = game.StartTime,
-                HasFinished = game.HasFinished
+                HasFinished = game.HasFinished,
+                Rounds = game.Rounds.Select(x => x.ToEntity()).ToList()
             };
         }
 
@@ -21,7 +23,7 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                 Id = gameEntity.Id,
                 StartTime = gameEntity.StartTime,
                 HasFinished = gameEntity.HasFinished,
-                Rounds = gameEntity.Rounds.Select(x => x.ToDomainModel())
+                Rounds = gameEntity.Rounds.Select(x => x.ToDomainModel()).ToList()
             };
         }
     }

@@ -3,16 +3,17 @@ using DeMol2018.BitcoinGame.Domain.Models;
 
 namespace DeMol2018.BitcoinGame.DAL.Mappers
 {
-    public static class TransactionEntityMapper
+    public static class TransactionMapper
     {
         public static TransactionEntity ToEntity(this Transaction transaction)
         {
             return new TransactionEntity {
-                Id = transaction.Id,
-                SenderId = transaction.Sender.Id,
-                ReceiverId = transaction.Receiver.Id,
-                RoundId = transaction.Round.Id,
-                Amount = transaction.Amount
+                SenderId = transaction.SenderId,
+                ReceiverId = transaction.ReceiverId,
+                RoundId = transaction.RoundId,
+                RoundNumber = transaction.RoundNumber,
+                Amount = transaction.Amount,
+                InvalidReceiverAddress = transaction.InvalidReceiverAddress
             };
         }
 
@@ -21,9 +22,11 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
             return new Transaction {
                 Id = transactionEntity.Id,
                 Amount = transactionEntity.Amount,
-                Sender = transactionEntity.SenderWallet.ToDomainModel(),
-                Receiver = transactionEntity.ReceiverWallet.ToDomainModel(),
-                Round = transactionEntity.Round.ToDomainModel()
+                InvalidReceiverAddress = transactionEntity.InvalidReceiverAddress,
+                SenderId = transactionEntity.SenderId,
+                ReceiverId = transactionEntity.ReceiverId,
+                RoundId = transactionEntity.RoundId,
+                RoundNumber = transactionEntity.RoundNumber
             };
         }
     }

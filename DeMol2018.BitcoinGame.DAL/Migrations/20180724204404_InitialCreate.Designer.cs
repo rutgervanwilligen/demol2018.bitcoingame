@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeMol2018.BitcoinGame.DAL.Migrations
 {
     [DbContext(typeof(BitcoinGameDbContext))]
-    [Migration("20180716104325_AddAdminStatusMigration")]
-    partial class AddAdminStatusMigration
+    [Migration("20180724204404_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -57,14 +57,16 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
 
             modelBuilder.Entity("DeMol2018.BitcoinGame.DAL.Entities.RoundEntity", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasDefaultValueSql("NEWID()");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("GameId");
+
+                    b.Property<int>("RoundNumber");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
@@ -84,9 +86,11 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
 
                     b.Property<int>("Amount");
 
-                    b.Property<Guid>("ReceiverId");
+                    b.Property<int?>("InvalidReceiverAddress");
 
-                    b.Property<int>("RoundId");
+                    b.Property<Guid?>("ReceiverId");
+
+                    b.Property<Guid>("RoundId");
 
                     b.Property<Guid>("SenderId");
 
@@ -113,7 +117,7 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
 
                     b.Property<int>("StartAmount");
 
-                    b.Property<int>("Type");
+                    b.Property<string>("Type");
 
                     b.HasKey("Id");
 

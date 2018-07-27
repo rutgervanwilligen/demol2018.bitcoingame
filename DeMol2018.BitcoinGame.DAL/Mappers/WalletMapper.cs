@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DeMol2018.BitcoinGame.DAL.Entities;
 using DeMol2018.BitcoinGame.Domain.Models;
@@ -18,8 +19,7 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                         Address = playerWallet.Address,
                         StartAmount = playerWallet.StartAmount,
                         PlayerId = playerWallet.Player.Id,
-                        Type = WalletEntity.WalletType.PlayerWallet
-                        // TODO Transactions
+                        Type = WalletEntity.WalletType.PlayerWallet.ToString()
                     };
                 case JokerWallet jokerWallet:
                     return new WalletEntity {
@@ -27,8 +27,7 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                         Address = jokerWallet.Address,
                         StartAmount = jokerWallet.StartAmount,
                         PlayerId = null,
-                        Type = WalletEntity.WalletType.JokerWallet
-                        // TODO Transactions
+                        Type = WalletEntity.WalletType.JokerWallet.ToString()
                     };
             }
 
@@ -37,26 +36,33 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
 
         public static Wallet ToDomainModel(this WalletEntity walletEntity)
         {
-            switch (walletEntity.Type)
+            var walletType = MapWalletTypeFromString(walletEntity.Type);
+
+            switch (walletType)
             {
                 case WalletEntity.WalletType.JokerWallet:
                     return new JokerWallet {
                         Id = walletEntity.Id,
                         Address = walletEntity.Address,
                         StartAmount = walletEntity.StartAmount,
-                        ReceivedTransactions = walletEntity.ReceivedTransactions?.Select(x => x.ToDomainModel()).ToList() ?? Enumerable.Empty<Transaction>().ToList()
+                        ReceivedTransactions = walletEntity.ReceivedTransactions?.Select(x => x.ToDomainModel()).ToList() ?? new List<Transaction>()
                     };
                 case WalletEntity.WalletType.PlayerWallet:
                     return new PlayerWallet {
                         Id = walletEntity.Id,
                         Address = walletEntity.Address,
                         StartAmount = walletEntity.StartAmount,
-                        ReceivedTransactions = walletEntity.ReceivedTransactions?.Select(x => x.ToDomainModel()).ToList() ?? Enumerable.Empty<Transaction>().ToList(),
-                        SentTransactions = walletEntity.SentTransactions?.Select(x => x.ToDomainModel()).ToList() ?? Enumerable.Empty<Transaction>().ToList()
+                        ReceivedTransactions = walletEntity.ReceivedTransactions?.Select(x => x.ToDomainModel()).ToList() ?? new List<Transaction>(),
+                        SentTransactions = walletEntity.SentTransactions?.Select(x => x.ToDomainModel()).ToList() ?? new List<Transaction>()
                     };
                 default:
                     throw new Exception("Unexpected wallet type in database");
             }
+        }
+
+        public static WalletEntity.WalletType MapWalletTypeFromString(string typeString)
+        {
+            return (WalletEntity.WalletType) Enum.Parse(typeof(WalletEntity.WalletType), typeString);
         }
     }
 }

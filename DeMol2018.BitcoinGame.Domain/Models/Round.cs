@@ -6,9 +6,9 @@ namespace DeMol2018.BitcoinGame.Domain.Models
 {
     public class Round
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public int RoundNumber { get; set; }
-        public Game Game { get; set; }
+        public Guid GameId { get; set; }
         
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
@@ -17,12 +17,12 @@ namespace DeMol2018.BitcoinGame.Domain.Models
         public bool HasEnded => HasStarted 
                                 && DateTime.UtcNow > EndTime;
 
-        public IEnumerable<Transaction> Transactions { get; set; }
+        public List<Transaction> Transactions { get; set; }
 
         public Round()
         {
             HasStarted = false;
-            Transactions = Enumerable.Empty<Transaction>();
+            Transactions = new List<Transaction>();
         }
 
         public void Start(TimeSpan roundLength)

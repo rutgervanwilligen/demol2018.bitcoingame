@@ -21,7 +21,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
         public IEnumerable<JokerWinner> GetJokerWinners()
         {
             return ReceivedTransactions
-                .GroupBy(x => x.Sender.Id)
+                .GroupBy(x => x.SenderId)
                 .Select(x => new JokerWinner {
                     PlayerId = x.Key,
                     NumberOfJokersWon = x.Sum(y => y.Amount) / AmountForOneJoker

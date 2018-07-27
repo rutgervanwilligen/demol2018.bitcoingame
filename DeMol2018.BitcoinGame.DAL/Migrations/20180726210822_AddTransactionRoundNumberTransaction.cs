@@ -2,13 +2,13 @@
 
 namespace DeMol2018.BitcoinGame.DAL.Migrations
 {
-    public partial class AddRoundNumberMigration : Migration
+    public partial class AddTransactionRoundNumberTransaction : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
                 name: "RoundNumber",
-                table: "Rounds",
+                table: "Transactions",
                 nullable: false,
                 defaultValue: 0);
         }
@@ -17,7 +17,7 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
         {
             migrationBuilder.DropColumn(
                 name: "RoundNumber",
-                table: "Rounds");
+                table: "Transactions");
         }
     }
 }

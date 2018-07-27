@@ -47,9 +47,15 @@ interface ReceiveRoundEndTimeAction {
     endTime: Date;
 }
 
+interface ReceiveMakeTransactionResult {
+    type: 'RECEIVE_MAKE_TRANSACTION_RESULT';
+    transactionSuccessful: boolean;
+    userCurrentBalance: number;
+}
+
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = MakeTransactionAction | ReceiveRoundEndTimeAction | ReceiveNewRoundResultAction | ReceiveLoginResultAction;
+type KnownAction = MakeTransactionAction | ReceiveRoundEndTimeAction | ReceiveNewRoundResultAction | ReceiveLoginResultAction | ReceiveMakeTransactionResult;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -99,6 +105,11 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
             return {
                 ...state,
                 currentBalance: state.currentBalance === undefined ? 0 : state.currentBalance - action.amount
+            };
+        case 'RECEIVE_MAKE_TRANSACTION_RESULT':
+            return {
+                ...state,
+                currentBalance: action.userCurrentBalance
             };
         case 'RECEIVE_NEW_ROUND_RESULT':
             return {
