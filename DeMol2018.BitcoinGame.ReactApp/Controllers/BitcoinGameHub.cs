@@ -58,14 +58,14 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
 
             if (!player.IsAdmin)
             {
-                return Clients.Caller.SendAsync("StartNewRoundResult", new {
+                return Clients.Caller.SendAsync("StartNewRoundResult", new StartNewRoundResult {
                     callSuccessful = false
                 });
             }
 
             var newRound = _roundService.StartNewRound(TimeSpan.FromMinutes(lengthOfNewRoundInMinutes));
 
-            return Clients.All.SendAsync("StartNewRoundResult", new {
+            return Clients.All.SendAsync("StartNewRoundResult", new StartNewRoundResult {
                 callSuccessful = true,
                 newRoundNumber = newRound.RoundNumber,
                 newRoundEndTime = newRound.EndTime
