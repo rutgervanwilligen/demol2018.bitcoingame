@@ -6,6 +6,6 @@ namespace DeMol2018.BitcoinGame.ReactApp.ResultObjects
     {
         public bool callSuccessful { get; set; }
         public int? newRoundNumber { get; set; }
-        public DateTime? newRoundEndTime { get; set; }
+        public string newRoundEndTime { get; set; }
     }
 }

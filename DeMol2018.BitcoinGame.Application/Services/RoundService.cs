@@ -10,12 +10,14 @@ namespace DeMol2018.BitcoinGame.Application.Services
     public class RoundService
     {
         private RoundRepository RoundRepository { get; set; }
+        private GameRepository GameRepository { get; set; }
         private GameService GameService { get; set; }
 
         public RoundService(GameService gameService, BitcoinGameDbContext dbContext)
         {
             GameService = gameService;
             RoundRepository = new RoundRepository(dbContext);
+            GameRepository = new GameRepository(dbContext);
         }
 
         public Round StartNewRound(TimeSpan roundLength)
@@ -26,6 +28,8 @@ namespace DeMol2018.BitcoinGame.Application.Services
                 GameId = currentGame.Id,
                 RoundNumber = currentGame.Rounds.Any() ? currentGame.Rounds.Max(x => x.RoundNumber) + 1 : 1
             };
+
+            MarkAllGamesInGameFinished(currentGame.Id);
             
             round.Start(roundLength);
 
@@ -33,6 +37,20 @@ namespace DeMol2018.BitcoinGame.Application.Services
             RoundRepository.SaveChanges();
 
             return round;
+        }
+
+        private void MarkAllGamesInGameFinished(Guid gameId)
+        {
+            var now = DateTime.UtcNow;
+            var game = GameRepository.GetBy(x => x.Id == gameId);
+
+            foreach (var round in game.Rounds)
+            {
+                if (round.EndTime > now)
+                {
+                    round.EndTime = now;
+                }
+            }
         }
 
         public Round GetCurrentRound()

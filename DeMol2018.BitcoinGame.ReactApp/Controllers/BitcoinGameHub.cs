@@ -46,7 +46,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 UpdatedState = new UpdatedStateResult {
                     UserWalletAddress = wallet.Address,
                     UserCurrentBalance = currentRound == null ? wallet.StartAmount : wallet.GetCurrentBalanceInRound(currentRound.RoundNumber),
-                    CurrentRoundEndTime = currentRound?.EndTime,
+                    CurrentRoundEndTime = currentRound?.EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                     CurrentRoundNumber = currentRound?.RoundNumber
                 }
             });
@@ -68,7 +68,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             return Clients.All.SendAsync("StartNewRoundResult", new StartNewRoundResult {
                 callSuccessful = true,
                 newRoundNumber = newRound.RoundNumber,
-                newRoundEndTime = newRound.EndTime
+                newRoundEndTime = newRound.EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ")
             });
         }
         

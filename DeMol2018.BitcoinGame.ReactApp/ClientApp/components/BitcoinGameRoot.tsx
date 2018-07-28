@@ -1,5 +1,4 @@
 import * as React from 'react';
-import RoundCountdownTimer from "./RoundCountdownTimer";
 import * as BitcoinGameStore from "../store/BitcoinGame";
 import {connect} from "react-redux";
 import {ApplicationState} from "../store";
@@ -7,6 +6,7 @@ import Login from "./Login";
 import Wallet from "./Wallet";
 import MakeTransaction from "./MakeTransaction";
 import AdminPanel from "./AdminPanel";
+import RoundManager from "./RoundManager";
 
 type BitcoinGameProps =
     BitcoinGameStore.BitcoinGameState
@@ -38,7 +38,7 @@ class BitcoinGameRoot extends React.Component<BitcoinGameProps> {
         if (isAdmin) {
             return (
                 <div>
-                    <RoundCountdownTimer />
+                    <RoundManager />
                     <AdminPanel />
                 </div>
             )
@@ -46,7 +46,7 @@ class BitcoinGameRoot extends React.Component<BitcoinGameProps> {
 
         return (
             <div>
-                <RoundCountdownTimer />
+                <RoundManager />
                 <Wallet />
                 <MakeTransaction />
             </div>

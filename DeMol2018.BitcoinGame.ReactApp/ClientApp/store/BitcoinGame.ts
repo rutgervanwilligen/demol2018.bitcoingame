@@ -1,5 +1,6 @@
 import { Action, Reducer } from 'redux';
 import { AppThunkAction } from './';
+import {RoundCountdownTimerState} from "./RoundCountdownTimer";
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -25,7 +26,7 @@ interface MakeTransactionAction {
     amount: number;
 }
 
-interface ReceiveLoginResultAction {
+export interface ReceiveLoginResultAction {
     type: 'RECEIVE_LOGIN_RESULT';
     loginSuccessful: boolean;
     isAdmin: boolean;
@@ -33,13 +34,13 @@ interface ReceiveLoginResultAction {
     userWalletAddress?: number;
     userCurrentBalance?: number;
     currentRoundNumber: number;
-    currentRoundEndTime?: Date;
+    currentRoundEndTime?: string;
 }
 
-interface ReceiveNewRoundResultAction {
+export interface ReceiveNewRoundResultAction {
     type: 'RECEIVE_NEW_ROUND_RESULT';
     newRoundNumber: number;
-    newRoundEndTime: Date
+    newRoundEndTime: string;
 }
 
 interface ReceiveRoundEndTimeAction {
@@ -87,7 +88,7 @@ const unloadedState: BitcoinGameState = {
 
 export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
-    console.log("acctiiieee");
+    console.log("acctiiieee in de BitcoinGameState");
     console.log(action);
     switch (action.type) {
         case 'RECEIVE_LOGIN_RESULT':
@@ -98,7 +99,7 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 playerGuid: action.loginSuccessful ? action.playerGuid : '',
                 usersWalletAddress: action.userWalletAddress,
                 currentBalance: action.userCurrentBalance,
-                currentRoundEndTime: action.currentRoundEndTime,
+                currentRoundEndTime: action.currentRoundEndTime != null ? new Date(action.currentRoundEndTime) : undefined,
                 currentRoundNumber: action.currentRoundNumber
             };
         case 'MAKE_TRANSACTION':
@@ -115,7 +116,7 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
             return {
                 ...state,
                 currentRoundNumber: action.newRoundNumber,
-                currentRoundEndTime: action.newRoundEndTime
+                currentRoundEndTime: new Date(action.newRoundEndTime)
             };
         case 'RECEIVE_ROUND_END_TIME':
             // Only accept the incoming data if it matches the most recent request. This ensures we correctly
@@ -123,7 +124,7 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
 //            if (action.startDateIndex === state.startDateIndex) {
             return {
                 ...state,
-                currentRoundEndTime: action.endTime
+                currentRoundEndTime: action.endTime != null ? new Date(action.endTime) : undefined,
             };
 //            }
 //            break;
