@@ -9,10 +9,12 @@ type WalletProps =
 
 class Wallet extends React.Component<WalletProps> {
     public render() {
-        return  <div className="wallet">
-                    <h2>Mijn walletadres: { this.props.usersWalletAddress }</h2>
-                    <h2>Mijn saldo: { this.props.currentBalance }</h2>
-                </div>;
+        return (
+            <div className="wallet">
+                <h2>Mijn walletadres: { this.props.usersWalletAddress }</h2>
+                <h2>Mijn saldo: { this.props.currentBalance }</h2>
+            </div>
+        );
     }
 }
 

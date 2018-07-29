@@ -26,6 +26,15 @@ class Wallet extends React.Component<MakeTransactionProps> {
         this.setReceiverAddressInputRef = this.setReceiverAddressInputRef.bind(this);
     }
     
+    makeTransactionAndClearFields = () => {
+        let receiverAddress = +this.receiverAddressInput.value;
+        let amount = +this.amountInput.value;
+
+        this.props.makeTransaction(this.props.playerGuid, receiverAddress, amount);
+
+        // TODO Clear fields
+    };
+
     public render() {
         return (
             <div className="makeTransaction">
@@ -34,7 +43,7 @@ class Wallet extends React.Component<MakeTransactionProps> {
                 <input className="ïnputField" placeholder='Hoeveelheid' ref={this.setAmountInputRef} />
                 <label>Ontvangstadres</label>
                 <input className="ïnputField" placeholder='Ontvangstadres' ref={this.setReceiverAddressInputRef} />
-                <button onClick={() => this.props.makeTransaction(this.props.playerGuid, +this.receiverAddressInput.value, +this.amountInput.value )}>Verstuur</button>
+                <button onClick={this.makeTransactionAndClearFields}>Verstuur</button>
             </div>
         );
     }

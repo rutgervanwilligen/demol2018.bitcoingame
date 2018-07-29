@@ -1,6 +1,5 @@
 import { Action, Reducer } from 'redux';
 import { AppThunkAction } from './';
-import {RoundCountdownTimerState} from "./RoundCountdownTimer";
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
