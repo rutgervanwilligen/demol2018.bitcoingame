@@ -26,7 +26,6 @@ namespace DeMol2018.BitcoinGame.ReactApp
             services.AddDbContext<BitcoinGameDbContext>(options => options.UseSqlServer(connectionString));
 
             services.AddTransient<GameService>();
-            services.AddTransient<RoundService>();
             services.AddTransient<PlayerService>();
             services.AddTransient<TransactionService>();
             services.AddTransient<WalletService>();

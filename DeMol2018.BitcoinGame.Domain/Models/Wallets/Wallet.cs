@@ -23,15 +23,17 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
 
         public abstract bool WalletIsClosed();
 
-        public int GetCurrentBalanceInRound(int currentRoundNumber)
+        public int GetCurrentBalanceInGameAndRound(Guid gameId, int roundNumber)
         {
             // All received amounts excluding the current round
             var receivedAmount = IncomingTransactions
-                .Where(x => x.RoundNumber < currentRoundNumber)
+                .Where(x => x.GameId == gameId &&
+                            x.RoundNumber < roundNumber)
                 .Sum(x => x.Amount);
 
             // All sent amounds including the current round
             var sentAmount = OutgoingTransactions
+                .Where(x => x.GameId == gameId)
                 .Sum(x => x.Amount);
 
             return StartAmount + receivedAmount - sentAmount;
@@ -69,7 +71,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
                 int currentRoundNumber,
                 int? invalidReceiverAddress)
         {
-            var currentBalance = GetCurrentBalanceInRound(currentRoundNumber);
+            var currentBalance = GetCurrentBalanceInGameAndRound(currentGameId, currentRoundNumber);
 
             if (amount > currentBalance) {
                 throw new InsufficientFundsException("Balance is too low to make transaction.");

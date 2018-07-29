@@ -36,12 +36,6 @@ export interface ReceiveLoginResultAction {
     currentRoundEndTime?: string;
 }
 
-export interface ReceiveNewRoundResultAction {
-    type: 'RECEIVE_NEW_ROUND_RESULT';
-    newRoundNumber: number;
-    newRoundEndTime: string;
-}
-
 export interface ReceiveNewGameStateAction {
     type: 'RECEIVE_NEW_GAME_STATE';
     currentRoundNumber: number;
@@ -62,7 +56,7 @@ interface ReceiveMakeTransactionResult {
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = MakeTransactionAction | ReceiveRoundEndTimeAction | ReceiveNewRoundResultAction | ReceiveLoginResultAction | ReceiveMakeTransactionResult | ReceiveNewGameStateAction;
+type KnownAction = MakeTransactionAction | ReceiveRoundEndTimeAction | ReceiveLoginResultAction | ReceiveMakeTransactionResult | ReceiveNewGameStateAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -124,12 +118,6 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
             return {
                 ...state,
                 currentBalance: action.userCurrentBalance
-            };
-        case 'RECEIVE_NEW_ROUND_RESULT':
-            return {
-                ...state,
-                currentRoundNumber: action.newRoundNumber,
-                currentRoundEndTime: new Date(action.newRoundEndTime)
             };
         case 'RECEIVE_ROUND_END_TIME':
             // Only accept the incoming data if it matches the most recent request. This ensures we correctly

@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using DeMol2018.BitcoinGame.DAL;
+using DeMol2018.BitcoinGame.DAL.Entities;
 using DeMol2018.BitcoinGame.DAL.Mappers;
 using DeMol2018.BitcoinGame.DAL.Repositories;
 using DeMol2018.BitcoinGame.Domain.Models;
@@ -8,13 +10,11 @@ namespace DeMol2018.BitcoinGame.Application.Services
 {
     public class GameService
     {
-        private GameRepository GameRepository { get; set; }
-        private RoundRepository RoundRepository { get; set; }
+        private GameRepository GameRepository { get; }
 
         public GameService(BitcoinGameDbContext dbContext)
         {
             GameRepository = new GameRepository(dbContext);
-            RoundRepository = new RoundRepository(dbContext);
         }
         
         public Game FindCurrentGame()
@@ -34,6 +34,62 @@ namespace DeMol2018.BitcoinGame.Application.Services
             GameRepository.SaveChanges();
 
             return newGame;
+        }
+
+        public Round StartNewRound(TimeSpan roundLength)
+        {
+            var currentGame = GameRepository.FindCurrentGame();
+
+            if (currentGame == null)
+            {
+                return null;
+            }
+
+            var newRound = new Round {
+                GameId = currentGame.Id,
+                RoundNumber = currentGame.Rounds.Any() ? currentGame.Rounds.Max(x => x.RoundNumber) + 1 : 1
+            };
+
+            MarkAllRoundsInGameFinished(currentGame);
+
+            newRound.Start(roundLength);
+
+            currentGame.Rounds.Add(newRound.ToEntity());
+
+            GameRepository.SaveChanges();
+
+            return newRound;
+        }
+
+        public Round GetCurrentRound()
+        {
+            var currentGame = GameRepository.FindCurrentGame();
+
+            if (currentGame == null)
+            {
+                return null;
+            }
+
+            var rounds = currentGame.Rounds.Select(x => x.ToDomainModel()).ToList();
+
+            if (!rounds.Any(x => x.IsActive)) {
+                return null;
+            }
+
+            return rounds.OrderByDescending(x => x.RoundNumber).First();
+        }
+
+        private void MarkAllRoundsInGameFinished(GameEntity game)
+        {
+            var now = DateTime.UtcNow;
+
+            foreach (var round in game.Rounds)
+            {
+                if (round.EndTime > now)
+                {
+                    round.EndTime = now;
+                }
+            }
         }
 
         private void InactivateAllOldGames()

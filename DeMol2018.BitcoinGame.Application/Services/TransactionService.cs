@@ -8,19 +8,17 @@ namespace DeMol2018.BitcoinGame.Application.Services
     public class TransactionService
     {
         private WalletRepository WalletRepository { get; }
-        private RoundService RoundService { get; }
         private GameService GameService { get; }
 
-        public TransactionService(RoundService roundService, GameService gameService, BitcoinGameDbContext dbContext)
+        public TransactionService(GameService gameService, BitcoinGameDbContext dbContext)
         {
             WalletRepository = new WalletRepository(dbContext);
-            RoundService = roundService;
             GameService = gameService;
         }
 
         public void MakeTransaction(int senderWalletAddress, int receiverWalletAddress, int amount)
         {
-            var currentRound = RoundService.GetCurrentRound();
+            var currentRound = GameService.GetCurrentRound();
             var currentGame = GameService.FindCurrentGame();
 
             if (currentRound == null)

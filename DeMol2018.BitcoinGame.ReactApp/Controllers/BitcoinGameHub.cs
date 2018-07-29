@@ -11,18 +11,18 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
         private readonly TransactionService _transactionService;
         private readonly PlayerService _playerService;
         private readonly WalletService _walletService;
-        private readonly RoundService _roundService;
+        private readonly GameService _gameService;
 
         public BitcoinGameHub(
                 TransactionService transactionService,
                 PlayerService playerService,
                 WalletService walletService,
-                RoundService roundService)
+                GameService gameService)
         {
             _transactionService = transactionService;
             _playerService = playerService;
             _walletService = walletService;
-            _roundService = roundService;
+            _gameService = gameService;
         }
 
         public Task Login(string name, int code)
@@ -37,7 +37,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             }
 
             var wallet = _walletService.GetWalletByPlayerId(player.Id);
-            var currentRound = _roundService.GetCurrentRound();
+            var currentRound = _gameService.GetCurrentRound();
 
             return Clients.Caller.SendAsync("LoginResult", new LoginResult {
                 LoginSuccessful = true,
@@ -45,7 +45,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 PlayerGuid = player.Id,
                 UpdatedState = new UpdatedStateResult {
                     UserWalletAddress = wallet.Address,
-                    UserCurrentBalance = currentRound == null ? wallet.StartAmount : wallet.GetCurrentBalanceInRound(currentRound.RoundNumber),
+                    UserCurrentBalance = currentRound == null ? wallet.StartAmount : wallet.GetCurrentBalanceInGameAndRound(currentRound.GameId, currentRound.RoundNumber),
                     CurrentRoundEndTime = currentRound?.EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                     CurrentRoundNumber = currentRound?.RoundNumber
                 }
@@ -64,16 +64,34 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             var player = _playerService.GetById(invokerId.Value);
 
             var wallet = _walletService.GetWalletByPlayerId(player.Id);
-            var currentRound = _roundService.GetCurrentRound();
+            var currentRound = _gameService.GetCurrentRound();
 
             return Clients.Caller.SendAsync("FetchNewGameStateResult", new FetchNewGameStateResult {
                 CallSuccessful = true,
                 UpdatedState = new UpdatedStateResult {
                     UserWalletAddress = wallet.Address,
-                    UserCurrentBalance = currentRound == null ? wallet.StartAmount : wallet.GetCurrentBalanceInRound(currentRound.RoundNumber),
+                    UserCurrentBalance = currentRound == null ? wallet.StartAmount : wallet.GetCurrentBalanceInGameAndRound(currentRound.GameId, currentRound.RoundNumber),
                     CurrentRoundEndTime = currentRound?.EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                     CurrentRoundNumber = currentRound?.RoundNumber
                 }
+            });
+        }
+
+        public Task StartNewGame(Guid invokerId)
+        {
+            var player = _playerService.GetById(invokerId);
+
+            if (!player.IsAdmin)
+            {
+                return Clients.Caller.SendAsync("StartNewGameResult", new StartNewRoundResult {
+                    CallSuccessful = false
+                });
+            }
+
+            _gameService.StartNewGame();
+
+            return Clients.Caller.SendAsync("StartNewGameResult", new StartNewRoundResult {
+                CallSuccessful = true
             });
         }
 
@@ -88,14 +106,14 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 });
             }
 
-            _roundService.StartNewRound(TimeSpan.FromMinutes(lengthOfNewRoundInMinutes));
+            _gameService.StartNewRound(TimeSpan.FromMinutes(lengthOfNewRoundInMinutes));
 
             return Clients.All.SendAsync("AnnounceNewRoundResult");
         }
         
         public Task MakeTransaction(Guid invokerId, int receiverWalletAddress, int amount)
         {
-            var currentRound = _roundService.GetCurrentRound();
+            var currentRound = _gameService.GetCurrentRound();
 
             if (currentRound == null)
             {
@@ -114,7 +132,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             {                
                 return Clients.Caller.SendAsync("MakeTransactionResult", new {
                     transactionSuccessful = false,
-                    userCurrentBalance = senderWallet.GetCurrentBalanceInRound(currentRound.RoundNumber)
+                    userCurrentBalance = senderWallet.GetCurrentBalanceInGameAndRound(currentRound.GameId, currentRound.RoundNumber)
                 });
             }
 
@@ -122,7 +140,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
 
             return Clients.Caller.SendAsync("MakeTransactionResult", new {
                 transactionSuccessful = true,
-                userCurrentBalance = updatedSenderWallet.GetCurrentBalanceInRound(currentRound.RoundNumber)
+                userCurrentBalance = updatedSenderWallet.GetCurrentBalanceInGameAndRound(currentRound.GameId, currentRound.RoundNumber)
             });
         }
     }

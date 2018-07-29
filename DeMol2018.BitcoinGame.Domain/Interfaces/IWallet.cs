@@ -1,9 +1,11 @@
-﻿namespace DeMol2018.BitcoinGame.Domain.Interfaces
+﻿using System;
+
+namespace DeMol2018.BitcoinGame.Domain.Interfaces
 {
     public interface IWallet
     {
         bool WalletIsClosed();
-        int GetCurrentBalanceInRound(int currentRoundNumber);
+        int GetCurrentBalanceInGameAndRound(Guid gameId, int roundNumber);
         void WriteTransactions();
     }
 }

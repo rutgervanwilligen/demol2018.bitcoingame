@@ -42,6 +42,14 @@ export function signalRInvokeMiddleware() {
                     
                 });
                 break;
+
+            case "START_NEW_GAME":
+                connection.invoke("StartNewGame", action.invokerId).then(function () {
+
+                }).catch(function () {
+
+                });
+                break;
             default:
                 console.log("Unknown action (" + action.type + "). SignalR hub is not invoked.");
                 break;
@@ -85,8 +93,7 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
     connection.on('StartNewRoundResult', data => {
         store.dispatch({
             type: 'RECEIVE_NEW_ROUND_RESULT',
-            newRoundNumber: data.newRoundNumber,
-            newRoundEndTime: data.newRoundEndTime
+            callSuccessful: data.callSuccessful
         });
     });
 

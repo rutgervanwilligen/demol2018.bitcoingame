@@ -1,5 +1,5 @@
 import {Action, Reducer} from 'redux';
-import {ReceiveLoginResultAction, ReceiveNewGameStateAction, ReceiveNewRoundResultAction} from "./BitcoinGame";
+import {ReceiveLoginResultAction, ReceiveNewGameStateAction} from "./BitcoinGame";
 import {AppThunkAction} from "./index";
 
 // -----------------
