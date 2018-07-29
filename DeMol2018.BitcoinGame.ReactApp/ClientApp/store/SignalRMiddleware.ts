@@ -26,6 +26,14 @@ export function signalRInvokeMiddleware() {
                     console.log("login rejected");
                 });
                 break;
+
+            case "FETCH_NEW_GAME_STATE":
+                connection.invoke("FetchNewGameState", action.playerGuid).then(function () {
+                    console.log("fetch new game state fulfilled");
+                }).catch(function () {
+                    console.log("fetch new game state rejected");
+                });
+                break;
                 
             case "START_NEW_ROUND":
                 connection.invoke("StartNewRound", action.invokerId, action.lengthOfNewRoundInMinutes).then(function () {
@@ -46,10 +54,6 @@ export function signalRInvokeMiddleware() {
 export function signalRRegisterCommands(store: Store<ApplicationState>) {
 
     connection.on('LoginResult', loginResult => {
-       
-        console.log('login result:');
-        console.log(loginResult);
-        
         store.dispatch({
             type: 'RECEIVE_LOGIN_RESULT',
             loginSuccessful: loginResult.loginSuccessful,
@@ -61,12 +65,24 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
             currentRoundEndTime: loginResult.updatedState.currentRoundEndTime
         });
     });
-    
+
+    connection.on('AnnounceNewRoundResult', () => {
+        store.dispatch({
+            type: 'FETCH_NEW_GAME_STATE',
+            playerGuid: store.getState().bitcoinGame.playerGuid
+        });
+    });
+
+    connection.on('FetchNewGameStateResult', fetchNewGameStateResult => {
+        store.dispatch({
+            type: 'RECEIVE_NEW_GAME_STATE',
+            currentRoundNumber: fetchNewGameStateResult.updatedState.currentRoundNumber,
+            currentRoundEndTime: fetchNewGameStateResult.updatedState.currentRoundEndTime,
+            userCurrentBalance: fetchNewGameStateResult.updatedState.userCurrentBalance
+        });
+    });
+
     connection.on('StartNewRoundResult', data => {
-
-        console.log('start new round result');
-        console.log(data);
-
         store.dispatch({
             type: 'RECEIVE_NEW_ROUND_RESULT',
             newRoundNumber: data.newRoundNumber,
@@ -75,10 +91,6 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
     });
 
     connection.on('MakeTransactionResult', makeTransactionResult => {
-
-        console.log('make transaction result');
-        console.log(makeTransactionResult);
-
         store.dispatch({
             type: 'RECEIVE_MAKE_TRANSACTION_RESULT',
             transactionSuccessful: makeTransactionResult.transactionSuccessful,

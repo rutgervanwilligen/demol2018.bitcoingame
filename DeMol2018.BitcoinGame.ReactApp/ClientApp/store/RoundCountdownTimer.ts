@@ -1,5 +1,5 @@
 import {Action, Reducer} from 'redux';
-import {ReceiveLoginResultAction, ReceiveNewRoundResultAction} from "./BitcoinGame";
+import {ReceiveLoginResultAction, ReceiveNewGameStateAction, ReceiveNewRoundResultAction} from "./BitcoinGame";
 import {AppThunkAction} from "./index";
 
 // -----------------
@@ -23,7 +23,7 @@ interface UpdateTimeLeftAction {
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = ReceiveLoginResultAction | UpdateTimeLeftAction | ReceiveNewRoundResultAction;
+type KnownAction = ReceiveLoginResultAction | UpdateTimeLeftAction | ReceiveNewGameStateAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -61,10 +61,10 @@ export const reducer: Reducer<RoundCountdownTimerState> = (state: RoundCountdown
                 ...state,
                 currentEndTime: new Date(action.currentRoundEndTime)
             };
-        case 'RECEIVE_NEW_ROUND_RESULT':
+        case 'RECEIVE_NEW_GAME_STATE':
             return {
                 ...state,
-                currentEndTime: new Date(action.newRoundEndTime)
+                currentEndTime: new Date(action.currentRoundEndTime)
             };
         case 'UPDATE_TIME_LEFT':
             return {

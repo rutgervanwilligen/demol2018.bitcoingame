@@ -52,6 +52,31 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             });
         }
 
+        public Task FetchNewGameState(Guid? invokerId)
+        {
+            if (!invokerId.HasValue)
+            {
+                return Clients.Caller.SendAsync("FetchNewGameStateResult", new FetchNewGameStateResult {
+                    CallSuccessful = false
+                });
+            }
+
+            var player = _playerService.GetById(invokerId.Value);
+
+            var wallet = _walletService.GetWalletByPlayerId(player.Id);
+            var currentRound = _roundService.GetCurrentRound();
+
+            return Clients.Caller.SendAsync("FetchNewGameStateResult", new FetchNewGameStateResult {
+                CallSuccessful = true,
+                UpdatedState = new UpdatedStateResult {
+                    UserWalletAddress = wallet.Address,
+                    UserCurrentBalance = currentRound == null ? wallet.StartAmount : wallet.GetCurrentBalanceInRound(currentRound.RoundNumber),
+                    CurrentRoundEndTime = currentRound?.EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                    CurrentRoundNumber = currentRound?.RoundNumber
+                }
+            });
+        }
+
         public Task StartNewRound(Guid invokerId, int lengthOfNewRoundInMinutes)
         {
             var player = _playerService.GetById(invokerId);
@@ -59,17 +84,13 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             if (!player.IsAdmin)
             {
                 return Clients.Caller.SendAsync("StartNewRoundResult", new StartNewRoundResult {
-                    callSuccessful = false
+                    CallSuccessful = false
                 });
             }
 
-            var newRound = _roundService.StartNewRound(TimeSpan.FromMinutes(lengthOfNewRoundInMinutes));
+            _roundService.StartNewRound(TimeSpan.FromMinutes(lengthOfNewRoundInMinutes));
 
-            return Clients.All.SendAsync("StartNewRoundResult", new StartNewRoundResult {
-                callSuccessful = true,
-                newRoundNumber = newRound.RoundNumber,
-                newRoundEndTime = newRound.EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ")
-            });
+            return Clients.All.SendAsync("AnnounceNewRoundResult");
         }
         
         public Task MakeTransaction(Guid invokerId, int receiverWalletAddress, int amount)
