@@ -2,11 +2,12 @@ body {
     background-color: #000000;
     color: #90ee90;
     text-align: center;
+    font-family: 'OCR A Extended', 'Courier New';
 }
 
 @font-face {
     font-family: "OCR A Extended";
-    src: url("./ocraext.ttf");
+    src: url("ocraext.ttf");
 }
 
 .login {
