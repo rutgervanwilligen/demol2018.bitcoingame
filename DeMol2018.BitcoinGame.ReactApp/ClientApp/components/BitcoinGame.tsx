@@ -7,22 +7,13 @@ import Wallet from "./Wallet";
 import MakeTransaction from "./MakeTransaction";
 import AdminPanel from "./AdminPanel";
 import RoundManager from "./RoundManager";
+import GameManager from "./GameManager";
 
 type BitcoinGameProps =
     BitcoinGameStore.BitcoinGameState
     & typeof BitcoinGameStore.actionCreators;
 
-class BitcoinGameRoot extends React.Component<BitcoinGameProps> {
-    constructor(props: any) {
-        super(props);
-
-        this.state = {
-            currentRoundNumber: this.props.currentRoundNumber,
-            currentRoundEndTime: this.props.currentRoundEndTime,
-            currentBalance: this.props.currentBalance
-        };
-    }
-
+class BitcoinGame extends React.Component<BitcoinGameProps> {
     public render() {
         const isLoggedIn = this.props.isLoggedIn;
         const isAdmin = this.props.isAdmin;
@@ -38,7 +29,7 @@ class BitcoinGameRoot extends React.Component<BitcoinGameProps> {
         if (isAdmin) {
             return (
                 <div>
-                    <RoundManager />
+                    <GameManager />
                     <AdminPanel />
                 </div>
             )
@@ -46,7 +37,7 @@ class BitcoinGameRoot extends React.Component<BitcoinGameProps> {
 
         return (
             <div>
-                <RoundManager />
+                <GameManager />
                 <Wallet />
                 <MakeTransaction />
             </div>
@@ -58,4 +49,4 @@ class BitcoinGameRoot extends React.Component<BitcoinGameProps> {
 export default connect(
     (state: ApplicationState) => state.bitcoinGame, // Selects which state properties are merged into the component's props
     BitcoinGameStore.actionCreators // Selects which action creators are merged into the component's props
-)(BitcoinGameRoot);// as typeof BitcoinGameRoot;
+)(BitcoinGame);// as typeof BitcoinGameRoot;

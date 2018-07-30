@@ -35,7 +35,7 @@ class RoundCountdownTimer extends React.Component<RoundCountdownTimerProps> {
     getUpdatedClockValues = () => {
 
         let timeDiff = (this.props.currentEndTime.getTime() - new Date().getTime());
-        let totalSecondsLeft = Math.floor(timeDiff / 1000);
+        let totalSecondsLeft = Math.ceil(timeDiff / 1000);
 
         let minuteDivisor = totalSecondsLeft % (60 * 60);
         let minutesLeft = Math.floor(minuteDivisor / 60);
@@ -57,6 +57,13 @@ class RoundCountdownTimer extends React.Component<RoundCountdownTimerProps> {
 
         if (updatedClockValues.totalSecondsLeft == 0) {
             clearInterval(this.timer);
+
+            let fetchNewGameState = this.props.fetchNewGameState;
+            let playerGuid = this.props.playerGuid;
+
+            setTimeout(function () {
+                fetchNewGameState(playerGuid)
+            }, 1000);
         }
     };
 

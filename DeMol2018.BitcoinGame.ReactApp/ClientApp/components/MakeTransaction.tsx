@@ -30,9 +30,10 @@ class Wallet extends React.Component<MakeTransactionProps> {
         let receiverAddress = +this.receiverAddressInput.value;
         let amount = +this.amountInput.value;
 
-        this.props.makeTransaction(this.props.playerGuid, receiverAddress, amount);
+        this.props.makeTransaction(this.props.playerGuid!, receiverAddress, amount);
 
-        // TODO Clear fields
+        this.receiverAddressInput.value = '';
+        this.amountInput.value = '';
     };
 
     public render() {

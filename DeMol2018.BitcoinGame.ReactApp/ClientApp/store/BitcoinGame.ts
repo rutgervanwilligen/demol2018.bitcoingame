@@ -7,8 +7,9 @@ import { AppThunkAction } from './';
 export interface BitcoinGameState {
     isLoggedIn: boolean;
     isAdmin: boolean;
-    playerGuid: string;
-    currentRoundNumber: number;
+    playerGuid?: string;
+    currentGameId?: string;
+    currentRoundNumber?: number;
     currentRoundEndTime?: Date;
     currentBalance?: number;
     usersWalletAddress?: number;
@@ -30,22 +31,19 @@ export interface ReceiveLoginResultAction {
     loginSuccessful: boolean;
     isAdmin: boolean;
     playerGuid: string;
+    currentGameId?: string;
     userWalletAddress?: number;
     userCurrentBalance?: number;
-    currentRoundNumber: number;
+    currentRoundNumber?: number;
     currentRoundEndTime?: string;
 }
 
 export interface ReceiveNewGameStateAction {
     type: 'RECEIVE_NEW_GAME_STATE';
-    currentRoundNumber: number;
-    currentRoundEndTime: string;
-    userCurrentBalance: number;
-}
-
-interface ReceiveRoundEndTimeAction {
-    type: 'RECEIVE_ROUND_END_TIME';
-    endTime: Date;
+    currentGameId?: string;
+    currentRoundNumber?: number;
+    currentRoundEndTime?: string;
+    userCurrentBalance?: number;
 }
 
 interface ReceiveMakeTransactionResult {
@@ -56,7 +54,7 @@ interface ReceiveMakeTransactionResult {
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = MakeTransactionAction | ReceiveRoundEndTimeAction | ReceiveLoginResultAction | ReceiveMakeTransactionResult | ReceiveNewGameStateAction;
+type KnownAction = MakeTransactionAction | ReceiveLoginResultAction | ReceiveMakeTransactionResult | ReceiveNewGameStateAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -79,8 +77,9 @@ export const actionCreators = {
 const unloadedState: BitcoinGameState = {
     isLoggedIn: false,
     isAdmin: false,
-    playerGuid: '',
-    currentRoundNumber: 0,
+    playerGuid: undefined,
+    currentGameId: undefined,
+    currentRoundNumber: undefined,
     currentRoundEndTime: undefined,
     currentBalance: undefined,
     usersWalletAddress: undefined
@@ -88,15 +87,15 @@ const unloadedState: BitcoinGameState = {
 
 export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
-    console.log("acctiiieee in de BitcoinGameState");
-    console.log(action);
+
     switch (action.type) {
         case 'RECEIVE_NEW_GAME_STATE':
             return {
                 ...state,
+                currentGameId: action.currentGameId,
                 currentBalance: action.userCurrentBalance,
                 currentRoundNumber: action.currentRoundNumber,
-                currentRoundEndTime: new Date(action.currentRoundEndTime)
+                currentRoundEndTime: action.currentRoundEndTime != null ? new Date(action.currentRoundEndTime) : undefined
             };
         case 'RECEIVE_LOGIN_RESULT':
             return {
@@ -105,6 +104,7 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 isAdmin: action.isAdmin,
                 playerGuid: action.loginSuccessful ? action.playerGuid : '',
                 usersWalletAddress: action.userWalletAddress,
+                currentGameId: action.currentGameId,
                 currentBalance: action.userCurrentBalance,
                 currentRoundEndTime: action.currentRoundEndTime != null ? new Date(action.currentRoundEndTime) : undefined,
                 currentRoundNumber: action.currentRoundNumber
@@ -119,16 +119,6 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 ...state,
                 currentBalance: action.userCurrentBalance
             };
-        case 'RECEIVE_ROUND_END_TIME':
-            // Only accept the incoming data if it matches the most recent request. This ensures we correctly
-            // handle out-of-order responses.
-//            if (action.startDateIndex === state.startDateIndex) {
-            return {
-                ...state,
-                currentRoundEndTime: action.endTime != null ? new Date(action.endTime) : undefined,
-            };
-//            }
-//            break;
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above
             const exhaustiveCheck: never = action;

@@ -10,6 +10,8 @@ let connection = new signalR.HubConnection("http://localhost:63426/bitcoinGameHu
 export function signalRInvokeMiddleware() {
     return (next: any) => async (action: any) => {
 
+        let ignoredActionTypes = ['UPDATE_TIME_LEFT'];
+
         switch (action.type) {
             case "MAKE_TRANSACTION":
                 connection.invoke("MakeTransaction", action.invokerId, action.receiverAddress, action.amount).then(function () {
@@ -51,7 +53,10 @@ export function signalRInvokeMiddleware() {
                 });
                 break;
             default:
-                console.log("Unknown action (" + action.type + "). SignalR hub is not invoked.");
+                if (!action.type.startsWith('RECEIVE') && ignoredActionTypes.indexOf(action.type) == -1 ) {
+                    console.log("Unknown action (" + action.type + "). SignalR hub is not invoked.");
+                }
+
                 break;
         }
 
@@ -69,6 +74,7 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
             isAdmin: loginResult.isAdmin,
             userWalletAddress: loginResult.updatedState.userWalletAddress,
             userCurrentBalance: loginResult.updatedState.userCurrentBalance,
+            currentGameId: loginResult.updatedState.currentGameId,
             currentRoundNumber: loginResult.updatedState.currentRoundNumber,
             currentRoundEndTime: loginResult.updatedState.currentRoundEndTime
         });
@@ -84,6 +90,7 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
     connection.on('FetchNewGameStateResult', fetchNewGameStateResult => {
         store.dispatch({
             type: 'RECEIVE_NEW_GAME_STATE',
+            currentGameId: fetchNewGameStateResult.updatedState.currentGameId,
             currentRoundNumber: fetchNewGameStateResult.updatedState.currentRoundNumber,
             currentRoundEndTime: fetchNewGameStateResult.updatedState.currentRoundEndTime,
             userCurrentBalance: fetchNewGameStateResult.updatedState.userCurrentBalance

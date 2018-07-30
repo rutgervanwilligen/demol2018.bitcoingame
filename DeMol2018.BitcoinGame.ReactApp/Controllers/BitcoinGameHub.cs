@@ -37,6 +37,8 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             }
 
             var wallet = _walletService.GetWalletByPlayerId(player.Id);
+
+            var currentGame = _gameService.FindCurrentGame();
             var currentRound = _gameService.GetCurrentRound();
 
             return Clients.Caller.SendAsync("LoginResult", new LoginResult {
@@ -44,6 +46,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 IsAdmin = player.IsAdmin,
                 PlayerGuid = player.Id,
                 UpdatedState = new UpdatedStateResult {
+                    CurrentGameId = currentGame?.Id,
                     UserWalletAddress = wallet.Address,
                     UserCurrentBalance = currentRound == null ? wallet.StartAmount : wallet.GetCurrentBalanceInGameAndRound(currentRound.GameId, currentRound.RoundNumber),
                     CurrentRoundEndTime = currentRound?.EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ"),
@@ -64,11 +67,14 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             var player = _playerService.GetById(invokerId.Value);
 
             var wallet = _walletService.GetWalletByPlayerId(player.Id);
+
+            var currentGame = _gameService.FindCurrentGame();
             var currentRound = _gameService.GetCurrentRound();
 
             return Clients.Caller.SendAsync("FetchNewGameStateResult", new FetchNewGameStateResult {
                 CallSuccessful = true,
                 UpdatedState = new UpdatedStateResult {
+                    CurrentGameId = currentGame?.Id,
                     UserWalletAddress = wallet.Address,
                     UserCurrentBalance = currentRound == null ? wallet.StartAmount : wallet.GetCurrentBalanceInGameAndRound(currentRound.GameId, currentRound.RoundNumber),
                     CurrentRoundEndTime = currentRound?.EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ"),
@@ -90,8 +96,20 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
 
             _gameService.StartNewGame();
 
-            return Clients.Caller.SendAsync("StartNewGameResult", new StartNewRoundResult {
-                CallSuccessful = true
+            var wallet = _walletService.GetWalletByPlayerId(player.Id);
+
+            var currentGame = _gameService.FindCurrentGame();
+            var currentRound = _gameService.GetCurrentRound();
+
+            return Clients.Caller.SendAsync("FetchNewGameStateResult", new FetchNewGameStateResult {
+                CallSuccessful = true,
+                UpdatedState = new UpdatedStateResult {
+                    CurrentGameId = currentGame?.Id,
+                    UserWalletAddress = wallet.Address,
+                    UserCurrentBalance = currentRound == null ? wallet.StartAmount : wallet.GetCurrentBalanceInGameAndRound(currentRound.GameId, currentRound.RoundNumber),
+                    CurrentRoundEndTime = currentRound?.EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                    CurrentRoundNumber = currentRound?.RoundNumber
+                }
             });
         }
 

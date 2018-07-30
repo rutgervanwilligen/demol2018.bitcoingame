@@ -6,6 +6,7 @@ import {AppThunkAction} from "./index";
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface RoundCountdownTimerState {
+    playerGuid: string;
     currentEndTime: Date;
     minutesLeft: number;
     secondsLeft: number;
@@ -20,10 +21,14 @@ interface UpdateTimeLeftAction {
     minutesLeft: number;
 }
 
+interface FetchNewGameStateAction {
+    type: 'FETCH_NEW_GAME_STATE';
+    playerGuid: string;
+}
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = ReceiveLoginResultAction | UpdateTimeLeftAction | ReceiveNewGameStateAction;
+type KnownAction = ReceiveLoginResultAction | UpdateTimeLeftAction | ReceiveNewGameStateAction | FetchNewGameStateAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -36,6 +41,12 @@ export const actionCreators = {
             secondsLeft: secondsLeft,
             minutesLeft: minutesLeft
         });
+    },
+    fetchNewGameState: (playerGuid: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        dispatch({
+            type: 'FETCH_NEW_GAME_STATE',
+            playerGuid: playerGuid
+        });
     }
 };
 
@@ -43,6 +54,7 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
 const unloadedState: RoundCountdownTimerState = {
+    playerGuid: '',
     minutesLeft: 0,
     secondsLeft: 0,
     currentEndTime: new Date()
@@ -50,21 +62,17 @@ const unloadedState: RoundCountdownTimerState = {
 
 export const reducer: Reducer<RoundCountdownTimerState> = (state: RoundCountdownTimerState, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
-    console.log("acctiiieee in de RoundCountdownTimerState");
-    console.log(action);
     switch (action.type) {
         case 'RECEIVE_LOGIN_RESULT':
-            if (action.currentRoundEndTime == null) {
-                return state;
-            }
             return {
                 ...state,
-                currentEndTime: new Date(action.currentRoundEndTime)
+                playerGuid: action.playerGuid,
+                currentEndTime: new Date(action.currentRoundEndTime!)
             };
         case 'RECEIVE_NEW_GAME_STATE':
             return {
                 ...state,
-                currentEndTime: new Date(action.currentRoundEndTime)
+                currentEndTime: new Date(action.currentRoundEndTime!)
             };
         case 'UPDATE_TIME_LEFT':
             return {
@@ -72,6 +80,8 @@ export const reducer: Reducer<RoundCountdownTimerState> = (state: RoundCountdown
                 minutesLeft: action.minutesLeft,
                 secondsLeft: action.secondsLeft
             };
+        case 'FETCH_NEW_GAME_STATE':
+                return state;
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above
             const exhaustiveCheck: never = action;
