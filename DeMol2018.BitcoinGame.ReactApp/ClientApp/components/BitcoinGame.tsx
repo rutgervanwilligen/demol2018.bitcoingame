@@ -4,9 +4,7 @@ import {connect} from "react-redux";
 import {ApplicationState} from "../store";
 import Login from "./Login";
 import Wallet from "./Wallet";
-import MakeTransaction from "./MakeTransaction";
 import AdminPanel from "./AdminPanel";
-import RoundManager from "./RoundManager";
 import GameManager from "./GameManager";
 
 type BitcoinGameProps =
@@ -20,7 +18,7 @@ class BitcoinGame extends React.Component<BitcoinGameProps> {
 
         if (!isLoggedIn) {
             return (
-                <div>
+                <div className="bitcoinGame">
                     <Login />
                 </div>
             )
@@ -28,7 +26,7 @@ class BitcoinGame extends React.Component<BitcoinGameProps> {
         
         if (isAdmin) {
             return (
-                <div>
+                <div className="bitcoinGame">
                     <GameManager />
                     <AdminPanel />
                 </div>
@@ -36,10 +34,9 @@ class BitcoinGame extends React.Component<BitcoinGameProps> {
         } 
 
         return (
-            <div>
+            <div className="bitcoinGame">
                 <GameManager />
                 <Wallet />
-                <MakeTransaction />
             </div>
         );
     }

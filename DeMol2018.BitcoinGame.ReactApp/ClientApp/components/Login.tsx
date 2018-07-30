@@ -30,8 +30,8 @@ class Login extends React.Component<LoginProps> {
     public render() {
         return  <div className="login">
                     <h2>Login</h2>
-                    <input className="ïnputField" placeholder='Naam' ref={this.setNameInputRef} />
-                    <input className="ïnputField" placeholder='Code' ref={this.setCodeInputRef} />
+                    <input className="inputField" placeholder='Naam' ref={this.setNameInputRef} />
+                    <input className="inputField" placeholder='Code' ref={this.setCodeInputRef} />
                     <button onClick={() => this.props.login(this.nameInput.value, this.codeInput.value)}>Login</button>
                 </div>;
     }

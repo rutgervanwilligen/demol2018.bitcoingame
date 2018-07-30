@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using DeMol2018.BitcoinGame.DAL;
 using DeMol2018.BitcoinGame.DAL.Mappers;
 using DeMol2018.BitcoinGame.DAL.Repositories;
@@ -28,6 +29,12 @@ namespace DeMol2018.BitcoinGame.Application.Services
             
             var senderWalletEntity = WalletRepository.GetBy(x => x.Address == senderWalletAddress);
             var senderWallet = senderWalletEntity.ToDomainModel();
+
+            if (amount <= 0)
+            {
+                throw new InvalidTransactionException("Transaction amount should be > 0");
+            }
+
             var receiverWalletEntity = WalletRepository.FindBy(x => x.Address == receiverWalletAddress);
             var receiverWallet = receiverWalletEntity?.ToDomainModel();
 

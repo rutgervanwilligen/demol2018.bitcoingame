@@ -94,7 +94,7 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 ...state,
                 currentGameId: action.currentGameId,
                 currentBalance: action.userCurrentBalance,
-                currentRoundNumber: action.currentRoundNumber,
+                currentRoundNumber: action.currentRoundNumber != null ? action.currentRoundNumber : undefined,
                 currentRoundEndTime: action.currentRoundEndTime != null ? new Date(action.currentRoundEndTime) : undefined
             };
         case 'RECEIVE_LOGIN_RESULT':
@@ -107,7 +107,7 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 currentGameId: action.currentGameId,
                 currentBalance: action.userCurrentBalance,
                 currentRoundEndTime: action.currentRoundEndTime != null ? new Date(action.currentRoundEndTime) : undefined,
-                currentRoundNumber: action.currentRoundNumber
+                currentRoundNumber: action.currentRoundNumber != null ? action.currentRoundNumber : undefined
             };
         case 'MAKE_TRANSACTION':
             return {

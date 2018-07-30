@@ -19,7 +19,7 @@ module.exports = (env) => {
         module: {
             rules: [
                 { test: /\.tsx?$/, include: /ClientApp/, use: 'awesome-typescript-loader?silent=true' },
-                { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' }
+                { test: /\.(ttf|png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' }
             ]
         },
         plugins: [new CheckerPlugin()]
@@ -55,7 +55,6 @@ module.exports = (env) => {
                         workers: 2
                     }
             })
-//            new webpack.optimize.UglifyJsPlugin()
         ])
     });
 
