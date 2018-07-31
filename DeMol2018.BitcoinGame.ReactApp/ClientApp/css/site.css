@@ -7,13 +7,13 @@ body {
 
 @font-face {
     font-family: "OCR A Extended";
-    src: url("ocraext.ttf");
+    src: url("../fonts/ocraext.ttf");
 }
 
 .login {
     border: 3px solid white;
     border-radius: 20px;
-    width: 50%;
+    width: 300px;
     margin-left: auto;
     margin-right: auto;
     padding: 20px;

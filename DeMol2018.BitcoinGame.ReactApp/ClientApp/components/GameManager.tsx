@@ -33,4 +33,4 @@ class GameManager extends React.Component<GameManagerProps> {
 export default connect(
     (state: ApplicationState) => state.bitcoinGame, // Selects which state properties are merged into the component's props
     BitcoinGameStore.actionCreators // Selects which action creators are merged into the component's props
-)(GameManager);//as typeof RoundManager;
+)(GameManager);// as typeof GameManager;

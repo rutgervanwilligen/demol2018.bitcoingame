@@ -40,4 +40,4 @@ class AdminPanel extends React.Component<AdminPanelProps> {
 export default connect(
     (state: ApplicationState) => state.bitcoinGame, // Selects which state properties are merged into the component's props
     AdminPanelStore.actionCreators // Selects which action creators are merged into the component's props
-)(AdminPanel);//as typeof RoundCountdownTimer;
+)(AdminPanel);// as typeof AdminPanel;

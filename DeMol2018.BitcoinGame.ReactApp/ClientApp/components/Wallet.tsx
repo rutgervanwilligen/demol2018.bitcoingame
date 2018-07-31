@@ -10,7 +10,6 @@ type WalletProps =
 
 class Wallet extends React.Component<WalletProps> {
     public render() {
-        console.log(this.props);
         return (
             <div className="wallet">
                 <h2>Mijn walletadres: { this.props.usersWalletAddress }</h2>
@@ -25,4 +24,4 @@ class Wallet extends React.Component<WalletProps> {
 export default connect(
     (state: ApplicationState) => state.bitcoinGame, // Selects which state properties are merged into the component's props
     BitcoinGameStore.actionCreators // Selects which action creators are merged into the component's props
-)(Wallet);//as typeof Wallet;
+)(Wallet);// as typeof Wallet;

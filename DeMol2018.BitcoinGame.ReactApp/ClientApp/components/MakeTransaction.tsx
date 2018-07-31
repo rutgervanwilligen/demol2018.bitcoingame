@@ -7,7 +7,7 @@ type MakeTransactionProps =
     BitcoinGameStore.BitcoinGameState
     & typeof BitcoinGameStore.actionCreators;
 
-class Wallet extends React.Component<MakeTransactionProps> {
+class MakeTransaction extends React.Component<MakeTransactionProps> {
     private amountInput: HTMLInputElement;
     private receiverAddressInput: HTMLInputElement;
 
@@ -57,4 +57,4 @@ class Wallet extends React.Component<MakeTransactionProps> {
 export default connect(
     (state: ApplicationState) => state.bitcoinGame, // Selects which state properties are merged into the component's props
     BitcoinGameStore.actionCreators // Selects which action creators are merged into the component's props
-)(Wallet);//as typeof MakeTransaction;
+)(MakeTransaction);// as typeof MakeTransaction;
