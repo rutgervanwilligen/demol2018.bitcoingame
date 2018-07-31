@@ -1,8 +1,26 @@
 body {
     background-color: #000000;
-    color: #90ee90;
+    color: #ffffff;
     text-align: center;
     font-family: 'OCR A Extended', 'Courier New';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#react-app {
+    width: 100%;
+    position: relative;
+    height: 90%;
+}
+
+.button {
+    color: #000000;
+}
+
+body h1 {
+    font-weight: bold;
+    color: #90ee90;
 }
 
 @font-face {
@@ -10,8 +28,23 @@ body {
     src: url("../fonts/ocraext.ttf");
 }
 
+.error {
+    color: #ff0000;
+}
+
+.bitcoinGame {
+    position: relative;
+    border: 3px solid #90ee90;
+    border-radius: 20px;
+    width: 90%;
+    height: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+}
+
 .login {
-    border: 3px solid white;
+    border: 3px solid #90ee90;
     border-radius: 20px;
     width: 300px;
     margin-left: auto;
@@ -37,4 +70,73 @@ body {
     display: block;
     margin: auto;
     margin-top: 10px;
+}
+
+.gameManager {
+    
+}
+
+.gameManager .gameStatusHeader {
+    font-size: 22px;
+}
+
+.gameManager .gameStatusText {
+    font-size: 18px;
+    color: #90ee90;
+}
+
+.gameManager .gameStatusText.error {
+    color: #ff0000;
+}
+
+.wallet {
+    width: 350px;
+    border: 3px solid #90ee90;
+    padding: 20px;
+    bottom: 30px;
+    margin-bottom: 0;
+    display: block;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-175px);
+}
+
+.wallet .walletHeader {
+    margin: 0;
+    color: #90ee90;
+    font-size: 32px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.wallet .currentBalance {
+    text-align: left;
+    display: inline-block;
+    width: 50%;
+}
+
+.wallet .walletAddress {
+    text-align: right;
+    display: inline-block;
+    width: 50%;
+}
+
+.currentBalanceHeader {
+    font-size: 20px;
+}
+
+.currentBalanceText {
+    font-size: 30px;
+    color: #ffff00;
+    font-weight: bold;
+}
+
+.walletAddressHeader {
+    font-size: 20px;
+}
+
+.walletAddressText {
+    font-size: 30px;
+    color: #ffff00;
+    font-weight: bold;
 }

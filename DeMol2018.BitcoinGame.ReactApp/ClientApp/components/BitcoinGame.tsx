@@ -18,9 +18,7 @@ class BitcoinGame extends React.Component<BitcoinGameProps> {
 
         if (!isLoggedIn) {
             return (
-                <div className="bitcoinGame">
-                    <Login />
-                </div>
+                <Login />
             )
         }
         

@@ -12,8 +12,15 @@ class Wallet extends React.Component<WalletProps> {
     public render() {
         return (
             <div className="wallet">
-                <h2>Mijn walletadres: { this.props.usersWalletAddress }</h2>
-                <h2>Mijn saldo: { this.props.currentBalance }</h2>
+                <h2 className="walletHeader">Mijn wallet</h2>
+                <div className="currentBalance">
+                    <div className="currentBalanceHeader">Saldo</div>
+                    <div className="currentBalanceText">{ this.props.currentBalance } BTC</div>
+                </div>
+                <div className="walletAddress">
+                    <div className="walletAddressHeader">Adres</div>
+                    <div className="walletAddressText">{ this.props.usersWalletAddress }</div>
+                </div>
                 <MakeTransaction />
             </div>
         );

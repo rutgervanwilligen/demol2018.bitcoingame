@@ -26,11 +26,12 @@ class AdminPanel extends React.Component<AdminPanelProps> {
         return (
             <div className="adminPanel">
                 <h2>Adminpaneel</h2>
+                <h3>Game ID: {this.props.currentGameId}</h3>
                 <h3>Start nieuw spel</h3>
-                <button onClick={() => this.props.startNewGame(this.props.playerGuid!)}>Start nieuw spel</button>
+                <button className="button" onClick={() => this.props.startNewGame(this.props.playerGuid!)}>Start nieuw spel</button>
                 <h3>Start nieuwe ronde</h3>
                 <input className="ïnputField" placeholder='Lengte van nieuwe ronde (min)' ref={this.setNewRoundLengthInputRef} />
-                <button onClick={() => this.props.startNewRound(this.props.playerGuid!, +this.newRoundLengthInput.value)}>Start nieuwe ronde</button>
+                <button className="button" onClick={() => this.props.startNewRound(this.props.playerGuid!, +this.newRoundLengthInput.value)}>Start nieuwe ronde</button>
             </div>
         );
     }

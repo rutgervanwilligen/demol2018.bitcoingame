@@ -14,15 +14,16 @@ class GameManager extends React.Component<GameManagerProps> {
         if (this.props.currentGameId != null) {
             return (
                 <div className="gameManager">
-                    <h2>Het spel is begonnen!</h2>
-                    <h3>Game ID: {this.props.currentGameId!}</h3>
+                    <div className="gameStatusHeader">Spelstatus</div>
+                    <div className="gameStatusText">Gestart</div>
                     <RoundManager />
                 </div>
             );
         } else {
             return (
                 <div className="gameManager">
-                     Er is nog geen spel gestart.
+                    <div className="gameStatusHeader">Spelstatus</div>
+                    <div className="gameStatusText error">Nog niet gestart</div>
                 </div>
             );
         }

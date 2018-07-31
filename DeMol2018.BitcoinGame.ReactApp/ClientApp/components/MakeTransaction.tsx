@@ -39,8 +39,8 @@ class MakeTransaction extends React.Component<MakeTransactionProps> {
     public render() {
         return (
             <div className="makeTransaction">
-                <h2>Maak geld over</h2>
-                <label>Hoeveelheid (heel getal)</label>
+                <h2 className="makeTransactionHeader">Overmaken</h2>
+                <label>Hoeveelheid BTC</label>
                 <input className="ïnputField" placeholder='Hoeveelheid' ref={this.setAmountInputRef} />
                 <label>Ontvangstadres</label>
                 <input className="ïnputField" placeholder='Ontvangstadres' ref={this.setReceiverAddressInputRef} />
