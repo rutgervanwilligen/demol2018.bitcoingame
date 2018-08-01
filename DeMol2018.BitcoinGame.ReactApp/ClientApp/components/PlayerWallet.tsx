@@ -8,7 +8,7 @@ type WalletProps =
     BitcoinGameStore.BitcoinGameState
     & typeof BitcoinGameStore.actionCreators;
 
-class Wallet extends React.Component<WalletProps> {
+class PlayerWallet extends React.Component<WalletProps> {
     public render() {
         return (
             <div className="wallet">
@@ -31,4 +31,4 @@ class Wallet extends React.Component<WalletProps> {
 export default connect(
     (state: ApplicationState) => state.bitcoinGame, // Selects which state properties are merged into the component's props
     BitcoinGameStore.actionCreators // Selects which action creators are merged into the component's props
-)(Wallet);// as typeof Wallet;
+)(PlayerWallet);// as typeof PlayerWallet;

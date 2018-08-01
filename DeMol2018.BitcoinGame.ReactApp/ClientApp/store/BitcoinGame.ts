@@ -4,6 +4,12 @@ import { AppThunkAction } from './';
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
+export interface NonPlayerWalletState {
+    walletAddress: number;
+    currentBalance: number;
+    walletName: number;
+}
+
 export interface BitcoinGameState {
     isLoggedIn: boolean;
     isAdmin: boolean;
@@ -13,6 +19,7 @@ export interface BitcoinGameState {
     currentRoundEndTime?: Date;
     currentBalance?: number;
     usersWalletAddress?: number;
+    nonPlayerWallets: NonPlayerWalletState[];
 }
 
 // -----------------
@@ -82,7 +89,8 @@ const unloadedState: BitcoinGameState = {
     currentRoundNumber: undefined,
     currentRoundEndTime: undefined,
     currentBalance: undefined,
-    usersWalletAddress: undefined
+    usersWalletAddress: undefined,
+    nonPlayerWallets: []
 };
 
 export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, incomingAction: Action) => {

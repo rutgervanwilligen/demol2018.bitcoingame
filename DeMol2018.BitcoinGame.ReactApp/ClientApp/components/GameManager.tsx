@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { ApplicationState }  from '../store';
 import * as BitcoinGameStore from '../store/BitcoinGame';
 import RoundManager from "./RoundManager";
+import NonPlayerWallet from "./NonPlayerWallet";
 
 type GameManagerProps =
     BitcoinGameStore.BitcoinGameState
@@ -17,13 +18,23 @@ class GameManager extends React.Component<GameManagerProps> {
                     <div className="gameStatusHeader">Spelstatus</div>
                     <div className="gameStatusText">Gestart</div>
                     <RoundManager />
+                    <div className="nonPlayerWallets">
+                        Hoe-ha-nonplayerwallets
+                        {this.props.nonPlayerWallets.map((wallet) => <NonPlayerWallet
+                            walletName = {wallet.walletName}
+                            currentBalance = {wallet.currentBalance}
+                            walletAddress = {wallet.walletAddress}
+                        />)}
+                    </div>
                 </div>
             );
         } else {
             return (
                 <div className="gameManager">
-                    <div className="gameStatusHeader">Spelstatus</div>
-                    <div className="gameStatusText error">Nog niet gestart</div>
+                    <div className="gameStatus">
+                        <div className="gameStatusHeader">Spelstatus</div>
+                        <div className="gameStatusText error">Nog niet gestart</div>
+                    </div>
                 </div>
             );
         }

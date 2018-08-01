@@ -3,7 +3,7 @@ import * as BitcoinGameStore from "../store/BitcoinGame";
 import {connect} from "react-redux";
 import {ApplicationState} from "../store";
 import Login from "./Login";
-import Wallet from "./Wallet";
+import PlayerWallet from "./PlayerWallet";
 import AdminPanel from "./AdminPanel";
 import GameManager from "./GameManager";
 
@@ -34,7 +34,7 @@ class BitcoinGame extends React.Component<BitcoinGameProps> {
         return (
             <div className="bitcoinGame">
                 <GameManager />
-                <Wallet />
+                <PlayerWallet />
             </div>
         );
     }
