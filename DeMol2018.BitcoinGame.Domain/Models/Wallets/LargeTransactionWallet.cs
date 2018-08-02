@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
 {
     public class LargeTransactionWallet : Wallet
     {
         public new readonly int Address = 111;
+        public new readonly string DisplayName = "Grote-transactiewallet";
 
         private const int MinimalAmountToSendInOneTransaction = 1200;
         private const int EuroPrizeToWinForEachTransaction = 500;
@@ -21,11 +21,10 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             return false;
         }
 
-        public int GetEurosWonInGameAndRoundNumber(Guid gameId, int roundNumber)
+        public int GetEurosWonInGameAndRoundNumber(int roundNumber)
         {
             var numberOfValidTransactions = IncomingTransactions
-                .Count(x => x.GameId == gameId
-                         && x.RoundNumber < roundNumber
+                .Count(x => x.RoundNumber < roundNumber
                          && x.Amount > MinimalAmountToSendInOneTransaction);
 
             return numberOfValidTransactions * EuroPrizeToWinForEachTransaction;

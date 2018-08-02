@@ -19,11 +19,10 @@ class GameManager extends React.Component<GameManagerProps> {
                     <div className="gameStatusText">Gestart</div>
                     <RoundManager />
                     <div className="nonPlayerWallets">
-                        Hoe-ha-nonplayerwallets
                         {this.props.nonPlayerWallets.map((wallet) => <NonPlayerWallet
-                            walletName = {wallet.walletName}
+                            name = {wallet.name}
                             currentBalance = {wallet.currentBalance}
-                            walletAddress = {wallet.walletAddress}
+                            address = {wallet.address}
                         />)}
                     </div>
                 </div>

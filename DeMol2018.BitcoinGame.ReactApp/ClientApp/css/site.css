@@ -139,3 +139,37 @@ body h1 {
     color: #ffff00;
     font-weight: bold;
 }
+
+.nonPlayerWallet {
+    margin-right: 2%;
+    display: inline-block;
+    width: 32%;
+    padding: 10px;
+    border: 3px solid #90ee90;
+    border-radius: 20px;
+}
+
+.nonPlayerWallet:last-child {
+    margin-right: 0;
+}
+
+.nonPlayerWallets {
+    margin: 10px 0;
+}
+
+.nonPlayerWallet .walletHeader {
+    height: 40px;
+    font-size: 22px;
+    margin: 0;
+    margin-bottom: 20px;
+}
+
+.nonPlayerWallet .currentBalance {
+    display: inline-block;
+    width: 50%;
+}
+
+.nonPlayerWallet .walletAddress {
+    display: inline-block;
+    width: 50%;
+}

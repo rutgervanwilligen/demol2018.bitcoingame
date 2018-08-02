@@ -83,7 +83,7 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                         IncomingTransactions = walletEntity.IncomingTransactions?.Select(x => x.ToDomainModel()).ToList() ?? new List<IncomingTransaction>()
                     };
                 case WalletEntity.WalletType.LargeTransactionWallet:
-                    return new CombinedTransactionWallet {
+                    return new LargeTransactionWallet {
                         Id = walletEntity.Id,
                         GameId = walletEntity.GameId,
                         StartAmount = walletEntity.StartAmount,

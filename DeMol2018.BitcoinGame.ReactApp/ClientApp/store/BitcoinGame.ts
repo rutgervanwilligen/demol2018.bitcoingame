@@ -5,9 +5,9 @@ import { AppThunkAction } from './';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface NonPlayerWalletState {
-    walletAddress: number;
+    address: number;
     currentBalance: number;
-    walletName: number;
+    name: number;
 }
 
 export interface BitcoinGameState {
@@ -43,6 +43,7 @@ export interface ReceiveLoginResultAction {
     userCurrentBalance?: number;
     currentRoundNumber?: number;
     currentRoundEndTime?: string;
+    nonPlayerWallets?: NonPlayerWalletState[];
 }
 
 export interface ReceiveNewGameStateAction {
@@ -52,6 +53,7 @@ export interface ReceiveNewGameStateAction {
     currentRoundEndTime?: string;
     userCurrentBalance?: number;
     userWalletAddress?: number;
+    nonPlayerWallets?: NonPlayerWalletState[];
 }
 
 interface ReceiveMakeTransactionResult {
@@ -105,7 +107,8 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 currentBalance: action.userCurrentBalance,
                 usersWalletAddress: action.userWalletAddress,
                 currentRoundNumber: action.currentRoundNumber != null ? action.currentRoundNumber : undefined,
-                currentRoundEndTime: action.currentRoundEndTime != null ? new Date(action.currentRoundEndTime) : undefined
+                currentRoundEndTime: action.currentRoundEndTime != null ? new Date(action.currentRoundEndTime) : undefined,
+                nonPlayerWallets: action.nonPlayerWallets != null ? action.nonPlayerWallets : []
             };
         case 'RECEIVE_LOGIN_RESULT':
             return {
@@ -117,7 +120,8 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 currentGameId: action.currentGameId,
                 currentBalance: action.userCurrentBalance,
                 currentRoundEndTime: action.currentRoundEndTime != null ? new Date(action.currentRoundEndTime) : undefined,
-                currentRoundNumber: action.currentRoundNumber != null ? action.currentRoundNumber : undefined
+                currentRoundNumber: action.currentRoundNumber != null ? action.currentRoundNumber : undefined,
+                nonPlayerWallets: action.nonPlayerWallets != null ? action.nonPlayerWallets : []
             };
         case 'MAKE_TRANSACTION':
             return {

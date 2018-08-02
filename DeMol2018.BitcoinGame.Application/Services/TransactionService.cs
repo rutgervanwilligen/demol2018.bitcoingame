@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using DeMol2018.BitcoinGame.DAL;
 using DeMol2018.BitcoinGame.DAL.Mappers;
 using DeMol2018.BitcoinGame.DAL.Repositories;
@@ -27,7 +26,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
                 throw new InvalidTransactionException("There is no active round. Transaction failed.");
             }
             
-            var senderWalletEntity = WalletRepository.GetBy(x => x.Address == senderWalletAddress);
+            var senderWalletEntity = WalletRepository.GetBy(x => x.Address == senderWalletAddress && x.GameId == currentRound.GameId);
             var senderWallet = senderWalletEntity.ToDomainModel();
 
             if (amount <= 0)
@@ -35,7 +34,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
                 throw new InvalidTransactionException("Transaction amount should be > 0");
             }
 
-            var receiverWalletEntity = WalletRepository.FindBy(x => x.Address == receiverWalletAddress);
+            var receiverWalletEntity = WalletRepository.FindBy(x => x.Address == receiverWalletAddress && x.GameId == currentRound.GameId);
             var receiverWallet = receiverWalletEntity?.ToDomainModel();
 
             var outgoingTransaction = senderWallet.MakeTransaction(

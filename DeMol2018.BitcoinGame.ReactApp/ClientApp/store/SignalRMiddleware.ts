@@ -2,6 +2,7 @@
 
 import { ApplicationState } from "./index";
 import { Store } from "redux";
+import {NonPlayerWalletState} from "./BitcoinGame";
 
 // Declare connection
 let connection = new signalR.HubConnection("http://localhost:63426/bitcoinGameHub");
@@ -67,6 +68,13 @@ export function signalRInvokeMiddleware() {
 export function signalRRegisterCommands(store: Store<ApplicationState>) {
 
     connection.on('LoginResult', loginResult => {
+        let sortedWallets = loginResult.updatedState.nonPlayerWallets != null
+            ? loginResult.updatedState.nonPlayerWallets.sort(
+                (a: NonPlayerWalletState, b: NonPlayerWalletState) => {
+                    return a.address - b.address
+                })
+            : null;
+
         store.dispatch({
             type: 'RECEIVE_LOGIN_RESULT',
             loginSuccessful: loginResult.loginSuccessful,
@@ -76,7 +84,8 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
             userCurrentBalance: loginResult.updatedState.userCurrentBalance,
             currentGameId: loginResult.updatedState.currentGameId,
             currentRoundNumber: loginResult.updatedState.currentRoundNumber,
-            currentRoundEndTime: loginResult.updatedState.currentRoundEndTime
+            currentRoundEndTime: loginResult.updatedState.currentRoundEndTime,
+            nonPlayerWallets: sortedWallets
         });
     });
 
@@ -88,13 +97,21 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
     });
 
     connection.on('FetchNewGameStateResult', fetchNewGameStateResult => {
+        let sortedWallets = fetchNewGameStateResult.updatedState.nonPlayerWallets != null
+            ? fetchNewGameStateResult.updatedState.nonPlayerWallets.sort(
+                (a: NonPlayerWalletState, b: NonPlayerWalletState) => {
+                    return a.address - b.address
+                })
+            : null;
+
         store.dispatch({
             type: 'RECEIVE_NEW_GAME_STATE',
             currentGameId: fetchNewGameStateResult.updatedState.currentGameId,
             currentRoundNumber: fetchNewGameStateResult.updatedState.currentRoundNumber,
             currentRoundEndTime: fetchNewGameStateResult.updatedState.currentRoundEndTime,
             userWalletAddress: fetchNewGameStateResult.updatedState.userWalletAddress,
-            userCurrentBalance: fetchNewGameStateResult.updatedState.userCurrentBalance
+            userCurrentBalance: fetchNewGameStateResult.updatedState.userCurrentBalance,
+            nonPlayerWallets: sortedWallets
         });
     });
 

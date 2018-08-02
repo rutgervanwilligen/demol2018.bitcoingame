@@ -5,14 +5,14 @@ export default class NonPlayerWallet extends React.Component<NonPlayerWalletStat
     public render() {
         return (
             <div className="nonPlayerWallet">
-                <h2 className="walletHeader">{ this.props.walletName }</h2>
+                <h2 className="walletHeader">{ this.props.name }</h2>
                 <div className="currentBalance">
                     <div className="currentBalanceHeader">Saldo</div>
                     <div className="currentBalanceText">{ this.props.currentBalance } BTC</div>
                 </div>
                 <div className="walletAddress">
                     <div className="walletAddressHeader">Adres</div>
-                    <div className="walletAddressText">{ this.props.walletAddress }</div>
+                    <div className="walletAddressText">{ this.props.address }</div>
                 </div>
             </div>
         );
