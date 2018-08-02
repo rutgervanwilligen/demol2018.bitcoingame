@@ -10,6 +10,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
         public Guid Id { get; set; }
         public int Address { get; set; }
         public int StartAmount { get; set; }
+        public Guid GameId { get; set; }
 
         public List<IncomingTransaction> IncomingTransactions;
         public List<OutgoingTransaction> OutgoingTransactions;

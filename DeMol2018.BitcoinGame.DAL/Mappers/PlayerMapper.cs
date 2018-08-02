@@ -13,7 +13,8 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                 Id = player.Id,
                 LoginCode = player.LoginCode,
                 Name = player.Name,
-                IsAdmin = player.IsAdmin
+                IsAdmin = player.IsAdmin,
+                WalletAddress = player.WalletAddress
             };
         }
 
@@ -24,6 +25,7 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                 LoginCode = player.LoginCode,
                 Name = player.Name,
                 IsAdmin = player.IsAdmin,
+                WalletAddress = player.WalletAddress,
                 Wallets = player.Wallets.Select(x => (PlayerWallet)x.ToDomainModel())
             };
         }

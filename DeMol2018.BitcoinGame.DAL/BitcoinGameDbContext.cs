@@ -24,7 +24,7 @@ namespace DeMol2018.BitcoinGame.DAL
             modelBuilder
                 .Entity<PlayerEntity>()
                 .Property(x => x.Id)
-                .HasDefaultValueSql("NEWID()");
+                .ValueGeneratedOnAdd();
 
             modelBuilder
                 .Entity<RoundEntity>()
@@ -33,7 +33,7 @@ namespace DeMol2018.BitcoinGame.DAL
             modelBuilder
                 .Entity<RoundEntity>()
                 .Property(x => x.Id)
-                .HasDefaultValueSql("NEWID()");
+                .ValueGeneratedOnAdd();
 
             modelBuilder
                 .Entity<RoundEntity>()
@@ -56,11 +56,11 @@ namespace DeMol2018.BitcoinGame.DAL
             modelBuilder
                 .Entity<GameEntity>()
                 .HasKey(x => x.Id);
-            
+
             modelBuilder
                 .Entity<GameEntity>()
                 .Property(x => x.Id)
-                .HasDefaultValueSql("NEWID()");
+                .ValueGeneratedOnAdd();
             
             modelBuilder
                 .Entity<GameEntity>()
@@ -71,17 +71,28 @@ namespace DeMol2018.BitcoinGame.DAL
             modelBuilder
                 .Entity<WalletEntity>()
                 .HasKey(x => x.Id);
-            
+
             modelBuilder
                 .Entity<WalletEntity>()
                 .Property(x => x.Id)
-                .HasDefaultValueSql("NEWID()");
+                .ValueGeneratedOnAdd();
 
             modelBuilder
                 .Entity<WalletEntity>()
                 .HasOne(x => x.Player)
                 .WithMany(x => x.Wallets)
                 .HasForeignKey(x => x.PlayerId);
+
+            modelBuilder
+                .Entity<WalletEntity>()
+                .HasOne(x => x.Game)
+                .WithMany(x => x.Wallets)
+                .HasForeignKey(x => x.GameId);
+
+            modelBuilder
+                .Entity<WalletEntity>()
+                .Property(x => x.Type)
+                .IsRequired();
 
             modelBuilder
                 .Entity<OutgoingTransactionEntity>()

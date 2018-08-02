@@ -15,10 +15,11 @@ namespace DeMol2018.BitcoinGame.Application.Services
             WalletRepository = new WalletRepository(dbContext);
         }
 
-        public Wallet GetWalletByPlayerId(Guid playerId)
+        public Wallet GetWalletByGameIdAndPlayerId(Guid gameId, Guid playerId)
         {
             return WalletRepository
-                .GetBy(x => x.PlayerId == playerId)
+                .GetBy(x => x.PlayerId == playerId
+                         && x.GameId == gameId)
                 .ToDomainModel();
         }
     }

@@ -10,6 +10,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models
         public string Name { get; set; }
         public int LoginCode { get; set; }
         public bool IsAdmin { get; set; }
+        public int WalletAddress { get; set; }
         
         public IEnumerable<PlayerWallet> Wallets { get; set; }
     }

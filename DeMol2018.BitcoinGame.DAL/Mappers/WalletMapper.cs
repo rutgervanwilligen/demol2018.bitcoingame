@@ -16,6 +16,7 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                 case PlayerWallet playerWallet:
                     return new WalletEntity {
                         Id = playerWallet.Id,
+                        GameId = playerWallet.GameId,
                         Address = playerWallet.Address,
                         StartAmount = playerWallet.StartAmount,
                         PlayerId = playerWallet.PlayerId,
@@ -26,12 +27,35 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                 case JokerWallet jokerWallet:
                     return new WalletEntity {
                         Id = jokerWallet.Id,
+                        GameId = jokerWallet.GameId,
                         Address = jokerWallet.Address,
                         StartAmount = jokerWallet.StartAmount,
                         PlayerId = null,
                         Type = WalletEntity.WalletType.JokerWallet.ToString(),
-                        OutgoingTransactions = jokerWallet.OutgoingTransactions.Select(x => x.ToEntity()).ToList(),
+                        OutgoingTransactions = new List<OutgoingTransactionEntity>(),
                         IncomingTransactions = jokerWallet.IncomingTransactions.Select(x => x.ToEntity()).ToList()
+                    };
+                case CombinedTransactionWallet combinedTransactionWallet:
+                    return new WalletEntity {
+                        Id = combinedTransactionWallet.Id,
+                        GameId = combinedTransactionWallet.GameId,
+                        Address = combinedTransactionWallet.Address,
+                        StartAmount = combinedTransactionWallet.StartAmount,
+                        PlayerId = null,
+                        Type = WalletEntity.WalletType.CombinedTransactionWallet.ToString(),
+                        OutgoingTransactions = new List<OutgoingTransactionEntity>(),
+                        IncomingTransactions = combinedTransactionWallet.IncomingTransactions.Select(x => x.ToEntity()).ToList()
+                    };
+                case LargeTransactionWallet largeTransactionWallet:
+                    return new WalletEntity {
+                        Id = largeTransactionWallet.Id,
+                        GameId = largeTransactionWallet.GameId,
+                        Address = largeTransactionWallet.Address,
+                        StartAmount = largeTransactionWallet.StartAmount,
+                        PlayerId = null,
+                        Type = WalletEntity.WalletType.LargeTransactionWallet.ToString(),
+                        OutgoingTransactions = new List<OutgoingTransactionEntity>(),
+                        IncomingTransactions = largeTransactionWallet.IncomingTransactions.Select(x => x.ToEntity()).ToList()
                     };
             }
 
@@ -47,7 +71,21 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                 case WalletEntity.WalletType.JokerWallet:
                     return new JokerWallet {
                         Id = walletEntity.Id,
-                        Address = walletEntity.Address,
+                        GameId = walletEntity.GameId,
+                        StartAmount = walletEntity.StartAmount,
+                        IncomingTransactions = walletEntity.IncomingTransactions?.Select(x => x.ToDomainModel()).ToList() ?? new List<IncomingTransaction>()
+                    };
+                case WalletEntity.WalletType.CombinedTransactionWallet:
+                    return new CombinedTransactionWallet {
+                        Id = walletEntity.Id,
+                        GameId = walletEntity.GameId,
+                        StartAmount = walletEntity.StartAmount,
+                        IncomingTransactions = walletEntity.IncomingTransactions?.Select(x => x.ToDomainModel()).ToList() ?? new List<IncomingTransaction>()
+                    };
+                case WalletEntity.WalletType.LargeTransactionWallet:
+                    return new CombinedTransactionWallet {
+                        Id = walletEntity.Id,
+                        GameId = walletEntity.GameId,
                         StartAmount = walletEntity.StartAmount,
                         IncomingTransactions = walletEntity.IncomingTransactions?.Select(x => x.ToDomainModel()).ToList() ?? new List<IncomingTransaction>()
                     };
@@ -59,6 +97,7 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                     
                     return new PlayerWallet {
                         Id = walletEntity.Id,
+                        GameId = walletEntity.GameId,
                         Address = walletEntity.Address,
                         StartAmount = walletEntity.StartAmount,
                         PlayerId = walletEntity.PlayerId.Value,

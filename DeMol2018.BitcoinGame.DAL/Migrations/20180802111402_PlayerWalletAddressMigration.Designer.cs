@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeMol2018.BitcoinGame.DAL.Migrations
 {
     [DbContext(typeof(BitcoinGameDbContext))]
-    [Migration("20180727200216_DeleteOldTransactionsMigration")]
-    partial class DeleteOldTransactionsMigration
+    [Migration("20180802111402_PlayerWalletAddressMigration")]
+    partial class PlayerWalletAddressMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,8 +24,7 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
             modelBuilder.Entity("DeMol2018.BitcoinGame.DAL.Entities.GameEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWID()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<bool>("HasFinished");
 
@@ -90,8 +89,7 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
             modelBuilder.Entity("DeMol2018.BitcoinGame.DAL.Entities.PlayerEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWID()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<bool>("IsAdmin");
 
@@ -99,6 +97,8 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired();
+
+                    b.Property<int>("WalletAddress");
 
                     b.HasKey("Id");
 
@@ -108,8 +108,7 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
             modelBuilder.Entity("DeMol2018.BitcoinGame.DAL.Entities.RoundEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWID()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
@@ -131,18 +130,22 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
             modelBuilder.Entity("DeMol2018.BitcoinGame.DAL.Entities.WalletEntity", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWID()");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<int>("Address");
+
+                    b.Property<Guid>("GameId");
 
                     b.Property<Guid?>("PlayerId");
 
                     b.Property<int>("StartAmount");
 
-                    b.Property<string>("Type");
+                    b.Property<string>("Type")
+                        .IsRequired();
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GameId");
 
                     b.HasIndex("PlayerId");
 
@@ -175,6 +178,11 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
 
             modelBuilder.Entity("DeMol2018.BitcoinGame.DAL.Entities.WalletEntity", b =>
                 {
+                    b.HasOne("DeMol2018.BitcoinGame.DAL.Entities.GameEntity", "Game")
+                        .WithMany("Wallets")
+                        .HasForeignKey("GameId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("DeMol2018.BitcoinGame.DAL.Entities.PlayerEntity", "Player")
                         .WithMany("Wallets")
                         .HasForeignKey("PlayerId");

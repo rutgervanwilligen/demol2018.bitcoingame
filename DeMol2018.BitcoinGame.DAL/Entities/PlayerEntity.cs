@@ -18,6 +18,8 @@ namespace DeMol2018.BitcoinGame.DAL.Entities
 
         public bool IsAdmin { get; set; }
         
+        public int WalletAddress { get; set; }
+
         public virtual ICollection<WalletEntity> Wallets { get; set; }
     }
 }

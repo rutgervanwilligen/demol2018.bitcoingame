@@ -21,10 +21,15 @@ namespace DeMol2018.BitcoinGame.DAL.Entities
         public Guid? PlayerId { get; set; }
         public virtual PlayerEntity Player { get; set; }
         
+        public Guid GameId { get; set; }
+        public virtual GameEntity Game { get; set; }
+
         public enum WalletType
         {
-            JokerWallet,
-            PlayerWallet
+            PlayerWallet = 0,
+            JokerWallet = 1,
+            CombinedTransactionWallet = 2,
+            LargeTransactionWallet = 3
         }
     }
 }

@@ -34,7 +34,7 @@ class BitcoinGame extends React.Component<BitcoinGameProps> {
         return (
             <div className="bitcoinGame">
                 <GameManager />
-                <PlayerWallet />
+                { this.props.currentGameId != null ? <PlayerWallet /> : ''}
             </div>
         );
     }

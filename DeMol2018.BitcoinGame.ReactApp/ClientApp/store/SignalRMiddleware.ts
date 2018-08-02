@@ -80,7 +80,7 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
         });
     });
 
-    connection.on('AnnounceNewRoundResult', () => {
+    connection.on('AnnounceNewGameStateResult', () => {
         store.dispatch({
             type: 'FETCH_NEW_GAME_STATE',
             playerGuid: store.getState().bitcoinGame.playerGuid
@@ -93,6 +93,7 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
             currentGameId: fetchNewGameStateResult.updatedState.currentGameId,
             currentRoundNumber: fetchNewGameStateResult.updatedState.currentRoundNumber,
             currentRoundEndTime: fetchNewGameStateResult.updatedState.currentRoundEndTime,
+            userWalletAddress: fetchNewGameStateResult.updatedState.userWalletAddress,
             userCurrentBalance: fetchNewGameStateResult.updatedState.userCurrentBalance
         });
     });

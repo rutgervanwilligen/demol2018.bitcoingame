@@ -13,5 +13,6 @@ namespace DeMol2018.BitcoinGame.DAL.Entities
         public bool HasFinished { get; set; }
  
         public virtual ICollection<RoundEntity> Rounds { get; set; }
+        public virtual ICollection<WalletEntity> Wallets { get; set; }
     }
 }

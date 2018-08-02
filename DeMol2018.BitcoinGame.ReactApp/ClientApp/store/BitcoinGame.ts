@@ -51,6 +51,7 @@ export interface ReceiveNewGameStateAction {
     currentRoundNumber?: number;
     currentRoundEndTime?: string;
     userCurrentBalance?: number;
+    userWalletAddress?: number;
 }
 
 interface ReceiveMakeTransactionResult {
@@ -102,6 +103,7 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 ...state,
                 currentGameId: action.currentGameId,
                 currentBalance: action.userCurrentBalance,
+                usersWalletAddress: action.userWalletAddress,
                 currentRoundNumber: action.currentRoundNumber != null ? action.currentRoundNumber : undefined,
                 currentRoundEndTime: action.currentRoundEndTime != null ? new Date(action.currentRoundEndTime) : undefined
             };
