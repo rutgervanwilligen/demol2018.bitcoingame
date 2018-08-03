@@ -51,8 +51,15 @@ namespace DeMol2018.BitcoinGame.Application.Services
             return EuroBalanceAtNewGame + nonPlayerWalletMoneyWonSoFar + playerWalletMoneyWonSoFar;
         }
 
-        private int GetPlayerWalletMoneyWonSoFar(Guid gameId, int roundNumberValue)
+        private int GetPlayerWalletMoneyWonSoFar(Guid gameId, int roundNumber)
         {
+            var playerWallets = WalletRepository
+                .GetAll()
+                .Where(x => x.GameId == gameId
+                         && x.Type == WalletEntity.WalletType.PlayerWallet.ToString())
+                .Select(x => x.ToDomainModel())
+                .ToList();
+
             // Stuivertje wisselen
             return 0;
         }

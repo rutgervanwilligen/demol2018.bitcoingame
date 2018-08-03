@@ -11,8 +11,6 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                 Id = transaction.Id,
 //                ReceiverWalletId = transaction.ReceiverWalletId,
                 SenderWalletId = transaction.SenderWalletId,
-                GameId = transaction.GameId,
-                RoundId = transaction.RoundId,
                 RoundNumber = transaction.RoundNumber,
                 Amount = transaction.Amount
             };
@@ -25,8 +23,6 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                 Amount = transactionEntity.Amount,
 //                ReceiverWalletId = transactionEntity.ReceiverWalletId,
                 SenderWalletId = transactionEntity.SenderWalletId,
-                GameId = transactionEntity.GameId,
-                RoundId = transactionEntity.RoundId,
                 RoundNumber = transactionEntity.RoundNumber
             };
         }
@@ -37,8 +33,6 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                 Id = transaction.Id,
                 SenderWalletId = transaction.SenderWalletId,
                 ReceiverWalletId = transaction.ReceiverWalletId,
-                GameId = transaction.GameId,
-                RoundId = transaction.RoundId,
                 RoundNumber = transaction.RoundNumber,
                 Amount = transaction.Amount,
                 InvalidReceiverAddress = transaction.InvalidReceiverAddress
@@ -53,8 +47,6 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                 InvalidReceiverAddress = transactionEntity.InvalidReceiverAddress,
                 SenderWalletId = transactionEntity.SenderWalletId,
                 ReceiverWalletId = transactionEntity.ReceiverWalletId,
-                GameId = transactionEntity.GameId,
-                RoundId = transactionEntity.RoundId,
                 RoundNumber = transactionEntity.RoundNumber
             };
         }

@@ -19,7 +19,6 @@ namespace DeMol2018.BitcoinGame.Application.Services
         public void MakeTransaction(int senderWalletAddress, int receiverWalletAddress, int amount)
         {
             var currentRound = GameService.GetCurrentRound();
-            var currentGame = GameService.FindCurrentGame();
 
             if (currentRound == null)
             {
@@ -40,8 +39,6 @@ namespace DeMol2018.BitcoinGame.Application.Services
             var outgoingTransaction = senderWallet.MakeTransaction(
                 receiverWallet?.Id,
                 amount,
-                currentGame.Id,
-                currentRound.Id,
                 currentRound.RoundNumber,
                 receiverWallet == null ? receiverWalletAddress : (int?)null);
             
@@ -55,8 +52,6 @@ namespace DeMol2018.BitcoinGame.Application.Services
             }
 
             var incomingTransaction = receiverWallet.AddIncomingTransaction(
-                currentGame.Id,
-                currentRound.Id,
                 currentRound.RoundNumber,
                 amount,
                 senderWallet.Id);

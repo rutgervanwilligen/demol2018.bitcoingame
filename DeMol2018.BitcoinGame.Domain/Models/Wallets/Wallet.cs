@@ -46,15 +46,11 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
         }
 
         public IncomingTransaction AddIncomingTransaction(
-            Guid gameId,
-            Guid roundId,
             int roundNumber,
             int amount,
             Guid senderWalletId)
         {
             var incomingTransaction = new IncomingTransaction {
-                GameId = gameId,
-                RoundId = roundId,
                 RoundNumber = roundNumber,
                 Amount = amount,
                 SenderWalletId = senderWalletId
@@ -67,12 +63,10 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
         public OutgoingTransaction MakeTransaction(
                 Guid? receiverWalletId,
                 int amount,
-                Guid currentGameId,
-                Guid currentRoundId,
-                int currentRoundNumber,
+                int roundNumber,
                 int? invalidReceiverAddress)
         {
-            var currentBalance = GetCurrentBalanceInRound(currentRoundNumber);
+            var currentBalance = GetCurrentBalanceInRound(roundNumber);
 
             if (amount > currentBalance) {
                 throw new InsufficientFundsException("Balance is too low to make transaction.");
@@ -81,9 +75,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             var outgoingTransaction = new OutgoingTransaction {
                 Amount = amount,
                 ReceiverWalletId = receiverWalletId,
-                RoundId = currentRoundId,
-                GameId = currentGameId,
-                RoundNumber = currentRoundNumber,
+                RoundNumber = roundNumber,
                 InvalidReceiverAddress = receiverWalletId == null
                     ? invalidReceiverAddress
                     : null

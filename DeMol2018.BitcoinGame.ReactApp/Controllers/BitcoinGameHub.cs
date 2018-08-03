@@ -75,7 +75,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 IsAdmin = player.IsAdmin,
                 PlayerGuid = player.Id,
                 UpdatedState = new UpdatedStateResult {
-                    CurrentGameId = currentGame?.Id,
+                    CurrentGameId = currentGame.Id,
                     UserWalletAddress = userWalletAddress,
                     UserCurrentBalance = userCurrentBalance,
                     CurrentRoundEndTime = currentRound?.EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ"),
