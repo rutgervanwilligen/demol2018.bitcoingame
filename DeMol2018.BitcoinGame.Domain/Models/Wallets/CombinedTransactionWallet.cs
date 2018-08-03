@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
 {
@@ -23,12 +22,11 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             return false;
         }
 
-        public int GetEurosWonInGameAndRoundNumber(Guid gameId, int roundNumber)
+        public override int GetMoneyWonInRound(int roundNumber)
         {
             var transactionsGroupedByRound = IncomingTransactions
-                .Where(x => x.GameId == gameId
-                         && x.RoundNumber < roundNumber)
                 .GroupBy(x => x.RoundNumber)
+                .Where(x => x.Key < roundNumber)
                 .Where(x => x.Count() >= MinimalNumberOfCandidatesToWin);
 
             var numberOfValidCombinedTransactions = transactionsGroupedByRound

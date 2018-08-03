@@ -4,6 +4,7 @@ import { ApplicationState }  from '../store';
 import * as BitcoinGameStore from '../store/BitcoinGame';
 import RoundManager from "./RoundManager";
 import NonPlayerWallet from "./NonPlayerWallet";
+import MoneyWonSoFar from "./MoneyWonSoFar";
 
 type GameManagerProps =
     BitcoinGameStore.BitcoinGameState
@@ -15,8 +16,11 @@ class GameManager extends React.Component<GameManagerProps> {
         if (this.props.currentGameId != null) {
             return (
                 <div className="gameManager">
-                    <div className="gameStatusHeader">Spelstatus</div>
-                    <div className="gameStatusText">Gestart</div>
+                    <div className="gameStatus">
+                        <div className="gameStatusHeader">Spelstatus</div>
+                        <div className="gameStatusText">Gestart</div>
+                    </div>
+                    <MoneyWonSoFar />
                     <RoundManager />
                     <div className="nonPlayerWallets">
                         {this.props.nonPlayerWallets.map((wallet) => <NonPlayerWallet
@@ -34,6 +38,7 @@ class GameManager extends React.Component<GameManagerProps> {
                         <div className="gameStatusHeader">Spelstatus</div>
                         <div className="gameStatusText error">Nog niet gestart</div>
                     </div>
+                    <MoneyWonSoFar />
                 </div>
             );
         }

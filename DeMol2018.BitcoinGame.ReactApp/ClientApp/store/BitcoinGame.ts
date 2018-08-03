@@ -20,6 +20,7 @@ export interface BitcoinGameState {
     currentBalance?: number;
     usersWalletAddress?: number;
     nonPlayerWallets: NonPlayerWalletState[];
+    moneyWonSoFar: number;
 }
 
 // -----------------
@@ -44,6 +45,7 @@ export interface ReceiveLoginResultAction {
     currentRoundNumber?: number;
     currentRoundEndTime?: string;
     nonPlayerWallets?: NonPlayerWalletState[];
+    moneyWonSoFar: number;
 }
 
 export interface ReceiveNewGameStateAction {
@@ -54,6 +56,7 @@ export interface ReceiveNewGameStateAction {
     userCurrentBalance?: number;
     userWalletAddress?: number;
     nonPlayerWallets?: NonPlayerWalletState[];
+    moneyWonSoFar: number;
 }
 
 interface ReceiveMakeTransactionResult {
@@ -93,7 +96,8 @@ const unloadedState: BitcoinGameState = {
     currentRoundEndTime: undefined,
     currentBalance: undefined,
     usersWalletAddress: undefined,
-    nonPlayerWallets: []
+    nonPlayerWallets: [],
+    moneyWonSoFar: 0
 };
 
 export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, incomingAction: Action) => {
@@ -108,7 +112,8 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 usersWalletAddress: action.userWalletAddress,
                 currentRoundNumber: action.currentRoundNumber != null ? action.currentRoundNumber : undefined,
                 currentRoundEndTime: action.currentRoundEndTime != null ? new Date(action.currentRoundEndTime) : undefined,
-                nonPlayerWallets: action.nonPlayerWallets != null ? action.nonPlayerWallets : []
+                nonPlayerWallets: action.nonPlayerWallets != null ? action.nonPlayerWallets : [],
+                moneyWonSoFar: action.moneyWonSoFar
             };
         case 'RECEIVE_LOGIN_RESULT':
             return {
@@ -121,7 +126,8 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 currentBalance: action.userCurrentBalance,
                 currentRoundEndTime: action.currentRoundEndTime != null ? new Date(action.currentRoundEndTime) : undefined,
                 currentRoundNumber: action.currentRoundNumber != null ? action.currentRoundNumber : undefined,
-                nonPlayerWallets: action.nonPlayerWallets != null ? action.nonPlayerWallets : []
+                nonPlayerWallets: action.nonPlayerWallets != null ? action.nonPlayerWallets : [],
+                moneyWonSoFar: action.moneyWonSoFar
             };
         case 'MAKE_TRANSACTION':
             return {

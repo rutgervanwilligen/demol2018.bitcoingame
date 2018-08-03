@@ -21,11 +21,11 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             return false;
         }
 
-        public int GetEurosWonInGameAndRoundNumber(int roundNumber)
+        public override int GetMoneyWonInRound(int roundNumber)
         {
             var numberOfValidTransactions = IncomingTransactions
                 .Count(x => x.RoundNumber < roundNumber
-                         && x.Amount > MinimalAmountToSendInOneTransaction);
+                         && x.Amount >= MinimalAmountToSendInOneTransaction);
 
             return numberOfValidTransactions * EuroPrizeToWinForEachTransaction;
         }

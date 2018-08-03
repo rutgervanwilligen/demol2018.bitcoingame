@@ -75,16 +75,32 @@ body h1 {
     
 }
 
-.gameManager .gameStatusHeader {
-    font-size: 22px;
+.gameManager .gameStatus {
+    display: inline-block;
+    width: 50%;
 }
 
-.gameManager .gameStatusText {
+.gameManager .moneyWonSoFar {
+    display: inline-block;
+    width: 50%;
+}
+
+.moneyWonSoFar .moneyWonSoFarHeader {
+    font-size: 22px;
+    margin: 0;
+}
+
+.gameStatus .gameStatusHeader {
+    font-size: 22px;
+    margin: 0;
+}
+
+.gameStatus .gameStatusText {
     font-size: 18px;
     color: #90ee90;
 }
 
-.gameManager .gameStatusText.error {
+.gameStatus .gameStatusText.error {
     color: #ff0000;
 }
 

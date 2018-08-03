@@ -10,5 +10,6 @@ namespace DeMol2018.BitcoinGame.ReactApp.ResultObjects
         public int? CurrentRoundNumber { get; set; }
         public string CurrentRoundEndTime { get; set; }
         public NonPlayerWalletResult[] NonPlayerWallets { get; set; }
+        public int MoneyWonSoFar { get; set; }
     }
 }

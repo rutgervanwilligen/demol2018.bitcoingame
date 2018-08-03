@@ -21,6 +21,11 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             return false;
         }
 
+        public override int GetMoneyWonInRound(int roundNumber)
+        {
+            return 0;
+        }
+
         public IEnumerable<JokerWinner> GetJokerWinners()
         {
             return IncomingTransactions

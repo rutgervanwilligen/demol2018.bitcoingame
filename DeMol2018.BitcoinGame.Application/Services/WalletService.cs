@@ -12,6 +12,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
     public class WalletService
     {
         private WalletRepository WalletRepository { get; set; }
+        private const int EuroBalanceAtNewGame = 0;
 
         public WalletService(BitcoinGameDbContext dbContext)
         {
@@ -34,6 +35,37 @@ namespace DeMol2018.BitcoinGame.Application.Services
                             && x.Type != WalletEntity.WalletType.PlayerWallet.ToString())
                 .Select(x => x.ToDomainModel())
                 .ToList();
+        }
+
+        public int GetMoneyWonSoFarInGameIdAndRound(Guid gameId, int? roundNumber)
+        {
+            if (!roundNumber.HasValue || roundNumber.Value == 1)
+            {
+                return EuroBalanceAtNewGame;
+            }
+
+            var nonPlayerWalletMoneyWonSoFar = GetNonPlayerWalletMoneyWonSoFar(gameId, roundNumber.Value);
+
+            var playerWalletMoneyWonSoFar = GetPlayerWalletMoneyWonSoFar(gameId, roundNumber.Value);
+
+            return EuroBalanceAtNewGame + nonPlayerWalletMoneyWonSoFar + playerWalletMoneyWonSoFar;
+        }
+
+        private int GetPlayerWalletMoneyWonSoFar(Guid gameId, int roundNumberValue)
+        {
+            // Stuivertje wisselen
+            return 0;
+        }
+
+        private int GetNonPlayerWalletMoneyWonSoFar(Guid gameId, int roundNumber)
+        {
+            return WalletRepository
+                .GetAll()
+                .Where(x => x.GameId == gameId
+                         && x.Type != WalletEntity.WalletType.PlayerWallet.ToString())
+                .Select(x => x.ToDomainModel())
+                .ToList()
+                .Sum(x => x.GetMoneyWonInRound(roundNumber));
         }
     }
 }

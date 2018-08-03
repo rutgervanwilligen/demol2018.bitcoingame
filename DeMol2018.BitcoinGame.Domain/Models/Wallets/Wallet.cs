@@ -24,6 +24,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
         }
 
         public abstract bool WalletIsClosed();
+        public abstract int GetMoneyWonInRound(int roundNumber);
 
         public int GetCurrentBalanceInRound(int roundNumber)
         {

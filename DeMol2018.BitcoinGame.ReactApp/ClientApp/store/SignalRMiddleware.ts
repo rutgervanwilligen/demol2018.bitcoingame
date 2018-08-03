@@ -85,7 +85,8 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
             currentGameId: loginResult.updatedState.currentGameId,
             currentRoundNumber: loginResult.updatedState.currentRoundNumber,
             currentRoundEndTime: loginResult.updatedState.currentRoundEndTime,
-            nonPlayerWallets: sortedWallets
+            nonPlayerWallets: sortedWallets,
+            moneyWonSoFar: loginResult.updatedState.moneyWonSoFar
         });
     });
 
@@ -111,7 +112,8 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
             currentRoundEndTime: fetchNewGameStateResult.updatedState.currentRoundEndTime,
             userWalletAddress: fetchNewGameStateResult.updatedState.userWalletAddress,
             userCurrentBalance: fetchNewGameStateResult.updatedState.userCurrentBalance,
-            nonPlayerWallets: sortedWallets
+            nonPlayerWallets: sortedWallets,
+            moneyWonSoFar: fetchNewGameStateResult.updatedState.moneyWonSoFar
         });
     });
 
