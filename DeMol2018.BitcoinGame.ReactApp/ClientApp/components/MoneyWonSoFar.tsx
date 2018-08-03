@@ -8,7 +8,7 @@ class MoneyWonSoFar extends React.Component<BitcoinGameState> {
     public render() {
         return (
             <div className="moneyWonSoFar">
-                <h2 className="moneyWonSoFarHeader">Tot nu toe verdiend:</h2>
+                <div className="moneyWonSoFarHeader">Tot nu toe verdiend:</div>
                 <div className="moneyWonSoFarText">
                     &euro; {this.props.moneyWonSoFar}
                 </div>
