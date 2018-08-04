@@ -81,7 +81,34 @@ namespace DeMol2018.BitcoinGame.Application.Services
                 }
             }
 
-            return results.Sum(x => (x.Depth - 1) * 200);
+            var sortedResults = results.OrderByDescending(x => x.Depth);
+            var finalResults = new HashSet<MoneySwapSearch.SearchResult>();
+            var seenTransactionIds = new HashSet<Guid>();
+
+            foreach (var result in sortedResults)
+            {
+                var valid = true;
+                foreach (var transactionId in result.TransactionGuids)
+                {
+                    if (seenTransactionIds.Contains(transactionId))
+                    {
+                        valid = false;
+                    }
+                }
+
+                if (!valid)
+                {
+                    continue;
+                }
+
+                finalResults.Add(result);
+                foreach (var transactionId in result.TransactionGuids)
+                {
+                    seenTransactionIds.Add(transactionId);
+                }
+            }
+
+            return finalResults.Sum(x => (x.Depth - 1) * 200);
         }
 
         private int GetNonPlayerWalletMoneyWonUpUntilRound(Guid gameId, int roundNumber)
