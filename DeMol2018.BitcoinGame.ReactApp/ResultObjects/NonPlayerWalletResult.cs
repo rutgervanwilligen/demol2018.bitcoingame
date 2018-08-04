@@ -18,7 +18,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.ResultObjects
                         Address = jokerWallet.Address,
                         CurrentBalance = roundNumber == null
                             ? jokerWallet.StartAmount
-                            : jokerWallet.GetCurrentBalanceAfterRound(roundNumber.Value),
+                            : jokerWallet.GetBalanceAfterRound(roundNumber.Value),
                         Name = jokerWallet.DisplayName
                     };
                 case LargeTransactionWallet largeTransactionWallet:
@@ -26,7 +26,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.ResultObjects
                         Address = largeTransactionWallet.Address,
                         CurrentBalance = roundNumber == null
                             ? largeTransactionWallet.StartAmount
-                            : largeTransactionWallet.GetCurrentBalanceAfterRound(roundNumber.Value),
+                            : largeTransactionWallet.GetBalanceAfterRound(roundNumber.Value),
                         Name = largeTransactionWallet.DisplayName
                     };
                 case CombinedTransactionWallet combinedTransactionWallet:
@@ -34,7 +34,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.ResultObjects
                         Address = combinedTransactionWallet.Address,
                         CurrentBalance = roundNumber == null
                             ? combinedTransactionWallet.StartAmount
-                            : combinedTransactionWallet.GetCurrentBalanceAfterRound(roundNumber.Value),
+                            : combinedTransactionWallet.GetBalanceAfterRound(roundNumber.Value),
                         Name = combinedTransactionWallet.DisplayName
                     };
             }
