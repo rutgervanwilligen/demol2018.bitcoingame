@@ -50,7 +50,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             }
 
             var currentRound = _gameService.GetCurrentRound();
-            var lastRoundNumber = currentGame.Rounds.Any() 
+            var lastRoundNumber = currentGame.Rounds.Any(x => x.HasEnded)
                 ? currentGame.Rounds.Where(x => x.HasEnded).Max(x => x.RoundNumber) 
                 : (int?)null;
 
@@ -113,7 +113,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             }
 
             var currentRound = _gameService.GetCurrentRound();
-            var lastRoundNumber = currentGame.Rounds.Any() 
+            var lastRoundNumber = currentGame.Rounds.Any(x => x.HasEnded)
                 ? currentGame.Rounds.Where(x => x.HasEnded).Max(x => x.RoundNumber) 
                 : (int?)null;
 
