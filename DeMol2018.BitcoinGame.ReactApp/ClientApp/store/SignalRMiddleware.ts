@@ -16,7 +16,6 @@ export function signalRInvokeMiddleware() {
         switch (action.type) {
             case "MAKE_TRANSACTION":
                 connection.invoke("MakeTransaction", action.invokerId, action.receiverAddress, action.amount).then(function () {
-                    console.log("make transaction fulfilled");
                 }).catch(function () {
                     console.log("make transaction rejected");
                 });
@@ -24,7 +23,6 @@ export function signalRInvokeMiddleware() {
 
             case "LOGIN":
                 connection.invoke("Login", action.name, action.code).then(function () {
-                    console.log("login fulfilled");
                 }).catch(function () {
                     console.log("login rejected");
                 });
@@ -32,7 +30,6 @@ export function signalRInvokeMiddleware() {
 
             case "FETCH_NEW_GAME_STATE":
                 connection.invoke("FetchNewGameState", action.playerGuid).then(function () {
-                    console.log("fetch new game state fulfilled");
                 }).catch(function () {
                     console.log("fetch new game state rejected");
                 });
@@ -40,17 +37,15 @@ export function signalRInvokeMiddleware() {
                 
             case "START_NEW_ROUND":
                 connection.invoke("StartNewRound", action.invokerId, action.lengthOfNewRoundInMinutes).then(function () {
-                    
                 }).catch(function () {
-                    
+                    console.log("start new round rejected");
                 });
                 break;
 
             case "START_NEW_GAME":
                 connection.invoke("StartNewGame", action.invokerId).then(function () {
-
                 }).catch(function () {
-
+                    console.log("start new game rejected");
                 });
                 break;
             default:
@@ -83,6 +78,7 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
             userWalletAddress: loginResult.updatedState.userWalletAddress,
             userCurrentBalance: loginResult.updatedState.userCurrentBalance,
             currentGameId: loginResult.updatedState.currentGameId,
+            lastRoundNumber: loginResult.updatedState.lastRoundNumber,
             currentRoundNumber: loginResult.updatedState.currentRoundNumber,
             currentRoundEndTime: loginResult.updatedState.currentRoundEndTime,
             nonPlayerWallets: sortedWallets,
@@ -108,6 +104,7 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
         store.dispatch({
             type: 'RECEIVE_NEW_GAME_STATE',
             currentGameId: fetchNewGameStateResult.updatedState.currentGameId,
+            lastRoundNumber: fetchNewGameStateResult.updatedState.lastRoundNumber,
             currentRoundNumber: fetchNewGameStateResult.updatedState.currentRoundNumber,
             currentRoundEndTime: fetchNewGameStateResult.updatedState.currentRoundEndTime,
             userWalletAddress: fetchNewGameStateResult.updatedState.userWalletAddress,

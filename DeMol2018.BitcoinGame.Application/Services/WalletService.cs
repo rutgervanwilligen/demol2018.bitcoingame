@@ -39,14 +39,14 @@ namespace DeMol2018.BitcoinGame.Application.Services
                 .ToList();
         }
 
-        public int GetMoneyWonSoFarInGameIdAndRound(Guid gameId, int? roundNumber)
+        public int GetMoneyWonSoFarInGameIdUpUntilRound(Guid gameId, int? roundNumber)
         {
             if (!roundNumber.HasValue || roundNumber.Value == 1)
             {
                 return EuroBalanceAtNewGame;
             }
 
-            var nonPlayerWalletMoneyWonSoFar = GetNonPlayerWalletMoneyWonSoFar(gameId, roundNumber.Value);
+            var nonPlayerWalletMoneyWonSoFar = GetNonPlayerWalletMoneyWonUpUntilRound(gameId, roundNumber.Value);
 
             var playerWalletMoneyWonSoFar = GetPlayerWalletMoneyWonSoFar(gameId, roundNumber.Value);
 
@@ -84,7 +84,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
             return results.Sum(x => (x.Depth - 1) * 200);
         }
 
-        private int GetNonPlayerWalletMoneyWonSoFar(Guid gameId, int roundNumber)
+        private int GetNonPlayerWalletMoneyWonUpUntilRound(Guid gameId, int roundNumber)
         {
             return WalletRepository
                 .GetAll()
@@ -92,7 +92,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
                          && x.Type != WalletEntity.WalletType.PlayerWallet.ToString())
                 .Select(x => x.ToDomainModel())
                 .ToList()
-                .Sum(x => x.GetMoneyWonInRound(roundNumber));
+                .Sum(x => x.GetMoneyWonUntilRound(roundNumber));
         }
 
         public static class MoneySwapSearch

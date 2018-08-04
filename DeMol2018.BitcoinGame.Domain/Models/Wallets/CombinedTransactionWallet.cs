@@ -22,11 +22,11 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             return false;
         }
 
-        public override int GetMoneyWonInRound(int roundNumber)
+        public override int GetMoneyWonUntilRound(int roundNumber)
         {
             var transactionsGroupedByRound = IncomingTransactions
                 .GroupBy(x => x.RoundNumber)
-                .Where(x => x.Key < roundNumber)
+                .Where(x => x.Key <= roundNumber)
                 .Where(x => x.Count() >= MinimalNumberOfCandidatesToWin);
 
             var numberOfValidCombinedTransactions = transactionsGroupedByRound

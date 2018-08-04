@@ -12,7 +12,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             StartAmount = 1000;
         }
 
-        public override int GetMoneyWonInRound(int roundNumber)
+        public override int GetMoneyWonUntilRound(int roundNumber)
         {
             return 0;
         }

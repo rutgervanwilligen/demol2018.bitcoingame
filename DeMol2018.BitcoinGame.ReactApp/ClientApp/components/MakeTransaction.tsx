@@ -40,13 +40,17 @@ class MakeTransaction extends React.Component<MakeTransactionProps> {
         return (
             <div className="makeTransaction">
                 <h2 className="makeTransactionHeader">Overmaken</h2>
-                <label>Hoeveelheid BTC</label>
-                <input className="ïnputField" placeholder='Hoeveelheid' ref={this.setAmountInputRef} />
-                <label>Ontvangstadres</label>
-                <input className="ïnputField" placeholder='Ontvangstadres' ref={this.setReceiverAddressInputRef} />
+                <div className="amount">
+                    <label>Hoeveelheid BTC</label>
+                    <input className="inputField" placeholder='Hoeveelheid' ref={this.setAmountInputRef} />
+                </div>
+                <div className="receiverAddress">
+                    <label>Ontvangstadres</label>
+                    <input className="inputField" placeholder='Ontvangstadres' ref={this.setReceiverAddressInputRef} />
+                </div>
                 {this.props.currentRoundNumber !== undefined
-                    ? <button onClick={this.makeTransactionAndClearFields}>Verstuur</button>
-                    : <button disabled>Verstuur</button>
+                    ? <button className="button" onClick={this.makeTransactionAndClearFields}>Verstuur</button>
+                    : <button className="button" disabled>Verstuur</button>
                 }
             </div>
         );

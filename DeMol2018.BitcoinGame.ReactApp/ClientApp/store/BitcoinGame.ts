@@ -15,6 +15,7 @@ export interface BitcoinGameState {
     isAdmin: boolean;
     playerGuid?: string;
     currentGameId?: string;
+    lastRoundNumber?: number;
     currentRoundNumber?: number;
     currentRoundEndTime?: Date;
     currentBalance?: number;
@@ -42,6 +43,7 @@ export interface ReceiveLoginResultAction {
     currentGameId?: string;
     userWalletAddress?: number;
     userCurrentBalance?: number;
+    lastRoundNumber?: number;
     currentRoundNumber?: number;
     currentRoundEndTime?: string;
     nonPlayerWallets?: NonPlayerWalletState[];
@@ -51,6 +53,7 @@ export interface ReceiveLoginResultAction {
 export interface ReceiveNewGameStateAction {
     type: 'RECEIVE_NEW_GAME_STATE';
     currentGameId?: string;
+    lastRoundNumber?: number;
     currentRoundNumber?: number;
     currentRoundEndTime?: string;
     userCurrentBalance?: number;
@@ -97,7 +100,8 @@ const unloadedState: BitcoinGameState = {
     currentBalance: undefined,
     usersWalletAddress: undefined,
     nonPlayerWallets: [],
-    moneyWonSoFar: 0
+    moneyWonSoFar: 0,
+    lastRoundNumber: undefined
 };
 
 export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, incomingAction: Action) => {
@@ -110,6 +114,7 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 currentGameId: action.currentGameId,
                 currentBalance: action.userCurrentBalance,
                 usersWalletAddress: action.userWalletAddress,
+                lastRoundNumber: action.lastRoundNumber != null ? action.lastRoundNumber : undefined,
                 currentRoundNumber: action.currentRoundNumber != null ? action.currentRoundNumber : undefined,
                 currentRoundEndTime: action.currentRoundEndTime != null ? new Date(action.currentRoundEndTime) : undefined,
                 nonPlayerWallets: action.nonPlayerWallets != null ? action.nonPlayerWallets : [],
@@ -124,6 +129,7 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 usersWalletAddress: action.userWalletAddress,
                 currentGameId: action.currentGameId,
                 currentBalance: action.userCurrentBalance,
+                lastRoundNumber: action.lastRoundNumber != null ? action.lastRoundNumber : undefined,
                 currentRoundEndTime: action.currentRoundEndTime != null ? new Date(action.currentRoundEndTime) : undefined,
                 currentRoundNumber: action.currentRoundNumber != null ? action.currentRoundNumber : undefined,
                 nonPlayerWallets: action.nonPlayerWallets != null ? action.nonPlayerWallets : [],

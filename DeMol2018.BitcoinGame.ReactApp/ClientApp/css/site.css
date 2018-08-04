@@ -18,6 +18,10 @@ body {
     color: #000000;
 }
 
+.button[disabled] {
+    color: lightgrey;
+}
+
 body h1 {
     color: #90ee90;
 }
@@ -56,7 +60,7 @@ body h1 {
     margin-bottom: 20px;
 }
 
-.login .inputField {
+.inputField {
     color: #000000;
     width: 200px;
     font-size: 16px;
@@ -124,9 +128,8 @@ body h1 {
 .wallet .walletHeader {
     margin: 0;
     color: #90ee90;
-    font-size: 32px;
+    font-size: 26px;
     margin-bottom: 20px;
-    font-weight: bold;
 }
 
 .wallet .currentBalance {
@@ -191,6 +194,29 @@ body h1 {
 }
 
 .nonPlayerWallet .walletAddress {
+    display: inline-block;
+    width: 50%;
+}
+
+.makeTransaction .amount {
+    display: inline-block;
+    width: 50%;
+}
+
+.makeTransaction .makeTransactionHeader {
+    font-size: 22px;
+}
+
+.makeTransaction .inputField {
+    width: 140px;
+    text-align: center;
+}
+
+.makeTransaction .button {
+    margin-top: 10px;
+}
+
+.makeTransaction .receiverAddress {
     display: inline-block;
     width: 50%;
 }

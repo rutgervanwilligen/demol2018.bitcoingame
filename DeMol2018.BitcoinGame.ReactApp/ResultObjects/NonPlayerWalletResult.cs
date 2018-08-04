@@ -9,7 +9,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.ResultObjects
         public int CurrentBalance { get; set; }
         public string Name { get; set; }
 
-        public static NonPlayerWalletResult GetResultFromWalletAndRound(Wallet wallet, int? roundNumber)
+        public static NonPlayerWalletResult GetNonPlayerWalletStatesAfterRound(Wallet wallet, int? roundNumber)
         {
             switch (wallet)
             {
@@ -18,7 +18,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.ResultObjects
                         Address = jokerWallet.Address,
                         CurrentBalance = roundNumber == null
                             ? jokerWallet.StartAmount
-                            : jokerWallet.GetCurrentBalanceInRound(roundNumber.Value),
+                            : jokerWallet.GetCurrentBalanceAfterRound(roundNumber.Value),
                         Name = jokerWallet.DisplayName
                     };
                 case LargeTransactionWallet largeTransactionWallet:
@@ -26,7 +26,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.ResultObjects
                         Address = largeTransactionWallet.Address,
                         CurrentBalance = roundNumber == null
                             ? largeTransactionWallet.StartAmount
-                            : largeTransactionWallet.GetCurrentBalanceInRound(roundNumber.Value),
+                            : largeTransactionWallet.GetCurrentBalanceAfterRound(roundNumber.Value),
                         Name = largeTransactionWallet.DisplayName
                     };
                 case CombinedTransactionWallet combinedTransactionWallet:
@@ -34,7 +34,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.ResultObjects
                         Address = combinedTransactionWallet.Address,
                         CurrentBalance = roundNumber == null
                             ? combinedTransactionWallet.StartAmount
-                            : combinedTransactionWallet.GetCurrentBalanceInRound(roundNumber.Value),
+                            : combinedTransactionWallet.GetCurrentBalanceAfterRound(roundNumber.Value),
                         Name = combinedTransactionWallet.DisplayName
                     };
             }

@@ -21,7 +21,6 @@ class GameManager extends React.Component<GameManagerProps> {
                         <div className="gameStatusText">Gestart</div>
                     </div>
                     <MoneyWonSoFar />
-                    <RoundManager />
                     <div className="nonPlayerWallets">
                         {this.props.nonPlayerWallets.map((wallet) => <NonPlayerWallet
                             name = {wallet.name}
@@ -29,6 +28,7 @@ class GameManager extends React.Component<GameManagerProps> {
                             address = {wallet.address}
                         />)}
                     </div>
+                    <RoundManager />
                 </div>
             );
         } else {

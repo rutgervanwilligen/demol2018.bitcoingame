@@ -4,9 +4,9 @@ namespace DeMol2018.BitcoinGame.Domain.Interfaces
 {
     public interface IWallet
     {
-        int GetMoneyWonInRound(int roundNumber);
+        int GetMoneyWonUntilRound(int roundNumber);
         bool WalletIsClosed();
-        int GetCurrentBalanceInRound(int roundNumber);
+        int GetCurrentBalanceAfterRound(int roundNumber);
         void WriteTransactions();
     }
 }

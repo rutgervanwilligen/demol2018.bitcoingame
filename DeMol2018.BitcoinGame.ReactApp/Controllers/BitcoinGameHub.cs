@@ -38,7 +38,6 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             }
 
             var currentGame = _gameService.FindCurrentGame();
-            var currentRound = _gameService.GetCurrentRound();
 
             if (currentGame == null)
             {
@@ -50,16 +49,19 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 });
             }
 
+            var currentRound = _gameService.GetCurrentRound();
+            var lastRoundNumber = currentGame.Rounds?.Max(x => x.RoundNumber);
+
             var userWalletAddress = 0;
             var userCurrentBalance = 0;
 
             var nonPlayerWallets = _walletService.GetNonPlayerWalletsByGameId(currentGame.Id);
-            var nonPlayerWalletsResult = nonPlayerWallets
-                .Select(x => NonPlayerWalletResult.GetResultFromWalletAndRound(x, currentRound?.RoundNumber))
+            var nonPlayerWalletsState = nonPlayerWallets
+                .Select(x => NonPlayerWalletResult.GetNonPlayerWalletStatesAfterRound(x, lastRoundNumber))
                 .ToArray();
 
             var moneyWonSoFar =
-                _walletService.GetMoneyWonSoFarInGameIdAndRound(currentGame.Id, currentRound?.RoundNumber);
+                _walletService.GetMoneyWonSoFarInGameIdUpUntilRound(currentGame.Id, lastRoundNumber);
 
             if (!player.IsAdmin)
             {
@@ -67,7 +69,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 userWalletAddress = wallet.Address;
                 userCurrentBalance = currentRound == null
                     ? wallet.StartAmount
-                    : wallet.GetCurrentBalanceInRound(currentRound.RoundNumber);
+                    : wallet.GetCurrentBalanceAfterRound(currentRound.RoundNumber);
             }
 
             return Clients.Caller.SendAsync("LoginResult", new LoginResult {
@@ -76,11 +78,12 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 PlayerGuid = player.Id,
                 UpdatedState = new UpdatedStateResult {
                     CurrentGameId = currentGame.Id,
+                    LastRoundNumber = lastRoundNumber,
                     UserWalletAddress = userWalletAddress,
                     UserCurrentBalance = userCurrentBalance,
                     CurrentRoundEndTime = currentRound?.EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                     CurrentRoundNumber = currentRound?.RoundNumber,
-                    NonPlayerWallets = nonPlayerWalletsResult,
+                    NonPlayerWallets = nonPlayerWalletsState,
                     MoneyWonSoFar = moneyWonSoFar
                 }
             });
@@ -98,7 +101,6 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             var player = _playerService.GetById(invokerId.Value);
 
             var currentGame = _gameService.FindCurrentGame();
-            var currentRound = _gameService.GetCurrentRound();
 
             if (currentGame == null)
             {
@@ -108,13 +110,16 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 });
             }
 
+            var currentRound = _gameService.GetCurrentRound();
+            var lastRoundNumber = currentGame.Rounds?.Max(x => x.RoundNumber);
+
             var nonPlayerWallets = _walletService.GetNonPlayerWalletsByGameId(currentGame.Id);
             var nonPlayerWalletsResult = nonPlayerWallets
-                .Select(x => NonPlayerWalletResult.GetResultFromWalletAndRound(x, currentRound?.RoundNumber))
+                .Select(x => NonPlayerWalletResult.GetNonPlayerWalletStatesAfterRound(x, lastRoundNumber))
                 .ToArray();
 
             var moneyWonSoFar =
-                _walletService.GetMoneyWonSoFarInGameIdAndRound(currentGame.Id, currentRound?.RoundNumber);
+                _walletService.GetMoneyWonSoFarInGameIdUpUntilRound(currentGame.Id, lastRoundNumber);
 
             if (player.IsAdmin)
             {
@@ -122,6 +127,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                     CallSuccessful = true,
                     UpdatedState = new UpdatedStateResult {
                         CurrentGameId = currentGame.Id,
+                        LastRoundNumber = lastRoundNumber,
                         CurrentRoundEndTime = currentRound?.EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                         CurrentRoundNumber = currentRound?.RoundNumber,
                         NonPlayerWallets = nonPlayerWalletsResult,
@@ -136,10 +142,11 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 CallSuccessful = true,
                 UpdatedState = new UpdatedStateResult {
                     CurrentGameId = currentGame.Id,
+                    LastRoundNumber = currentGame.Rounds?.Max(x => x.RoundNumber),
                     UserWalletAddress = wallet.Address,
                     UserCurrentBalance = currentRound == null 
                         ? wallet.StartAmount
-                        : wallet.GetCurrentBalanceInRound(currentRound.RoundNumber),
+                        : wallet.GetCurrentBalanceAfterRound(currentRound.RoundNumber),
                     CurrentRoundEndTime = currentRound?.EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                     CurrentRoundNumber = currentRound?.RoundNumber,
                     NonPlayerWallets = nonPlayerWalletsResult,
@@ -204,7 +211,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             {                
                 return Clients.Caller.SendAsync("MakeTransactionResult", new {
                     transactionSuccessful = false,
-                    userCurrentBalance = senderWallet.GetCurrentBalanceInRound(currentRound.RoundNumber)
+                    userCurrentBalance = senderWallet.GetCurrentBalanceAfterRound(currentRound.RoundNumber)
                 });
             }
 
@@ -212,7 +219,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
 
             return Clients.Caller.SendAsync("MakeTransactionResult", new {
                 transactionSuccessful = true,
-                userCurrentBalance = updatedSenderWallet.GetCurrentBalanceInRound(currentRound.RoundNumber)
+                userCurrentBalance = updatedSenderWallet.GetCurrentBalanceAfterRound(currentRound.RoundNumber)
             });
         }
     }
