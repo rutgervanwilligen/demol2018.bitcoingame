@@ -48,12 +48,12 @@ namespace DeMol2018.BitcoinGame.Application.Services
 
             var nonPlayerWalletMoneyWonSoFar = GetNonPlayerWalletMoneyWonUpUntilRound(gameId, roundNumber.Value);
 
-            var playerWalletMoneyWonSoFar = GetPlayerWalletMoneyWonSoFar(gameId, roundNumber.Value);
+            var playerWalletMoneyWonSoFar = GetPlayerWalletMoneyWonUpUntilRound(gameId, roundNumber.Value);
 
             return EuroBalanceAtNewGame + nonPlayerWalletMoneyWonSoFar + playerWalletMoneyWonSoFar;
         }
 
-        private int GetPlayerWalletMoneyWonSoFar(Guid gameId, int roundNumber)
+        private int GetPlayerWalletMoneyWonUpUntilRound(Guid gameId, int roundNumber)
         {
             // Stuivertje wisselen
             var potentialTransactionsGroupedByRound = WalletRepository
@@ -62,7 +62,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
                          && x.Type == WalletEntity.WalletType.PlayerWallet.ToString())
                 .Select(x => x.ToDomainModel()).ToList()
                 .SelectMany(x => x.OutgoingTransactions).ToList()
-                .Where(y => y.RoundNumber < roundNumber
+                .Where(y => y.RoundNumber <= roundNumber
                      && y.ReceiverWalletId.HasValue
                      && y.Amount >= MinimalAmountForStuivertjeWisselen)
                 .GroupBy(x => x.RoundNumber)
@@ -156,6 +156,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
 
                     foreach (var newTransaction in newTransactions)
                     {
+                        seenTransactionIds.Add(newTransaction.Id);
                         queue.Enqueue(new TransactionDepthTuple {
                             Depth = tuple.Depth + 1,
                             Transaction = newTransaction,
