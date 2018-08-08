@@ -41,7 +41,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
 
         public int GetMoneyWonSoFarInGameIdUpUntilRound(Guid gameId, int? roundNumber)
         {
-            if (!roundNumber.HasValue || roundNumber.Value == 1)
+            if (!roundNumber.HasValue)
             {
                 return EuroBalanceAtNewGame;
             }
