@@ -13,7 +13,7 @@ namespace DeMol2018.BitcoinGame.DAL.Entities
         
         public int LoginCode { get; set; }
 
-        [Required]
+        [Required, MaxLength(100)]
         public string Name { get; set; }
 
         public bool IsAdmin { get; set; }

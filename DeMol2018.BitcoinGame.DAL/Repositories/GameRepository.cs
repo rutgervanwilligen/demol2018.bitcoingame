@@ -14,8 +14,8 @@ namespace DeMol2018.BitcoinGame.DAL.Repositories
 
         public GameEntity FindCurrentGame()
         {
-            return GetAll().SingleOrDefault(x => x.StartTime < DateTime.UtcNow
-                                                 && !x.HasFinished);
+            return GetAll().SingleOrDefault(x => !x.HasFinished
+                                              && x.StartTime < DateTime.UtcNow);
         }
     }
 }

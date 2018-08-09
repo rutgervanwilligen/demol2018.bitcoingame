@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DeMol2018.BitcoinGame.DAL.Migrations
 {
     [DbContext(typeof(BitcoinGameDbContext))]
-    [Migration("20180802083848_InitialCreate")]
+    [Migration("20180809094410_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -33,6 +33,8 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("StartTime", "HasFinished");
+
                     b.ToTable("Games");
                 });
 
@@ -43,11 +45,7 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
 
                     b.Property<int>("Amount");
 
-                    b.Property<Guid>("GameId");
-
                     b.Property<Guid>("ReceiverWalletId");
-
-                    b.Property<Guid>("RoundId");
 
                     b.Property<int>("RoundNumber");
 
@@ -67,13 +65,9 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
 
                     b.Property<int>("Amount");
 
-                    b.Property<Guid>("GameId");
-
                     b.Property<int?>("InvalidReceiverAddress");
 
                     b.Property<Guid?>("ReceiverWalletId");
-
-                    b.Property<Guid>("RoundId");
 
                     b.Property<int>("RoundNumber");
 
@@ -96,7 +90,10 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                     b.Property<int>("LoginCode");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<int>("WalletAddress");
 
                     b.HasKey("Id");
 

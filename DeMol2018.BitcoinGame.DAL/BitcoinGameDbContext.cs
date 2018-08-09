@@ -27,6 +27,11 @@ namespace DeMol2018.BitcoinGame.DAL
                 .ValueGeneratedOnAdd();
 
             modelBuilder
+                .Entity<PlayerEntity>()
+                .Property(x => x.Name)
+                .HasMaxLength(100);
+
+            modelBuilder
                 .Entity<RoundEntity>()
                 .HasKey(x => x.Id);
 
@@ -67,6 +72,10 @@ namespace DeMol2018.BitcoinGame.DAL
                 .Property(x => x.StartTime)
                 .HasColumnType("datetime2")
                 .IsRequired();
+
+            modelBuilder
+                .Entity<GameEntity>()
+                .HasIndex(x => new {x.StartTime, x.HasFinished});
 
             modelBuilder
                 .Entity<WalletEntity>()

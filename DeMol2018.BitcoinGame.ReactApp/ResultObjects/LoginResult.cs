@@ -8,5 +8,6 @@ namespace DeMol2018.BitcoinGame.ReactApp.ResultObjects
         public bool IsAdmin { get; set; }
         public Guid PlayerGuid { get; set; }
         public UpdatedStateResult UpdatedState { get; set; }
+        public DateTime[] Tests { get; set; }
     }
 }

@@ -26,8 +26,9 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     LoginCode = table.Column<int>(nullable: false),
-                    Name = table.Column<string>(nullable: false),
-                    IsAdmin = table.Column<bool>(nullable: false)
+                    Name = table.Column<string>(maxLength: 100, nullable: false),
+                    IsAdmin = table.Column<bool>(nullable: false),
+                    WalletAddress = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -91,8 +92,6 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                     ReceiverWalletId = table.Column<Guid>(nullable: false),
                     SenderWalletId = table.Column<Guid>(nullable: false),
                     Amount = table.Column<int>(nullable: false),
-                    GameId = table.Column<Guid>(nullable: false),
-                    RoundId = table.Column<Guid>(nullable: false),
                     RoundNumber = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -114,8 +113,6 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                     SenderWalletId = table.Column<Guid>(nullable: false),
                     ReceiverWalletId = table.Column<Guid>(nullable: true),
                     Amount = table.Column<int>(nullable: false),
-                    GameId = table.Column<Guid>(nullable: false),
-                    RoundId = table.Column<Guid>(nullable: false),
                     RoundNumber = table.Column<int>(nullable: false),
                     InvalidReceiverAddress = table.Column<int>(nullable: true)
                 },
@@ -129,6 +126,11 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Games_StartTime_HasFinished",
+                table: "Games",
+                columns: new[] { "StartTime", "HasFinished" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_IncomingTransactions_ReceiverWalletId",

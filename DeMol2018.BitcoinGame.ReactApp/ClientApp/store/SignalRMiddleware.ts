@@ -22,7 +22,9 @@ export function signalRInvokeMiddleware() {
                 break;
 
             case "LOGIN":
+                console.log("start login");
                 connection.invoke("Login", action.name, action.code).then(function () {
+                    console.log("klaar met login");
                 }).catch(function () {
                     console.log("login rejected");
                 });
@@ -63,6 +65,8 @@ export function signalRInvokeMiddleware() {
 export function signalRRegisterCommands(store: Store<ApplicationState>) {
 
     connection.on('LoginResult', loginResult => {
+        console.log("result ontvangen");
+        console.log(loginResult);
         let sortedWallets = loginResult.updatedState.nonPlayerWallets != null
             ? loginResult.updatedState.nonPlayerWallets.sort(
                 (a: NonPlayerWalletState, b: NonPlayerWalletState) => {
@@ -70,6 +74,7 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
                 })
             : null;
 
+        console.log("wallets gesorteerd");
         store.dispatch({
             type: 'RECEIVE_LOGIN_RESULT',
             loginSuccessful: loginResult.loginSuccessful,
@@ -84,6 +89,7 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
             nonPlayerWallets: sortedWallets,
             moneyWonSoFar: loginResult.updatedState.moneyWonSoFar
         });
+        console.log("gedispatched");
     });
 
     connection.on('AnnounceNewGameStateResult', () => {

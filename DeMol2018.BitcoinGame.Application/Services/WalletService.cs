@@ -169,6 +169,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
                         results.Add(new SearchResult {
                             TransactionGuids = tuple.Traversal
                         });
+                        continue;
                     }
 
                     var receiverId = tuple.Transaction.ReceiverWalletId;

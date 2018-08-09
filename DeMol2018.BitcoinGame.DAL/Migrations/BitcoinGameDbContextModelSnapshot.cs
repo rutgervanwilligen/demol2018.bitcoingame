@@ -31,6 +31,8 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("StartTime", "HasFinished");
+
                     b.ToTable("Games");
                 });
 
@@ -86,7 +88,8 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                     b.Property<int>("LoginCode");
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(100);
 
                     b.Property<int>("WalletAddress");
 
