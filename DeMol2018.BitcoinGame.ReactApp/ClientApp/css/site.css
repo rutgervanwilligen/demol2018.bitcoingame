@@ -165,12 +165,14 @@ body h1 {
 }
 
 .nonPlayerWallet {
-    margin-right: 50px;
+    margin-right: 40px;
     display: inline-block;
-    width: 230px;
+    width: 255px;
     padding: 10px;
-    border-top: 3px solid #90ee90;
-    border-bottom: 3px solid #90ee90;
+
+    border: 3px solid;
+    border-image: linear-gradient(to left, rgba(0, 0, 0, 0) 0%, #90ee90 50%, rgba(0, 0, 0, 0) 100%)
+    100% 0 100% 0/3px 0 3px 0 stretch;
 }
 
 .nonPlayerWallet:last-child {
@@ -182,7 +184,7 @@ body h1 {
 }
 
 .nonPlayerWallet .walletHeader {
-    height: 40px;
+    height: 50px;
     font-size: 22px;
     margin: 0 0 20px;
 }
