@@ -39,8 +39,7 @@ body h1 {
     position: relative;
     border: 3px solid #90ee90;
     border-radius: 20px;
-    width: 90%;
-    height: 90%;
+    width: 900px;
     margin-left: auto;
     margin-right: auto;
     padding: 20px;
@@ -56,8 +55,7 @@ body h1 {
 }
 
 .login h2 {
-    margin: 0;
-    margin-bottom: 20px;
+    margin: 0 0 20px;
 }
 
 .inputField {
@@ -118,11 +116,8 @@ body h1 {
     border: 3px solid #90ee90;
     padding: 20px;
     bottom: 30px;
-    margin-bottom: 0;
     display: block;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-175px);
+    margin: 0;
 }
 
 .wallet .walletHeader {
@@ -134,8 +129,7 @@ body h1 {
 
 .wallet .currentBalance {
     text-align: left;
-    display: inline-block;
-    width: 50%;
+    display: block;
 }
 
 .wallet .walletAddress {
@@ -145,32 +139,38 @@ body h1 {
 }
 
 .currentBalanceHeader {
-    font-size: 20px;
+    display: inline;
+    font-size: 18px;
 }
 
 .currentBalanceText {
-    font-size: 30px;
+    display: inline;
+    font-size: 18px;
     color: #ffff00;
     font-weight: bold;
+    margin-left: 10px;
 }
 
 .walletAddressHeader {
-    font-size: 20px;
+    display: inline;
+    font-size: 18px;
 }
 
 .walletAddressText {
-    font-size: 30px;
+    display: inline;
+    font-size: 18px;
     color: #ffff00;
     font-weight: bold;
+    margin-left: 10px;
 }
 
 .nonPlayerWallet {
-    margin-right: 2%;
+    margin-right: 50px;
     display: inline-block;
-    width: 32%;
+    width: 230px;
     padding: 10px;
-    border: 3px solid #90ee90;
-    border-radius: 20px;
+    border-top: 3px solid #90ee90;
+    border-bottom: 3px solid #90ee90;
 }
 
 .nonPlayerWallet:last-child {
@@ -178,24 +178,21 @@ body h1 {
 }
 
 .nonPlayerWallets {
-    margin: 10px 0;
+    margin: 30px 0;
 }
 
 .nonPlayerWallet .walletHeader {
     height: 40px;
     font-size: 22px;
-    margin: 0;
-    margin-bottom: 20px;
+    margin: 0 0 20px;
 }
 
 .nonPlayerWallet .currentBalance {
-    display: inline-block;
-    width: 50%;
+    display: block;
 }
 
 .nonPlayerWallet .walletAddress {
-    display: inline-block;
-    width: 50%;
+    display: block;
 }
 
 .makeTransaction .amount {

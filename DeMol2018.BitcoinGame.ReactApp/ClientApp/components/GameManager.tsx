@@ -22,7 +22,8 @@ class GameManager extends React.Component<GameManagerProps> {
                     </div>
                     <MoneyWonSoFar />
                     <div className="nonPlayerWallets">
-                        {this.props.nonPlayerWallets.map((wallet) => <NonPlayerWallet
+                        {this.props.nonPlayerWallets.map((wallet, i) => <NonPlayerWallet
+                            key = {i}
                             name = {wallet.name}
                             currentBalance = {wallet.currentBalance}
                             address = {wallet.address}
