@@ -14,19 +14,19 @@ class RoundManager extends React.Component<RoundManagerProps> {
         if (this.props.currentRoundNumber != null && this.props.currentRoundEndTime != null) {
             return (
                 <div className="roundManager">
-                    <h2>Ronde {this.props.currentRoundNumber}</h2>
-                    <h3>Tijd over: <RoundCountdownTimer/></h3>
+                    <div className="roundNumber">Ronde {this.props.currentRoundNumber}</div>
+                    <div className="timeLeft">Tijd over: <RoundCountdownTimer/></div>
                 </div>
             );
         } else if (this.props.lastRoundNumber != null) {
             return (
-                <div className="roundManager">
+                <div className="roundManager noRoundActive">
                     Geen ronde actief. Laatst gespeelde ronde: {this.props.lastRoundNumber}
                 </div>
             );
         } else {
             return (
-                <div className="roundManager">
+                <div className="roundManager noRoundActive">
                      Geen ronde actief. De eerste ronde begint binnenkort.
                 </div>
             );

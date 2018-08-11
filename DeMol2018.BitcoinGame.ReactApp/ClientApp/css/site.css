@@ -75,7 +75,21 @@ body h1 {
 }
 
 .roundManager {
-    margin: 0 0;
+    margin: 20px 0;
+    height: 63px;
+}
+
+.noRoundActive {
+    line-height: 63px;
+}
+
+.roundNumber {
+    font-size: 28px;
+}
+
+.timeLeft {
+    font-size: 22px;
+    margin-top: -5px;
 }
 
 .gameManager .gameStatus {
@@ -223,6 +237,10 @@ body h1 {
 
 .nonPlayerWallet .walletAddress {
     display: block;
+}
+
+.makeTransaction {
+    margin-top: 10px;
 }
 
 .makeTransaction .amount {
