@@ -33,7 +33,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
             GameRepository.Add(gameEntity);
             GameRepository.SaveChanges();
             
-            return newGame;
+            return gameEntity.ToDomainModel();
         }
 
         public Round StartNewRound(TimeSpan roundLength)

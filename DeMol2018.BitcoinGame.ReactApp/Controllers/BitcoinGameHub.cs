@@ -55,10 +55,8 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             }
 
             var e = DateTime.UtcNow;
-            var currentRound = _gameService.GetCurrentRound();
-            var lastRoundNumber = currentGame.Rounds.Any(x => x.HasEnded)
-                ? currentGame.Rounds.Where(x => x.HasEnded).Max(x => x.RoundNumber) 
-                : (int?)null;
+            var currentRound = currentGame.GetCurrentRound();
+            var lastRoundNumber = currentGame.GetLastFinishedRoundNumber();
 
             var f = DateTime.UtcNow;
             var userWalletAddress = 0;
@@ -123,10 +121,8 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 });
             }
 
-            var currentRound = _gameService.GetCurrentRound();
-            var lastRoundNumber = currentGame.Rounds.Any(x => x.HasEnded)
-                ? currentGame.Rounds.Where(x => x.HasEnded).Max(x => x.RoundNumber) 
-                : (int?)null;
+            var currentRound = currentGame.GetCurrentRound();
+            var lastRoundNumber = currentGame.GetLastFinishedRoundNumber();
 
             var nonPlayerWallets = _walletService.GetNonPlayerWalletsByGameId(currentGame.Id);
             var nonPlayerWalletsResult = nonPlayerWallets
@@ -181,10 +177,9 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 });
             }
 
-            _gameService.StartNewGame();
+            var newGame = _gameService.StartNewGame();
 
-            var currentGame = _gameService.FindCurrentGame();
-            _playerService.createNewWalletsForGame(currentGame.Id);
+            _playerService.createNewWalletsForGame(newGame.Id);
 
             return Clients.All.SendAsync("AnnounceNewGameStateResult");
         }

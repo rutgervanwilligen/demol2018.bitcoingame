@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DeMol2018.BitcoinGame.Domain.Models
 {
@@ -16,6 +17,16 @@ namespace DeMol2018.BitcoinGame.Domain.Models
             Rounds = new List<Round>();
             StartTime = DateTime.UtcNow;
             HasFinished = false;
+        }
+
+        public Round GetCurrentRound()
+            => Rounds.Any(x => x.IsActive) ? Rounds.OrderByDescending(x => x.RoundNumber).First() : null;
+
+        public int? GetLastFinishedRoundNumber()
+        {
+            return Rounds.Any(x => x.HasEnded)
+                ? Rounds.Where(x => x.HasEnded).Max(x => x.RoundNumber)
+                : (int?) null;
         }
     }
 }
