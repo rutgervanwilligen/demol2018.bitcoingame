@@ -157,7 +157,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 CallSuccessful = true,
                 UpdatedState = new UpdatedStateResult {
                     CurrentGameId = currentGame.Id,
-                    LastRoundNumber = currentGame.Rounds?.Max(x => x.RoundNumber),
+                    LastRoundNumber = lastRoundNumber,
                     UserWalletAddress = wallet.Address,
                     UserCurrentBalance = lastRoundNumber == null
                         ? wallet.StartAmount
