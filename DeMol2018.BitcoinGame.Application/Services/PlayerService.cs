@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DeMol2018.BitcoinGame.DAL;
-using DeMol2018.BitcoinGame.DAL.Entities;
 using DeMol2018.BitcoinGame.DAL.Mappers;
 using DeMol2018.BitcoinGame.DAL.Repositories;
 using DeMol2018.BitcoinGame.Domain.Models;
@@ -32,7 +31,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
             return PlayerRepository.GetBy(x => x.Id == invokerId).ToDomainModel();
         }
 
-        public void createNewWalletsForGame(Guid gameId)
+        public void CreateNewWalletsForGame(Guid gameId)
         {
             var players = PlayerRepository
                 .GetAll()

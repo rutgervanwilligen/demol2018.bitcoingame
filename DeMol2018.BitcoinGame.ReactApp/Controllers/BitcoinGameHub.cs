@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DeMol2018.BitcoinGame.Application.Services;
@@ -29,10 +28,8 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
 
         public Task Login(string name, int code)
         {
-            var a = DateTime.UtcNow;
             var player = _playerService.Login(name, code);
 
-            var b = DateTime.UtcNow;
             if (player == null)
             {
                 return Clients.Caller.SendAsync("LoginResult", new LoginResult {
@@ -40,10 +37,8 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 });
             }
 
-            var c = DateTime.UtcNow;
             var currentGame = _gameService.FindCurrentGame();
 
-            var d = DateTime.UtcNow;
             if (currentGame == null)
             {
                 return Clients.Caller.SendAsync("LoginResult", new LoginResult {
@@ -54,11 +49,9 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 });
             }
 
-            var e = DateTime.UtcNow;
             var currentRound = currentGame.GetCurrentRound();
             var lastRoundNumber = currentGame.GetLastFinishedRoundNumber();
 
-            var f = DateTime.UtcNow;
             var userWalletAddress = 0;
             var userCurrentBalance = 0;
 
@@ -67,11 +60,9 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 .Select(x => NonPlayerWalletResult.GetNonPlayerWalletStatesAfterRound(x, lastRoundNumber))
                 .ToArray();
 
-            var g = DateTime.UtcNow;
             var moneyWonSoFar =
                 _walletService.GetMoneyWonSoFarInGameIdUpUntilRound(currentGame.Id, lastRoundNumber);
 
-            var h = DateTime.UtcNow;
             if (!player.IsAdmin)
             {
                 var wallet = _walletService.GetWalletByGameIdAndPlayerId(currentGame.Id, player.Id);
@@ -81,12 +72,10 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                     : wallet.GetBalanceAfterRound(lastRoundNumber.Value);
             }
 
-            var i = DateTime.UtcNow;
             return Clients.Caller.SendAsync("LoginResult", new LoginResult {
                 LoginSuccessful = true,
                 IsAdmin = player.IsAdmin,
                 PlayerGuid = player.Id,
-                Tests = new List<DateTime> { a, b, c, d, e, f, g, h, i}.ToArray(),
                 UpdatedState = new UpdatedStateResult {
                     CurrentGameId = currentGame.Id,
                     LastRoundNumber = lastRoundNumber,
@@ -179,7 +168,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
 
             var newGame = _gameService.StartNewGame();
 
-            _playerService.createNewWalletsForGame(newGame.Id);
+            _playerService.CreateNewWalletsForGame(newGame.Id);
 
             return Clients.All.SendAsync("AnnounceNewGameStateResult");
         }
