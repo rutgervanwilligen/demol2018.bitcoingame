@@ -36,13 +36,13 @@ namespace DeMol2018.BitcoinGame.Application.Services
             return gameEntity.ToDomainModel();
         }
 
-        public Round StartNewRound(TimeSpan roundLength)
+        public void StartNewRound(TimeSpan roundLength)
         {
             var currentGame = GameRepository.FindCurrentGame();
 
             if (currentGame == null)
             {
-                return null;
+                return;
             }
 
             var newRound = new Round {
@@ -57,8 +57,6 @@ namespace DeMol2018.BitcoinGame.Application.Services
             currentGame.Rounds.Add(newRound.ToEntity());
 
             GameRepository.SaveChanges();
-
-            return newRound;
         }
 
         private void MarkAllRoundsInGameFinished(GameEntity game)
