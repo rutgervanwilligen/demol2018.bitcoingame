@@ -191,16 +191,17 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
         
         public Task MakeTransaction(Guid invokerId, int receiverWalletAddress, int amount)
         {
-            var currentRound = _gameService.GetCurrentRound();
+            var currentGame = _gameService.FindCurrentGame();
 
-            if (currentRound == null)
+            if (currentGame?.GetCurrentRound() == null)
             {
                 return Clients.Caller.SendAsync("MakeTransactionResult", new {
                     transactionSuccessful = false
                 });
             }
 
-            var senderWallet = _walletService.GetWalletByGameIdAndPlayerId(currentRound.GameId, invokerId);
+            var currentRoundNumber = currentGame.GetCurrentRound().RoundNumber;
+            var senderWallet = _walletService.GetWalletByGameIdAndPlayerId(currentGame.Id, invokerId);
 
             try
             {
@@ -210,15 +211,15 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             {                
                 return Clients.Caller.SendAsync("MakeTransactionResult", new {
                     transactionSuccessful = false,
-                    userCurrentBalance = senderWallet.GetBalanceAfterRound(currentRound.RoundNumber - 1)
+                    userCurrentBalance = senderWallet.GetBalanceAfterRound(currentRoundNumber - 1)
                 });
             }
 
-            var updatedSenderWallet = _walletService.GetWalletByGameIdAndPlayerId(currentRound.GameId, invokerId);
+            var updatedSenderWallet = _walletService.GetWalletByGameIdAndPlayerId(currentGame.Id, invokerId);
 
             return Clients.Caller.SendAsync("MakeTransactionResult", new {
                 transactionSuccessful = true,
-                userCurrentBalance = updatedSenderWallet.GetBalanceAfterRound(currentRound.RoundNumber - 1)
+                userCurrentBalance = updatedSenderWallet.GetBalanceAfterRound(currentRoundNumber - 1)
             });
         }
     }

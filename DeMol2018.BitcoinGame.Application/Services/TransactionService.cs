@@ -18,14 +18,16 @@ namespace DeMol2018.BitcoinGame.Application.Services
 
         public void MakeTransaction(int senderWalletAddress, int receiverWalletAddress, int amount)
         {
-            var currentRound = GameService.GetCurrentRound();
+            var currentGame = GameService.FindCurrentGame();
 
-            if (currentRound == null)
+            if (currentGame?.GetCurrentRound() == null)
             {
                 throw new InvalidTransactionException("There is no active round. Transaction failed.");
             }
+
+            var currentRoundNumber = currentGame.GetCurrentRound().RoundNumber;
             
-            var senderWalletEntity = WalletRepository.GetBy(x => x.Address == senderWalletAddress && x.GameId == currentRound.GameId);
+            var senderWalletEntity = WalletRepository.GetBy(x => x.Address == senderWalletAddress && x.GameId == currentGame.Id);
             var senderWallet = senderWalletEntity.ToDomainModel();
 
             if (amount <= 0)
@@ -33,13 +35,13 @@ namespace DeMol2018.BitcoinGame.Application.Services
                 throw new InvalidTransactionException("Transaction amount should be > 0");
             }
 
-            var receiverWalletEntity = WalletRepository.FindBy(x => x.Address == receiverWalletAddress && x.GameId == currentRound.GameId);
+            var receiverWalletEntity = WalletRepository.FindBy(x => x.Address == receiverWalletAddress && x.GameId == currentGame.Id);
             var receiverWallet = receiverWalletEntity?.ToDomainModel();
 
             var outgoingTransaction = senderWallet.MakeTransaction(
                 receiverWallet?.Id,
                 amount,
-                currentRound.RoundNumber,
+                currentRoundNumber,
                 receiverWallet == null ? receiverWalletAddress : (int?)null);
             
             senderWalletEntity.OutgoingTransactions.Add(outgoingTransaction.ToEntity());
@@ -52,7 +54,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
             }
 
             var incomingTransaction = receiverWallet.AddIncomingTransaction(
-                currentRound.RoundNumber,
+                currentRoundNumber,
                 amount,
                 senderWallet.Id);
             
