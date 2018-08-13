@@ -15,13 +15,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             StartAmount = 0;
         }
 
-        public override bool WalletIsClosed()
-        {
-            // This wallet is always open
-            return false;
-        }
-
-        public override int GetMoneyWonUntilRound(int roundNumber)
+        public override int GetMoneyWonUpUntilRound(int roundNumber)
         {
             return 0;
         }

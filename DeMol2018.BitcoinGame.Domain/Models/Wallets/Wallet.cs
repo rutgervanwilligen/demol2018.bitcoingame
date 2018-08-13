@@ -23,8 +23,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             OutgoingTransactions = new List<OutgoingTransaction>();
         }
 
-        public abstract bool WalletIsClosed();
-        public abstract int GetMoneyWonUntilRound(int roundNumber);
+        public abstract int GetMoneyWonUpUntilRound(int roundNumber);
 
         public int GetBalanceAfterRound(int roundNumber)
         {
@@ -40,9 +39,12 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             return StartAmount + receivedAmount - sentAmount;
         }
 
-        public void WriteTransactions()
+        public int GetFinalBalance()
         {
-            throw new NotImplementedException();
+            var receivedAmount = IncomingTransactions.Sum(x => x.Amount);
+            var sentAmount = OutgoingTransactions.Sum(x => x.Amount);
+
+            return StartAmount + receivedAmount - sentAmount;
         }
 
         public IncomingTransaction AddIncomingTransaction(
@@ -53,7 +55,8 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             var incomingTransaction = new IncomingTransaction {
                 RoundNumber = roundNumber,
                 Amount = amount,
-                SenderWalletId = senderWalletId
+                SenderWalletId = senderWalletId,
+                Timestamp = DateTime.UtcNow
             };
 
             IncomingTransactions.Add(incomingTransaction);
@@ -76,6 +79,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
                 Amount = amount,
                 ReceiverWalletId = receiverWalletId,
                 RoundNumber = roundNumber,
+                Timestamp = DateTime.UtcNow,
                 InvalidReceiverAddress = receiverWalletId == null
                     ? invalidReceiverAddress
                     : null

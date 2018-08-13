@@ -74,12 +74,21 @@ namespace DeMol2018.BitcoinGame.Application.Services
 
         private void InactivateAllOldGames()
         {
-            var oldGames = GameRepository.GetAll().Where(x => !x.HasFinished);
+            var oldGames = GameRepository.GetAll().Where(x => x.IsCurrentGame);
 
             foreach (var oldGame in oldGames)
             {
-                oldGame.HasFinished = true;
+                oldGame.IsCurrentGame = false;
             }
+        }
+
+        public void FinishCurrentGame()
+        {
+            var currentGame = GameRepository.FindCurrentGame();
+
+            currentGame.HasFinished = true;
+
+            GameRepository.SaveChanges();
         }
     }
 }

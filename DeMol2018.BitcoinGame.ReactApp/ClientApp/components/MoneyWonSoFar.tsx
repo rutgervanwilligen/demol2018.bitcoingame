@@ -6,9 +6,14 @@ import {BitcoinGameState} from "../store/BitcoinGame";
 
 class MoneyWonSoFar extends React.Component<BitcoinGameState> {
     public render() {
+
+        let headerText = this.props.gameHasFinished
+            ? "In totaal verdiend:"
+            : "Tot nu toe verdiend:";
+
         return (
             <div className="moneyWonSoFar">
-                <div className="moneyWonSoFarHeader">Tot nu toe verdiend:</div>
+                <div className="moneyWonSoFarHeader">{ headerText }</div>
                 <div className="moneyWonSoFarText">
                     &euro; {this.props.moneyWonSoFar}
                 </div>

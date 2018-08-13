@@ -22,6 +22,8 @@ export interface BitcoinGameState {
     usersWalletAddress?: number;
     nonPlayerWallets: NonPlayerWalletState[];
     moneyWonSoFar: number;
+    gameHasFinished?: boolean;
+    numberOfJokersWon?: number;
 }
 
 // -----------------
@@ -48,6 +50,8 @@ export interface ReceiveLoginResultAction {
     currentRoundEndTime?: string;
     nonPlayerWallets?: NonPlayerWalletState[];
     moneyWonSoFar: number;
+    gameHasFinished?: boolean;
+    numberOfJokersWon?: number;
 }
 
 export interface ReceiveNewGameStateAction {
@@ -60,6 +64,8 @@ export interface ReceiveNewGameStateAction {
     userWalletAddress?: number;
     nonPlayerWallets?: NonPlayerWalletState[];
     moneyWonSoFar: number;
+    gameHasFinished?: boolean;
+    numberOfJokersWon?: number;
 }
 
 interface ReceiveMakeTransactionResult {
@@ -101,7 +107,9 @@ const unloadedState: BitcoinGameState = {
     usersWalletAddress: undefined,
     nonPlayerWallets: [],
     moneyWonSoFar: 0,
-    lastRoundNumber: undefined
+    lastRoundNumber: undefined,
+    gameHasFinished: undefined,
+    numberOfJokersWon: undefined
 };
 
 export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, incomingAction: Action) => {
@@ -112,13 +120,15 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
             return {
                 ...state,
                 currentGameId: action.currentGameId,
+                gameHasFinished: action.gameHasFinished,
                 currentBalance: action.userCurrentBalance,
                 usersWalletAddress: action.userWalletAddress,
                 lastRoundNumber: action.lastRoundNumber != null ? action.lastRoundNumber : undefined,
                 currentRoundNumber: action.currentRoundNumber != null ? action.currentRoundNumber : undefined,
                 currentRoundEndTime: action.currentRoundEndTime != null ? new Date(action.currentRoundEndTime) : undefined,
                 nonPlayerWallets: action.nonPlayerWallets != null ? action.nonPlayerWallets : [],
-                moneyWonSoFar: action.moneyWonSoFar
+                moneyWonSoFar: action.moneyWonSoFar,
+                numberOfJokersWon: action.numberOfJokersWon != null ? action.numberOfJokersWon : undefined
             };
         case 'RECEIVE_LOGIN_RESULT':
             return {
@@ -128,12 +138,14 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 playerGuid: action.loginSuccessful ? action.playerGuid : '',
                 usersWalletAddress: action.userWalletAddress,
                 currentGameId: action.currentGameId,
+                gameHasFinished: action.gameHasFinished,
                 currentBalance: action.userCurrentBalance,
                 lastRoundNumber: action.lastRoundNumber != null ? action.lastRoundNumber : undefined,
                 currentRoundEndTime: action.currentRoundEndTime != null ? new Date(action.currentRoundEndTime) : undefined,
                 currentRoundNumber: action.currentRoundNumber != null ? action.currentRoundNumber : undefined,
                 nonPlayerWallets: action.nonPlayerWallets != null ? action.nonPlayerWallets : [],
-                moneyWonSoFar: action.moneyWonSoFar
+                moneyWonSoFar: action.moneyWonSoFar,
+                numberOfJokersWon: action.numberOfJokersWon != null ? action.numberOfJokersWon : undefined
             };
         case 'MAKE_TRANSACTION':
             return {

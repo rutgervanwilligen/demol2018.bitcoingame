@@ -15,6 +15,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
         private WalletRepository WalletRepository { get; }
         private const int EuroBalanceAtNewGame = 0;
         private const int MinimalAmountForStuivertjeWisselen = 500;
+        private const int NumberOfJokerWalletJokerWinners = 8;
 
         public WalletService(BitcoinGameDbContext dbContext)
         {
@@ -119,7 +120,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
                          && x.Type != WalletEntity.WalletType.PlayerWallet.ToString())
                 .Select(x => x.ToDomainModel())
                 .ToList()
-                .Sum(x => x.GetMoneyWonUntilRound(roundNumber));
+                .Sum(x => x.GetMoneyWonUpUntilRound(roundNumber));
         }
 
         public static class MoneySwapSearch
@@ -195,6 +196,45 @@ namespace DeMol2018.BitcoinGame.Application.Services
 
                 return results;
             }
+        }
+
+        public int GetNumberOfJokersWonWithEndBalance(Guid gameId, Guid walletId)
+        {
+            var walletsSortedByBalance = WalletRepository
+                .GetAll()
+                .Where(x => x.GameId == gameId)
+                .Select(x => x.ToDomainModel())
+                .ToList()
+                .OrderByDescending(x => x.GetFinalBalance())
+                .ToList();
+
+            var highestEndBalance = walletsSortedByBalance.First().GetFinalBalance();
+            var walletsWithHighestBalance =
+                walletsSortedByBalance.Where(x => x.GetFinalBalance() == highestEndBalance).ToList();
+
+            if (walletsWithHighestBalance.Count > 1)
+            {
+                return walletsWithHighestBalance.Select(x => x.Id).Contains(walletId) ? 1 : 0;
+            }
+
+            return walletsWithHighestBalance.Single().Id == walletId ? 2 : 0;
+        }
+
+        public int GetNumberOfJokersWonFromJokerWallet(Guid gameId, Guid walletId)
+        {
+            var jokerWallet = WalletRepository
+                .GetAll()
+                .Single(x => x.GameId == gameId
+                          && x.Type == WalletEntity.WalletType.JokerWallet.ToString())
+                .ToDomainModel();
+
+            var winningTransactions = jokerWallet
+                .IncomingTransactions
+                .OrderByDescending(x => x.Amount)
+                .ThenBy(x => x.Timestamp)
+                .Take(NumberOfJokerWalletJokerWinners);
+
+            return winningTransactions.Count(x => x.SenderWalletId == walletId);
         }
     }
 }

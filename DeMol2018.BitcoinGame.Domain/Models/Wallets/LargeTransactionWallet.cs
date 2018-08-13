@@ -5,7 +5,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
     public class LargeTransactionWallet : Wallet
     {
         public new readonly int Address = 111;
-        public new readonly string DisplayName = "Grote-transactiewallet";
+        public new readonly string DisplayName = "Solo-transactiewallet";
 
         private const int MinimalAmountToSendInOneTransaction = 1200;
         private const int EuroPrizeToWinForEachTransaction = 500;
@@ -15,13 +15,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             StartAmount = 0;
         }
 
-        public override bool WalletIsClosed()
-        {
-            // This wallet is always open
-            return false;
-        }
-
-        public override int GetMoneyWonUntilRound(int roundNumber)
+        public override int GetMoneyWonUpUntilRound(int roundNumber)
         {
             var numberOfValidTransactions = IncomingTransactions
                 .Count(x => x.RoundNumber <= roundNumber

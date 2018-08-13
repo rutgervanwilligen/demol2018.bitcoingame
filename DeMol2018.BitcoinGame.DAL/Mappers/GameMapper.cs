@@ -13,6 +13,7 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                 Id = game.Id,
                 StartTime = game.StartTime,
                 HasFinished = game.HasFinished,
+                IsCurrentGame = game.IsCurrentGame,
                 Rounds = game.Rounds.Select(x => x.ToEntity()).ToList()
             };
         }
@@ -23,6 +24,7 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                 Id = gameEntity.Id,
                 StartTime = gameEntity.StartTime,
                 HasFinished = gameEntity.HasFinished,
+                IsCurrentGame = gameEntity.IsCurrentGame,
                 Rounds = gameEntity.Rounds.Select(x => x.ToDomainModel()).ToList()
             };
         }

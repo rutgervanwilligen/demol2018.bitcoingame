@@ -23,9 +23,14 @@ interface StartNewGameAction {
     invokerId: string
 }
 
+interface FinishCurrentGameAction {
+    type: 'FINISH_CURRENT_GAME',
+    invokerId: string
+}
+
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-type KnownAction = StartNewGameAction | StartNewRoundAction;
+type KnownAction = StartNewGameAction | StartNewRoundAction | FinishCurrentGameAction;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -43,6 +48,12 @@ export const actionCreators = {
             type: 'START_NEW_ROUND',
             invokerId: invokerId,
             lengthOfNewRoundInMinutes: lengthOfNewRoundInMinutes
+        });
+    },
+    finishCurrentGame: (invokerId: string): AppThunkAction<KnownAction> => (dispatch, getState) => {
+        dispatch({
+            type: 'FINISH_CURRENT_GAME',
+            invokerId: invokerId
         });
     }
 };

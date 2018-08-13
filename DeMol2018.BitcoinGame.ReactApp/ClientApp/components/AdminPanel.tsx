@@ -32,6 +32,8 @@ class AdminPanel extends React.Component<AdminPanelProps> {
                 <h3>Start nieuwe ronde</h3>
                 <input className="inputField" placeholder='Lengte van nieuwe ronde (min)' ref={this.setNewRoundLengthInputRef} />
                 <button className="button" onClick={() => this.props.startNewRound(this.props.playerGuid!, +this.newRoundLengthInput.value)}>Start nieuwe ronde</button>
+                <h3>Rond huidig spel af</h3>
+                <button className="button" onClick={() => this.props.finishCurrentGame(this.props.playerGuid!)}>Rond huidig spel af</button>
             </div>
         );
     }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using DeMol2018.BitcoinGame.DAL.Entities;
 
 namespace DeMol2018.BitcoinGame.DAL.Repositories
@@ -14,8 +13,7 @@ namespace DeMol2018.BitcoinGame.DAL.Repositories
 
         public GameEntity FindCurrentGame()
         {
-            return GetAll().SingleOrDefault(x => !x.HasFinished
-                                              && x.StartTime < DateTime.UtcNow);
+            return GetAll().FirstOrDefault(x => x.IsCurrentGame);
         }
     }
 }

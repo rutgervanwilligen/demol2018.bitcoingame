@@ -49,6 +49,14 @@ export function signalRInvokeMiddleware() {
                     console.log("start new game rejected");
                 });
                 break;
+
+            case "FINISH_CURRENT_GAME":
+                connection.invoke("FinishCurrentGame", action.invokerId).then(function () {
+                }).catch(function () {
+                    console.log("finish current game rejected");
+                });
+                break;
+
             default:
                 if (!action.type.startsWith('RECEIVE') && ignoredActionTypes.indexOf(action.type) == -1 ) {
                     console.log("Unknown action (" + action.type + "). SignalR hub is not invoked.");
@@ -86,7 +94,9 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
             currentRoundNumber: loginResult.updatedState.currentRoundNumber,
             currentRoundEndTime: loginResult.updatedState.currentRoundEndTime,
             nonPlayerWallets: sortedWallets,
-            moneyWonSoFar: loginResult.updatedState.moneyWonSoFar
+            moneyWonSoFar: loginResult.updatedState.moneyWonSoFar,
+            gameHasFinished: loginResult.updatedState.gameHasFinished,
+            numberOfJokersWon: loginResult.updatedState.numberOfJokersWon
         });
     });
 
@@ -109,7 +119,9 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
             userWalletAddress: fetchNewGameStateResult.updatedState.userWalletAddress,
             userCurrentBalance: fetchNewGameStateResult.updatedState.userCurrentBalance,
             nonPlayerWallets: sortedWallets,
-            moneyWonSoFar: fetchNewGameStateResult.updatedState.moneyWonSoFar
+            moneyWonSoFar: fetchNewGameStateResult.updatedState.moneyWonSoFar,
+            gameHasFinished: fetchNewGameStateResult.updatedState.gameHasFinished,
+            numberOfJokersWon: fetchNewGameStateResult.updatedState.numberOfJokersWon
         });
     });
 

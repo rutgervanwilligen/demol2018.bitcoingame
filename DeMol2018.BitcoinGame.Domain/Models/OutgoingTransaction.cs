@@ -11,5 +11,6 @@ namespace DeMol2018.BitcoinGame.Domain.Models
 
         public int RoundNumber { get; set; }
         public int? InvalidReceiverAddress { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }

@@ -4,14 +4,16 @@ using DeMol2018.BitcoinGame.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DeMol2018.BitcoinGame.DAL.Migrations
 {
     [DbContext(typeof(BitcoinGameDbContext))]
-    partial class BitcoinGameDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180812134516_IsCurrentGameMigration")]
+    partial class IsCurrentGameMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,9 +51,6 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
 
                     b.Property<Guid>("SenderWalletId");
 
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ReceiverWalletId");
@@ -73,9 +72,6 @@ namespace DeMol2018.BitcoinGame.DAL.Migrations
                     b.Property<int>("RoundNumber");
 
                     b.Property<Guid>("SenderWalletId");
-
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 

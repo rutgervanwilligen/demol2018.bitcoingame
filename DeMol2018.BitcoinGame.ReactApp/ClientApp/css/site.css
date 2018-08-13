@@ -139,7 +139,7 @@ body h1 {
     color: #ff0000;
 }
 
-.wallet {
+.wallet, .playerResult {
     width: 500px;
     padding: 10px 90px;
     bottom: 30px;
@@ -151,13 +151,7 @@ body h1 {
     100% 0 100% 0/3px 0 3px 0 stretch;
 }
 
-.wallet .currentBalance {
-    text-align: center;
-    display: inline-block;
-    width: 50%;
-}
-
-.wallet .walletAddress {
+.wallet .currentBalance, .wallet .walletAddress {
     text-align: center;
     display: inline-block;
     width: 50%;
@@ -168,7 +162,7 @@ body h1 {
     display: block;
 }
 
-.wallet .currentBalance .currentBalanceText {
+.wallet .currentBalance .currentBalanceText, .wallet .walletAddress .walletAddressText {
     width: 100%;
     display: block;
     margin: 0;
@@ -178,13 +172,6 @@ body h1 {
 .wallet .walletAddress .walletAddressHeader {
     width: 100%;
     display: block;
-}
-
-.wallet .walletAddress .walletAddressText {
-    width: 100%;
-    display: block;
-    margin: 0;
-    font-size: 28px;
 }
 
 .wallet .walletHeader {
@@ -266,7 +253,7 @@ body h1 {
 }
 
 .makeTransaction .inputField {
-    width: 140px;
+    width: 150px;
     text-align: center;
 }
 
@@ -278,3 +265,19 @@ body h1 {
     display: inline-block;
     width: 50%;
 }
+
+.playerResult .currentBalanceHeader, .playerResult .jokersWonHeader {
+    display: block;
+    width: 100%;
+    font-size: 18px;
+}
+
+.playerResult .currentBalanceText, .playerResult .jokersWonText {
+    font-size: 32px;
+    color: yellow;
+}
+
+.playerResultHeader {
+    margin: 0 0 10px;
+}
+

@@ -6,6 +6,7 @@ import Login from "./Login";
 import PlayerWallet from "./PlayerWallet";
 import AdminPanel from "./AdminPanel";
 import GameManager from "./GameManager";
+import PlayerResult from "./PlayerResult";
 
 type BitcoinGameProps =
     BitcoinGameStore.BitcoinGameState
@@ -21,20 +22,23 @@ class BitcoinGame extends React.Component<BitcoinGameProps> {
                 <Login />
             )
         }
-        
+
+        let gameContent;
+
         if (isAdmin) {
-            return (
-                <div className="bitcoinGame">
-                    <GameManager />
-                    <AdminPanel />
-                </div>
-            )
+            gameContent = <AdminPanel />;
+        } else if (this.props.currentGameId != null) {
+            if (this.props.gameHasFinished) {
+                gameContent = <PlayerResult />;
+            } else {
+                gameContent = <PlayerWallet />;
+            }
         } 
 
         return (
             <div className="bitcoinGame">
                 <GameManager />
-                { this.props.currentGameId != null ? <PlayerWallet /> : ''}
+                { gameContent }
             </div>
         );
     }

@@ -13,26 +13,7 @@ type GameManagerProps =
 class GameManager extends React.Component<GameManagerProps> {
 
     public render() {
-        if (this.props.currentGameId != null) {
-            return (
-                <div className="gameManager">
-                    <div className="gameStatus">
-                        <div className="gameStatusHeader">Spelstatus</div>
-                        <div className="gameStatusText">Gestart</div>
-                    </div>
-                    <MoneyWonSoFar />
-                    <div className="nonPlayerWallets">
-                        {this.props.nonPlayerWallets.map((wallet, i) => <NonPlayerWallet
-                            key = {i}
-                            name = {wallet.name}
-                            currentBalance = {wallet.currentBalance}
-                            address = {wallet.address}
-                        />)}
-                    </div>
-                    <RoundManager />
-                </div>
-            );
-        } else {
+        if (this.props.currentGameId == null) {
             return (
                 <div className="gameManager">
                     <div className="gameStatus">
@@ -43,6 +24,29 @@ class GameManager extends React.Component<GameManagerProps> {
                 </div>
             );
         }
+
+        let gameStatusTag = this.props.gameHasFinished!
+            ? <div className="gameStatusText error">Afgelopen</div>
+            : <div className="gameStatusText">Gestart</div>;
+
+        return (
+            <div className="gameManager">
+                <div className="gameStatus">
+                    <div className="gameStatusHeader">Spelstatus</div>
+                    { gameStatusTag }
+                </div>
+                <MoneyWonSoFar />
+                <div className="nonPlayerWallets">
+                    {this.props.nonPlayerWallets.map((wallet, i) => <NonPlayerWallet
+                        key = {i}
+                        name = {wallet.name}
+                        currentBalance = {wallet.currentBalance}
+                        address = {wallet.address}
+                    />)}
+                </div>
+                { this.props.gameHasFinished ? null : <RoundManager /> }
+            </div>
+        );
     }
 }
 

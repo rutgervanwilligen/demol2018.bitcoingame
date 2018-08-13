@@ -10,6 +10,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models
         public List<Round> Rounds { get; set; }
         public DateTime StartTime { get; set; }
         public bool HasFinished { get; set; }
+        public bool IsCurrentGame { get; set; }
 
         public Game()
         {
@@ -17,10 +18,13 @@ namespace DeMol2018.BitcoinGame.Domain.Models
             Rounds = new List<Round>();
             StartTime = DateTime.UtcNow;
             HasFinished = false;
+            IsCurrentGame = true;
         }
 
         public Round GetCurrentRound()
-            => Rounds.Any(x => x.IsActive) ? Rounds.OrderByDescending(x => x.RoundNumber).First() : null;
+            => Rounds.Any(x => x.IsActive)
+                ? Rounds.Where(x => x.IsActive).OrderByDescending(x => x.RoundNumber).First()
+                : null;
 
         public int? GetLastFinishedRoundNumber()
         {

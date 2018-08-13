@@ -17,5 +17,6 @@ namespace DeMol2018.BitcoinGame.DAL.Entities
         public int RoundNumber { get; set; }
 
         public int? InvalidReceiverAddress { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }

@@ -74,10 +74,6 @@ namespace DeMol2018.BitcoinGame.DAL
                 .IsRequired();
 
             modelBuilder
-                .Entity<GameEntity>()
-                .HasIndex(x => new {x.StartTime, x.HasFinished});
-
-            modelBuilder
                 .Entity<WalletEntity>()
                 .HasKey(x => x.Id);
 
@@ -118,7 +114,13 @@ namespace DeMol2018.BitcoinGame.DAL
                 .WithMany(x => x.OutgoingTransactions)
                 .HasForeignKey(x => x.SenderWalletId)
                 .OnDelete(DeleteBehavior.Cascade);
-            
+
+            modelBuilder
+                .Entity<OutgoingTransactionEntity>()
+                .Property(x => x.Timestamp)
+                .HasColumnType("datetime2")
+                .IsRequired();
+
             modelBuilder
                 .Entity<IncomingTransactionEntity>()
                 .HasKey(x => x.Id);
@@ -134,6 +136,12 @@ namespace DeMol2018.BitcoinGame.DAL
                 .WithMany(x => x.IncomingTransactions)
                 .HasForeignKey(x => x.ReceiverWalletId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder
+                .Entity<IncomingTransactionEntity>()
+                .Property(x => x.Timestamp)
+                .HasColumnType("datetime2")
+                .IsRequired();
         }
     }
 }

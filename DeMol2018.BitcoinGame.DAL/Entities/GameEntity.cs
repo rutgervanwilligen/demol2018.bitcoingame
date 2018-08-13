@@ -11,6 +11,7 @@ namespace DeMol2018.BitcoinGame.DAL.Entities
         
         public DateTime StartTime { get; set; }
         public bool HasFinished { get; set; }
+        public bool IsCurrentGame { get; set; }
  
         public virtual ICollection<RoundEntity> Rounds { get; set; }
         public virtual ICollection<WalletEntity> Wallets { get; set; }

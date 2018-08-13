@@ -5,7 +5,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
     public class CombinedTransactionWallet : Wallet
     {
         public new readonly int Address = 222;
-        public new readonly string DisplayName = "Combinatie-transactiewallet";
+        public new readonly string DisplayName = "Groeps-transactiewallet";
 
         private const int MinimalNumberOfCandidatesToWin = 3;
         private const int MinimalCombinedTransactionAmountToWin = 1200;
@@ -16,13 +16,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             StartAmount = 0;
         }
 
-        public override bool WalletIsClosed()
-        {
-            // This wallet is always open
-            return false;
-        }
-
-        public override int GetMoneyWonUntilRound(int roundNumber)
+        public override int GetMoneyWonUpUntilRound(int roundNumber)
         {
             var transactionsGroupedByRound = IncomingTransactions
                 .GroupBy(x => x.RoundNumber)

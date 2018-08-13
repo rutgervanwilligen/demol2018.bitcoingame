@@ -10,5 +10,6 @@ namespace DeMol2018.BitcoinGame.Domain.Models
         public int Amount { get; set; }
 
         public int RoundNumber { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }
