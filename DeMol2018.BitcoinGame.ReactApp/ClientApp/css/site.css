@@ -266,13 +266,13 @@ body h1 {
     width: 50%;
 }
 
-.playerResult .currentBalanceHeader, .playerResult .jokersWonHeader {
+.playerResult .playerResultBalanceHeader, .playerResult .jokersWonHeader {
     display: block;
     width: 100%;
     font-size: 18px;
 }
 
-.playerResult .currentBalanceText, .playerResult .jokersWonText {
+.playerResult .playerResultBalanceText, .playerResult .jokersWonText {
     font-size: 32px;
     color: yellow;
 }
