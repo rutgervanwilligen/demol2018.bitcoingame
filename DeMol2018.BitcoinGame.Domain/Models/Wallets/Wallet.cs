@@ -18,7 +18,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
 
         protected Wallet()
         {
-            Id = new Guid();
+            Id = Guid.NewGuid();
             IncomingTransactions = new List<IncomingTransaction>();
             OutgoingTransactions = new List<OutgoingTransaction>();
         }

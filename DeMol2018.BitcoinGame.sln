@@ -11,6 +11,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeMol2018.BitcoinGame.React
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeMol2018.BitcoinGame.Application", "DeMol2018.BitcoinGame.Application\DeMol2018.BitcoinGame.Application.csproj", "{24252488-D54B-42B7-88CD-2B54C70A34C9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeMol2018.BitcoinGame.Application.Tests", "DeMol2018.BitcoinGame.Application.Tests\DeMol2018.BitcoinGame.Application.Tests.csproj", "{EB1514E3-7986-477D-8347-209BF6DB925D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{24252488-D54B-42B7-88CD-2B54C70A34C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24252488-D54B-42B7-88CD-2B54C70A34C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24252488-D54B-42B7-88CD-2B54C70A34C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB1514E3-7986-477D-8347-209BF6DB925D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB1514E3-7986-477D-8347-209BF6DB925D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB1514E3-7986-477D-8347-209BF6DB925D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB1514E3-7986-477D-8347-209BF6DB925D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

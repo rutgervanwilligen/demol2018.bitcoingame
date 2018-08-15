@@ -14,7 +14,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models
 
         public Game()
         {
-            Id = new Guid();
+            Id = Guid.NewGuid();
             Rounds = new List<Round>();
             StartTime = DateTime.UtcNow;
             HasFinished = false;

@@ -22,7 +22,6 @@ export function signalRInvokeMiddleware() {
                 break;
 
             case "LOGIN":
-                console.log("start login");
                 connection.invoke("Login", action.name, action.code).then(function () {
                 }).catch(function () {
                     console.log("login rejected");
