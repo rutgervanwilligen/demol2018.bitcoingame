@@ -11,10 +11,12 @@ class MoneyWonSoFar extends React.Component<BitcoinGameState> {
             ? "In totaal verdiend:"
             : "Tot nu toe verdiend:";
 
+        let moneyClass = this.props.moneyWonSoFar < 0 ? " negative" : "";
+
         return (
             <div className="moneyWonSoFar">
                 <div className="moneyWonSoFarHeader">{ headerText }</div>
-                <div className="moneyWonSoFarText">
+                <div className={ "moneyWonSoFarText" + moneyClass }>
                     &euro; {this.props.moneyWonSoFar}
                 </div>
             </div>

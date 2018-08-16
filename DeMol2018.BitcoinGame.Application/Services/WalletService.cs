@@ -16,6 +16,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
         private const int EuroBalanceAtNewGame = 0;
         private const int MinimalAmountForStuivertjeWisselen = 500;
         private const int NumberOfJokerWalletJokerWinners = 8;
+        private const int EuroPenaltyWhenNoMoneyIsWonInRound = 500;
 
         public WalletService(BitcoinGameDbContext dbContext)
         {
@@ -47,46 +48,51 @@ namespace DeMol2018.BitcoinGame.Application.Services
                 return EuroBalanceAtNewGame;
             }
 
-            var nonPlayerWalletMoneyWonSoFar = GetNonPlayerWalletMoneyWonUpUntilRound(gameId, roundNumber.Value);
+            var moneyWonSoFar = EuroBalanceAtNewGame;
 
-            var playerWalletMoneyWonSoFar = GetPlayerWalletMoneyWonUpUntilRound(gameId, roundNumber.Value);
-
-            return EuroBalanceAtNewGame + nonPlayerWalletMoneyWonSoFar + playerWalletMoneyWonSoFar;
-        }
-
-        private int GetPlayerWalletMoneyWonUpUntilRound(Guid gameId, int roundNumber)
-        {
-            var potentialTransactionsGroupedByRound = WalletRepository
-                .GetAll()
-                .Where(x => x.GameId == gameId
-                         && x.Type == WalletEntity.WalletType.PlayerWallet.ToString())
-                .Select(x => x.ToDomainModel()).ToList()
-                .SelectMany(x => x.OutgoingTransactions).ToList()
-                .Where(y => y.RoundNumber <= roundNumber
-                     && y.ReceiverWalletId.HasValue
-                     && y.Amount >= MinimalAmountForStuivertjeWisselen)
-                .GroupBy(x => x.RoundNumber)
-                .ToList();
-
-            var totalPlayerWalletMoneyWon = 0;
-
-            foreach (var transactions in potentialTransactionsGroupedByRound)
+            for (var i = 1; i <= roundNumber.Value; i++)
             {
-                totalPlayerWalletMoneyWon += MoneySwap.GetMoneySwapResultOfTransactions(transactions.ToList());
+                var moneyWonInRound = GetNonPlayerWalletMoneyWonInRound(gameId, i)
+                                       + GetPlayerWalletMoneyWonInRound(gameId, i);
+
+                if (moneyWonInRound == 0)
+                {
+                    moneyWonSoFar -= EuroPenaltyWhenNoMoneyIsWonInRound;
+                }
+                else
+                {
+                    moneyWonSoFar += moneyWonInRound;
+                }
             }
 
-            return totalPlayerWalletMoneyWon;
+            return moneyWonSoFar;
         }
 
-        private int GetNonPlayerWalletMoneyWonUpUntilRound(Guid gameId, int roundNumber)
+        private int GetNonPlayerWalletMoneyWonInRound(Guid gameId, int roundNumber)
         {
             return WalletRepository
                 .GetAll()
                 .Where(x => x.GameId == gameId
-                         && x.Type != WalletEntity.WalletType.PlayerWallet.ToString())
+                            && x.Type != WalletEntity.WalletType.PlayerWallet.ToString())
                 .Select(x => x.ToDomainModel())
                 .ToList()
-                .Sum(x => x.GetMoneyWonUpUntilRound(roundNumber));
+                .Sum(x => x.GetMoneyWonInRound(roundNumber));
+        }
+
+        private int GetPlayerWalletMoneyWonInRound(Guid gameId, int roundNumber)
+        {
+            var eligibleTransactions = WalletRepository
+                .GetAll()
+                .Where(x => x.GameId == gameId
+                            && x.Type == WalletEntity.WalletType.PlayerWallet.ToString())
+                .Select(x => x.ToDomainModel()).ToList()
+                .SelectMany(x => x.OutgoingTransactions).ToList()
+                .Where(y => y.RoundNumber == roundNumber
+                            && y.ReceiverWalletId.HasValue
+                            && y.Amount >= MinimalAmountForStuivertjeWisselen)
+                .ToList();
+
+            return MoneySwap.GetMoneySwapResultOfTransactions(eligibleTransactions.ToList());
         }
 
         public int GetNumberOfJokersWonWithEndBalance(Guid gameId, Guid walletId)

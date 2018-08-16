@@ -16,17 +16,19 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             StartAmount = 0;
         }
 
-        public override int GetMoneyWonUpUntilRound(int roundNumber)
+        public override int GetMoneyWonInRound(int roundNumber)
         {
-            var transactionsGroupedByRound = IncomingTransactions
-                .GroupBy(x => x.RoundNumber)
-                .Where(x => x.Key <= roundNumber)
-                .Where(x => x.Count() >= MinimalNumberOfCandidatesToWin);
+            var transactionsInRound = IncomingTransactions
+                .Where(x => x.RoundNumber == roundNumber)
+                .ToList();
 
-            var numberOfValidCombinedTransactions = transactionsGroupedByRound
-                .Count(x => x.Sum(y => y.Amount) >= MinimalCombinedTransactionAmountToWin);
+            if (transactionsInRound.Count < MinimalNumberOfCandidatesToWin
+                || transactionsInRound.Sum(x => x.Amount) <= MinimalCombinedTransactionAmountToWin)
+            {
+                return 0;
+            }
 
-            return numberOfValidCombinedTransactions * EuroPrizeToWinPerRound;
+            return EuroPrizeToWinPerRound;
         }
     }
 }

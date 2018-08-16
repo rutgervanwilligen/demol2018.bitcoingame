@@ -14,10 +14,10 @@ body {
 }
 
 .wrapper {
+    margin: 20px 0;
     position: absolute;
-    top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
 }
 
 #react-app {
@@ -123,6 +123,10 @@ body h1 {
 .moneyWonSoFar .moneyWonSoFarText {
     font-size: 18px;
     color: #90ee90;
+}
+
+.moneyWonSoFar .moneyWonSoFarText.negative {
+    color: #ff0000;
 }
 
 .gameStatus .gameStatusHeader {

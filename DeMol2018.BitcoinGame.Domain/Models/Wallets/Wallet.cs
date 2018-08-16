@@ -23,7 +23,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             OutgoingTransactions = new List<OutgoingTransaction>();
         }
 
-        public abstract int GetMoneyWonUpUntilRound(int roundNumber);
+        public abstract int GetMoneyWonInRound(int roundNumber);
 
         public int GetBalanceAfterRound(int roundNumber)
         {

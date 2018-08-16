@@ -15,10 +15,10 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             StartAmount = 0;
         }
 
-        public override int GetMoneyWonUpUntilRound(int roundNumber)
+        public override int GetMoneyWonInRound(int roundNumber)
         {
             var numberOfValidTransactions = IncomingTransactions
-                .Count(x => x.RoundNumber <= roundNumber
+                .Count(x => x.RoundNumber == roundNumber
                          && x.Amount >= MinimalAmountToSendInOneTransaction);
 
             return numberOfValidTransactions * EuroPrizeToWinForEachTransaction;
