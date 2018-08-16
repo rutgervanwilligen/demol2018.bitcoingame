@@ -86,6 +86,8 @@ namespace DeMol2018.BitcoinGame.Application.Services
         {
             var currentGame = GameRepository.FindCurrentGame();
 
+            MarkAllRoundsInGameFinished(currentGame);
+
             currentGame.HasFinished = true;
 
             GameRepository.SaveChanges();

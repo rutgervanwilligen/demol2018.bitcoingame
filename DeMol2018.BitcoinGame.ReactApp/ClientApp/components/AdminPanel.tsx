@@ -23,12 +23,21 @@ class AdminPanel extends React.Component<AdminPanelProps> {
     }
     
     public render() {
+        if (this.props.gameHasFinished) {
+            return (
+                <div className="adminPanel">
+                    <h2>Adminpaneel</h2>
+                    <h3>Game ID: {this.props.currentGameId}</h3>
+                    <h3>Start nieuw spel</h3>
+                    <button className="button" onClick={() => this.props.startNewGame(this.props.playerGuid!)}>Start nieuw spel</button>
+                </div>
+            );
+        }
+
         return (
             <div className="adminPanel">
                 <h2>Adminpaneel</h2>
                 <h3>Game ID: {this.props.currentGameId}</h3>
-                <h3>Start nieuw spel</h3>
-                <button className="button" onClick={() => this.props.startNewGame(this.props.playerGuid!)}>Start nieuw spel</button>
                 <h3>Start nieuwe ronde</h3>
                 <input className="inputField" placeholder='Lengte van nieuwe ronde (min)' ref={this.setNewRoundLengthInputRef} />
                 <button className="button" onClick={() => this.props.startNewRound(this.props.playerGuid!, +this.newRoundLengthInput.value)}>Start nieuwe ronde</button>
