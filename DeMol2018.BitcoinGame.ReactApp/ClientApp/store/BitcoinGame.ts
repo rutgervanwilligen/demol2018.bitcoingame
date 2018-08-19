@@ -156,12 +156,16 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 nonPlayerWallets: action.nonPlayerWallets != null ? action.nonPlayerWallets : [],
                 moneyWonSoFar: action.moneyWonSoFar,
                 numberOfJokersWon: action.numberOfJokersWon != null ? action.numberOfJokersWon : undefined,
-                jokerWinners: action.jokerWinners != null ? action.jokerWinners : undefined
+                jokerWinners: action.jokerWinners != null ? action.jokerWinners : []
             };
         case 'MAKE_TRANSACTION':
             return {
                 ...state,
-                currentBalance: state.currentBalance === undefined ? 0 : state.currentBalance - action.amount
+                currentBalance: state.currentBalance === undefined
+                    ? undefined
+                    : state.currentBalance > action.amount
+                        ? state.currentBalance - action.amount
+                        : state.currentBalance
             };
         case 'RECEIVE_MAKE_TRANSACTION_RESULT':
             return {

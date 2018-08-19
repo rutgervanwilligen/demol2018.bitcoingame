@@ -23,11 +23,22 @@ class AdminPanel extends React.Component<AdminPanelProps> {
     }
     
     public render() {
+        if (!this.props.currentGameId) {
+            return (
+                <div className="adminPanel">
+                    <h2>Adminpaneel</h2>
+                    <h3>Start nieuw spel</h3>
+                    <button className="button" onClick={() => this.props.startNewGame(this.props.playerGuid!)}>Start nieuw spel</button>
+                </div>
+            );
+        }
+
         if (this.props.gameHasFinished) {
             return (
                 <div className="adminPanel">
                     <h2>Adminpaneel</h2>
                     <h3>Game ID: {this.props.currentGameId}</h3>
+                    <h3>Aantal gespeelde rondes: {this.props.lastRoundNumber == undefined ? "0" : this.props.lastRoundNumber}</h3>
                     <h2>Jokerwinnaars</h2>
                     <table className="jokerWinnerTable">
                         {this.props.jokerWinners!.map((winner, i) =>
