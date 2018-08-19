@@ -6,6 +6,7 @@ using DeMol2018.BitcoinGame.DAL;
 using DeMol2018.BitcoinGame.DAL.Entities;
 using DeMol2018.BitcoinGame.DAL.Mappers;
 using DeMol2018.BitcoinGame.DAL.Repositories;
+using DeMol2018.BitcoinGame.Domain.Models;
 using DeMol2018.BitcoinGame.Domain.Models.Wallets;
 
 namespace DeMol2018.BitcoinGame.Application.Services
@@ -15,7 +16,6 @@ namespace DeMol2018.BitcoinGame.Application.Services
         private WalletRepository WalletRepository { get; }
         private const int EuroBalanceAtNewGame = 0;
         private const int MinimalAmountForStuivertjeWisselen = 500;
-        private const int NumberOfJokerWalletJokerWinners = 8;
         private const int EuroPenaltyWhenNoMoneyIsWonInRound = 500;
 
         public WalletService(BitcoinGameDbContext dbContext)
@@ -95,7 +95,73 @@ namespace DeMol2018.BitcoinGame.Application.Services
             return MoneySwap.GetMoneySwapResultOfTransactions(eligibleTransactions.ToList());
         }
 
-        public int GetNumberOfJokersWonWithEndBalance(Guid gameId, Guid walletId)
+        public IEnumerable<JokerWinner> GetJokerWinnersInGame(Guid gameId)
+        {
+            var currentGamePlayerWallets = WalletRepository
+                .GetAll()
+                .Where(x => x.GameId == gameId
+                         && x.Type == WalletEntity.WalletType.PlayerWallet.ToString())
+                .ToList();
+
+            var jokerWinners = currentGamePlayerWallets
+                .Select(x => new JokerWinner {
+                    PlayerId = x.Player.Id,
+                    PlayerName = x.Player.Name,
+                    NumberOfJokersWon = 0
+                })
+                .ToList();
+
+            var jokerWinnersFromJokerWallet = GetJokerWinnersFromJokerWallet(gameId, currentGamePlayerWallets).ToList();
+            var jokerWinnersFromHighestBalance = GetJokerWinnersFromHighestBalance(gameId, currentGamePlayerWallets).ToList();
+
+            foreach (var jokerWinner in jokerWinners)
+            {
+                var jokersWonJokerWallet = jokerWinnersFromJokerWallet
+                    .SingleOrDefault(x => x.PlayerId == jokerWinner.PlayerId)?.NumberOfJokersWon;
+
+                var jokersWonFromHighestBalance = jokerWinnersFromHighestBalance
+                    .SingleOrDefault(x => x.PlayerId == jokerWinner.PlayerId)?.NumberOfJokersWon;
+
+                if (jokersWonJokerWallet.HasValue)
+                {
+                    jokerWinner.NumberOfJokersWon += jokersWonJokerWallet.Value;
+                }
+
+                if (jokersWonFromHighestBalance.HasValue)
+                {
+                    jokerWinner.NumberOfJokersWon += jokersWonFromHighestBalance.Value;
+                }
+            }
+
+            return jokerWinners;
+        }
+
+        private IEnumerable<JokerWinner> GetJokerWinnersFromJokerWallet(Guid gameId, IEnumerable<WalletEntity> playerWallets)
+        {
+            var jokerWallet = WalletRepository
+                .GetAll()
+                .Single(x => x.GameId == gameId &&
+                             x.Type == WalletEntity.WalletType.JokerWallet.ToString())
+                .ToDomainModel() as JokerWallet;
+
+            if (jokerWallet == null)
+            {
+                throw new Exception("No JokerWallet found in game");
+            }
+
+            var jokerWinners = jokerWallet.GetJokerWinners();
+
+            return jokerWinners.Select(x => {
+                var player = playerWallets.Single(y => y.Id == x.SenderWalletId).Player;
+                return new JokerWinner {
+                    NumberOfJokersWon = x.NumberOfJokersWon,
+                    PlayerId = player.Id,
+                    PlayerName = player.Name
+                };
+            });
+        }
+
+        private IEnumerable<JokerWinner> GetJokerWinnersFromHighestBalance(Guid gameId, IEnumerable<WalletEntity> playerWallets)
         {
             var walletsSortedByBalance = WalletRepository
                 .GetAll()
@@ -111,27 +177,24 @@ namespace DeMol2018.BitcoinGame.Application.Services
 
             if (walletsWithHighestBalance.Count > 1)
             {
-                return walletsWithHighestBalance.Select(x => x.Id).Contains(walletId) ? 1 : 0;
+                return walletsWithHighestBalance.Select(x =>
+                {
+                    var player = playerWallets.Single(y => y.Id == x.Id).Player;
+                    return new JokerWinner {
+                        PlayerId = player.Id,
+                        PlayerName = player.Name,
+                        NumberOfJokersWon = 1
+                    };
+                });
             }
 
-            return walletsWithHighestBalance.Single().Id == walletId ? 2 : 0;
-        }
+            var winner = playerWallets.Single(y => y.Id == walletsWithHighestBalance.Single().Id).Player;
 
-        public int GetNumberOfJokersWonFromJokerWallet(Guid gameId, Guid walletId)
-        {
-            var jokerWallet = WalletRepository
-                .GetAll()
-                .Single(x => x.GameId == gameId
-                          && x.Type == WalletEntity.WalletType.JokerWallet.ToString())
-                .ToDomainModel();
-
-            var winningTransactions = jokerWallet
-                .IncomingTransactions
-                .OrderByDescending(x => x.Amount)
-                .ThenBy(x => x.Timestamp)
-                .Take(NumberOfJokerWalletJokerWinners);
-
-            return winningTransactions.Count(x => x.SenderWalletId == walletId);
+            return new List<JokerWinner> { new JokerWinner {
+                PlayerId = winner.Id,
+                PlayerName = winner.Name,
+                NumberOfJokersWon = 2
+            }};
         }
     }
 }

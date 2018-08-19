@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DeMol2018.BitcoinGame.Application.Services;
@@ -71,16 +72,21 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 userCurrentBalance = lastRoundNumber == null
                     ? wallet.StartAmount
                     : wallet.GetBalanceAfterRound(lastRoundNumber.Value);
+            }
 
-                if (currentGame.HasFinished)
+            var jokerWinnersResult = new List<JokerWinnerResult>();
+
+            if (currentGame.HasFinished)
+            {
+                if (player.IsAdmin)
                 {
-                    var numberOfJokersWonFromJokerWallet =
-                        _walletService.GetNumberOfJokersWonFromJokerWallet(currentGame.Id, wallet.Id);
-
-                    var numberOfJokersWonWithEndBalance =
-                        _walletService.GetNumberOfJokersWonWithEndBalance(currentGame.Id, wallet.Id);
-
-                    numberOfJokersWon = numberOfJokersWonFromJokerWallet + numberOfJokersWonWithEndBalance;
+                    var jokerWinnerWallets = _walletService.GetJokerWinnersInGame(currentGame.Id);
+                    jokerWinnersResult = jokerWinnerWallets.Select(JokerWinnerResult.MapFrom).ToList();
+                }
+                else
+                {
+                    var jokerWinners = _walletService.GetJokerWinnersInGame(currentGame.Id);
+                    numberOfJokersWon = jokerWinners.Single(x => x.PlayerId == player.Id).NumberOfJokersWon;
                 }
             }
 
@@ -98,7 +104,8 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                     CurrentRoundNumber = currentRound?.RoundNumber,
                     NonPlayerWallets = nonPlayerWalletsState,
                     MoneyWonSoFar = moneyWonSoFar,
-                    NumberOfJokersWon = numberOfJokersWon
+                    NumberOfJokersWon = numberOfJokersWon,
+                    JokerWinners = jokerWinnersResult.ToArray()
                 }
             });
         }
@@ -137,6 +144,14 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
 
             if (player.IsAdmin)
             {
+                var jokerWinners = new List<JokerWinnerResult>();
+
+                if (currentGame.HasFinished)
+                {
+                    var jokerWinnerWallets = _walletService.GetJokerWinnersInGame(currentGame.Id);
+                    jokerWinners = jokerWinnerWallets.Select(JokerWinnerResult.MapFrom).ToList();
+                }
+
                 return Clients.Caller.SendAsync("FetchNewGameStateResult", new FetchNewGameStateResult {
                     CallSuccessful = true,
                     UpdatedState = new UpdatedStateResult {
@@ -146,7 +161,8 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                         CurrentRoundEndTime = currentRound?.EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                         CurrentRoundNumber = currentRound?.RoundNumber,
                         NonPlayerWallets = nonPlayerWalletsResult,
-                        MoneyWonSoFar = moneyWonSoFar
+                        MoneyWonSoFar = moneyWonSoFar,
+                        JokerWinners = jokerWinners.ToArray()
                     }
                 });
             }
@@ -154,15 +170,18 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
             var wallet = _walletService.GetWalletByGameIdAndPlayerId(currentGame.Id, player.Id);
             int? numberOfJokersWon = null;
 
+            var jokerWinnersResult = new List<JokerWinnerResult>();
+
             if (currentGame.HasFinished)
             {
-                var numberOfJokersWonFromJokerWallet =
-                    _walletService.GetNumberOfJokersWonFromJokerWallet(currentGame.Id, wallet.Id);
+                var jokerWinners = _walletService.GetJokerWinnersInGame(currentGame.Id);
+                numberOfJokersWon = jokerWinners.Single(x => x.PlayerId == player.Id).NumberOfJokersWon;
 
-                var numberOfJokersWonWithEndBalance =
-                    _walletService.GetNumberOfJokersWonWithEndBalance(currentGame.Id, wallet.Id);
-
-                numberOfJokersWon = numberOfJokersWonFromJokerWallet + numberOfJokersWonWithEndBalance;
+                if (player.IsAdmin)
+                {
+                    var jokerWinnerWallets = _walletService.GetJokerWinnersInGame(currentGame.Id);
+                    jokerWinnersResult = jokerWinnerWallets.Select(JokerWinnerResult.MapFrom).ToList();
+                }
             }
 
             return Clients.Caller.SendAsync("FetchNewGameStateResult", new FetchNewGameStateResult {
@@ -179,7 +198,8 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                     CurrentRoundNumber = currentRound?.RoundNumber,
                     NonPlayerWallets = nonPlayerWalletsResult,
                     MoneyWonSoFar = moneyWonSoFar,
-                    NumberOfJokersWon = numberOfJokersWon
+                    NumberOfJokersWon = numberOfJokersWon,
+                    JokerWinners = jokerWinnersResult.ToArray()
                 }
             });
         }

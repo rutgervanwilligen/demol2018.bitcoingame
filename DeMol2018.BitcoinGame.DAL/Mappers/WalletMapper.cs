@@ -94,7 +94,7 @@ namespace DeMol2018.BitcoinGame.DAL.Mappers
                     {
                         throw new Exception("Inconsistent player wallet found in database");
                     }
-                    
+
                     return new PlayerWallet {
                         Id = walletEntity.Id,
                         GameId = walletEntity.GameId,

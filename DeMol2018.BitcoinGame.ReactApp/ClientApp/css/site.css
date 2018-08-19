@@ -285,3 +285,14 @@ body h1 {
     margin: 0 0 10px;
 }
 
+.jokerWinnerTable {
+    margin: auto;
+    font-size: 18px;
+}
+
+.jokerWinnerNumberOfJokersWon {
+    color: yellow;
+    padding-left: 20px;
+}
+
+

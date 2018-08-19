@@ -7,7 +7,12 @@ import { AppThunkAction } from './';
 export interface NonPlayerWalletState {
     address: number;
     currentBalance: number;
-    name: number;
+    name: string;
+}
+
+export interface JokerWinner {
+    name: string;
+    numberOfJokersWon: number;
 }
 
 export interface BitcoinGameState {
@@ -24,6 +29,7 @@ export interface BitcoinGameState {
     moneyWonSoFar: number;
     gameHasFinished?: boolean;
     numberOfJokersWon?: number;
+    jokerWinners?: JokerWinner[];
 }
 
 // -----------------
@@ -52,6 +58,7 @@ export interface ReceiveLoginResultAction {
     moneyWonSoFar: number;
     gameHasFinished?: boolean;
     numberOfJokersWon?: number;
+    jokerWinners?: JokerWinner[];
 }
 
 export interface ReceiveNewGameStateAction {
@@ -66,6 +73,7 @@ export interface ReceiveNewGameStateAction {
     moneyWonSoFar: number;
     gameHasFinished?: boolean;
     numberOfJokersWon?: number;
+    jokerWinners?: JokerWinner[];
 }
 
 interface ReceiveMakeTransactionResult {
@@ -109,7 +117,8 @@ const unloadedState: BitcoinGameState = {
     moneyWonSoFar: 0,
     lastRoundNumber: undefined,
     gameHasFinished: undefined,
-    numberOfJokersWon: undefined
+    numberOfJokersWon: undefined,
+    jokerWinners: []
 };
 
 export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, incomingAction: Action) => {
@@ -128,7 +137,8 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 currentRoundEndTime: action.currentRoundEndTime != null ? new Date(action.currentRoundEndTime) : undefined,
                 nonPlayerWallets: action.nonPlayerWallets != null ? action.nonPlayerWallets : [],
                 moneyWonSoFar: action.moneyWonSoFar,
-                numberOfJokersWon: action.numberOfJokersWon != null ? action.numberOfJokersWon : undefined
+                numberOfJokersWon: action.numberOfJokersWon != null ? action.numberOfJokersWon : undefined,
+                jokerWinners: action.jokerWinners != null ? action.jokerWinners : []
             };
         case 'RECEIVE_LOGIN_RESULT':
             return {
@@ -145,7 +155,8 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 currentRoundNumber: action.currentRoundNumber != null ? action.currentRoundNumber : undefined,
                 nonPlayerWallets: action.nonPlayerWallets != null ? action.nonPlayerWallets : [],
                 moneyWonSoFar: action.moneyWonSoFar,
-                numberOfJokersWon: action.numberOfJokersWon != null ? action.numberOfJokersWon : undefined
+                numberOfJokersWon: action.numberOfJokersWon != null ? action.numberOfJokersWon : undefined,
+                jokerWinners: action.jokerWinners != null ? action.jokerWinners : undefined
             };
         case 'MAKE_TRANSACTION':
             return {

@@ -2,7 +2,7 @@
 
 import { ApplicationState } from "./index";
 import { Store } from "redux";
-import { NonPlayerWalletState } from "./BitcoinGame";
+import {JokerWinner, NonPlayerWalletState} from "./BitcoinGame";
 
 // Declare connection
 let connection = new signalR.HubConnection("http://localhost:63426/bitcoinGameHub");
@@ -78,8 +78,28 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
             : [];
     }
 
+    function sortJokerWinners(wallets: JokerWinner[]): JokerWinner[] {
+        return wallets != null
+            ? wallets.sort((a: JokerWinner, b: JokerWinner) => {
+                let nameA = a.name.toLowerCase();
+                let nameB = b.name.toLowerCase();
+
+                if (nameA < nameB) {
+                    return -1;
+                }
+
+                if (nameB < nameA) {
+                    return 1;
+                }
+
+                return 0;
+            })
+            : [];
+    }
+
     connection.on('LoginResult', loginResult => {
         let sortedWallets = sortWallets(loginResult.updatedState.nonPlayerWallets);
+        let sortedJokerWinners = sortJokerWinners(loginResult.updatedState.jokerWinners);
 
         store.dispatch({
             type: 'RECEIVE_LOGIN_RESULT',
@@ -95,7 +115,8 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
             nonPlayerWallets: sortedWallets,
             moneyWonSoFar: loginResult.updatedState.moneyWonSoFar,
             gameHasFinished: loginResult.updatedState.gameHasFinished,
-            numberOfJokersWon: loginResult.updatedState.numberOfJokersWon
+            numberOfJokersWon: loginResult.updatedState.numberOfJokersWon,
+            jokerWinners: sortedJokerWinners
         });
     });
 
@@ -108,6 +129,7 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
 
     connection.on('FetchNewGameStateResult', fetchNewGameStateResult => {
         let sortedWallets = sortWallets(fetchNewGameStateResult.updatedState.nonPlayerWallets);
+        let sortedJokerWinners = sortJokerWinners(fetchNewGameStateResult.updatedState.jokerWinners);
 
         store.dispatch({
             type: 'RECEIVE_NEW_GAME_STATE',
@@ -120,7 +142,8 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
             nonPlayerWallets: sortedWallets,
             moneyWonSoFar: fetchNewGameStateResult.updatedState.moneyWonSoFar,
             gameHasFinished: fetchNewGameStateResult.updatedState.gameHasFinished,
-            numberOfJokersWon: fetchNewGameStateResult.updatedState.numberOfJokersWon
+            numberOfJokersWon: fetchNewGameStateResult.updatedState.numberOfJokersWon,
+            jokerWinners: sortedJokerWinners
         });
     });
 

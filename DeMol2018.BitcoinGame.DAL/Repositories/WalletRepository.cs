@@ -9,6 +9,7 @@ namespace DeMol2018.BitcoinGame.DAL.Repositories
         {
             AddDefaultIncludes(x => x.IncomingTransactions);
             AddDefaultIncludes(x => x.OutgoingTransactions);
+            AddDefaultIncludes(x => x.Player);
         }
     }
 }

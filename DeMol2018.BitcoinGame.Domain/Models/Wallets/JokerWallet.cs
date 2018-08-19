@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
@@ -8,7 +9,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
         public new readonly int Address = 666;
         public new readonly string DisplayName = "Jokerwallet";
 
-        private const int AmountForOneJoker = 1500;
+        private const int NumberOfJokersGiven = 8;
         
         public JokerWallet()
         {
@@ -20,14 +21,23 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
             return 0;
         }
 
-        public IEnumerable<JokerWinner> GetJokerWinners()
+        public IEnumerable<JokerWalletJokerWinner> GetJokerWinners()
         {
             return IncomingTransactions
+                .OrderByDescending(x => x.Amount)
+                .ThenBy(x => x.Timestamp)
+                .Take(NumberOfJokersGiven)
                 .GroupBy(x => x.SenderWalletId)
-                .Select(x => new JokerWinner {
-                    SenderWallet = x.Key,
-                    NumberOfJokersWon = x.Sum(y => y.Amount) / AmountForOneJoker
+                .Select(x => new JokerWalletJokerWinner {
+                    SenderWalletId = x.Key,
+                    NumberOfJokersWon = x.Count()
                 });
+        }
+
+        public class JokerWalletJokerWinner
+        {
+            public Guid SenderWalletId { get; set; }
+            public int NumberOfJokersWon { get; set; }
         }
     }
 }
