@@ -15,7 +15,7 @@ class RoundManager extends React.Component<RoundManagerProps> {
             return (
                 <div className="roundManager">
                     <div className="roundNumber">Ronde {this.props.currentRoundNumber}</div>
-                    <div className="timeLeft">Tijd over: <RoundCountdownTimer/></div>
+                    <div className="timeLeft">Transacties worden verwerkt over: <RoundCountdownTimer/></div>
                 </div>
             );
         } else if (this.props.lastRoundNumber != null) {

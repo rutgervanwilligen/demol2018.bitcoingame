@@ -9,7 +9,7 @@ namespace DeMol2018.BitcoinGame.Domain.Models.Wallets
 
         private const int MinimalNumberOfCandidatesToWin = 3;
         private const int MinimalCombinedTransactionAmountToWin = 1200;
-        private const int EuroPrizeToWinPerRound = 250;
+        private const int EuroPrizeToWinPerRound = 300;
         
         public CombinedTransactionWallet()
         {

@@ -163,7 +163,7 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
                 ...state,
                 currentBalance: state.currentBalance === undefined
                     ? undefined
-                    : state.currentBalance > action.amount
+                    : state.currentBalance >= action.amount && action.amount > 0
                         ? state.currentBalance - action.amount
                         : state.currentBalance
             };
