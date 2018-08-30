@@ -112,7 +112,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
                 .ToList();
 
             var jokerWinnersFromJokerWallet = GetJokerWinnersFromJokerWallet(gameId, currentGamePlayerWallets).ToList();
-            var jokerWinnersFromHighestBalance = GetJokerWinnersFromHighestBalance(gameId, currentGamePlayerWallets).ToList();
+            var jokerWinnersFromHighestBalance = GetJokerWinnersFromHighestBalance(currentGamePlayerWallets).ToList();
 
             foreach (var jokerWinner in jokerWinners)
             {
@@ -161,11 +161,11 @@ namespace DeMol2018.BitcoinGame.Application.Services
             });
         }
 
-        private IEnumerable<JokerWinner> GetJokerWinnersFromHighestBalance(Guid gameId, IEnumerable<WalletEntity> playerWallets)
+        private IEnumerable<JokerWinner> GetJokerWinnersFromHighestBalance(IEnumerable<WalletEntity> playerWallets)
         {
-            var walletsSortedByBalance = WalletRepository
-                .GetAll()
-                .Where(x => x.GameId == gameId)
+            var playerWalletEntities = playerWallets.ToList();
+
+            var walletsSortedByBalance = playerWalletEntities
                 .Select(x => x.ToDomainModel())
                 .ToList()
                 .OrderByDescending(x => x.GetFinalBalance())
@@ -179,7 +179,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
             {
                 return walletsWithHighestBalance.Select(x =>
                 {
-                    var player = playerWallets.Single(y => y.Id == x.Id).Player;
+                    var player = playerWalletEntities.Single(y => y.Id == x.Id).Player;
                     return new JokerWinner {
                         PlayerId = player.Id,
                         PlayerName = player.Name,
@@ -188,7 +188,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
                 });
             }
 
-            var winner = playerWallets.Single(y => y.Id == walletsWithHighestBalance.Single().Id).Player;
+            var winner = playerWalletEntities.Single(y => y.Id == walletsWithHighestBalance.Single().Id).Player;
 
             return new List<JokerWinner> { new JokerWinner {
                 PlayerId = winner.Id,
