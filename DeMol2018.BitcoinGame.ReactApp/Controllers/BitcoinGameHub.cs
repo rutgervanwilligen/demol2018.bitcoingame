@@ -70,7 +70,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 var wallet = _walletService.GetWalletByGameIdAndPlayerId(currentGame.Id, player.Id);
                 userWalletAddress = wallet.Address;
                 userCurrentBalance = lastRoundNumber == null
-                    ? wallet.StartAmount
+                    ? wallet.GetBalanceAfterRound(0)
                     : wallet.GetBalanceAfterRound(lastRoundNumber.Value);
             }
 
@@ -192,7 +192,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                     LastRoundNumber = lastRoundNumber,
                     UserWalletAddress = wallet.Address,
                     UserCurrentBalance = lastRoundNumber == null
-                        ? wallet.StartAmount
+                        ? wallet.GetBalanceAfterRound(0)
                         : wallet.GetBalanceAfterRound(lastRoundNumber.Value),
                     CurrentRoundEndTime = currentRound?.EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ"),
                     CurrentRoundNumber = currentRound?.RoundNumber,
