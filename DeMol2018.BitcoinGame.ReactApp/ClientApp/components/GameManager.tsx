@@ -1,14 +1,13 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import { ApplicationState }  from '../store';
 import * as BitcoinGameStore from '../store/BitcoinGame';
 import RoundManager from "./RoundManager";
 import NonPlayerWallet from "./NonPlayerWallet";
 import MoneyWonSoFar from "./MoneyWonSoFar";
 
-type GameManagerProps =
-    BitcoinGameStore.BitcoinGameState
-    & typeof BitcoinGameStore.actionCreators;
+const connector = connect((state: ApplicationState) => state.bitcoinGame, BitcoinGameStore.actionCreators);
+type GameManagerProps = ConnectedProps<typeof connector>
 
 class GameManager extends React.Component<GameManagerProps> {
 
@@ -50,8 +49,4 @@ class GameManager extends React.Component<GameManagerProps> {
     }
 }
 
-// Wire up the React component to the Redux store
-export default connect(
-    (state: ApplicationState) => state.bitcoinGame, // Selects which state properties are merged into the component's props
-    BitcoinGameStore.actionCreators // Selects which action creators are merged into the component's props
-)(GameManager);// as typeof GameManager;
+export default connector(GameManager);

@@ -3,7 +3,6 @@ import { Provider } from 'react-redux';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router-dom';
 import { replace } from 'react-router-redux';
-import { createMemoryHistory } from 'history';
 import { createServerRenderer, RenderResult } from 'aspnet-prerendering';
 import configureStore from './configureStore';
 
@@ -31,7 +30,7 @@ export default createServerRenderer(params => {
             resolve({ redirectUrl: routerContext.url });
             return;
         }
-        
+
         // Once any async tasks are done, we can perform the final render
         // We also send the redux store state, so the client can continue execution where the server left off
         params.domainTasks.then(() => {

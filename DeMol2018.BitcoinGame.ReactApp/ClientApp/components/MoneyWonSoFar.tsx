@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import { ApplicationState }  from '../store';
-import * as BitcoinGameStore from '../store/BitcoinGame';
-import {BitcoinGameState} from "../store/BitcoinGame";
 
-class MoneyWonSoFar extends React.Component<BitcoinGameState> {
+const connector = connect((state: ApplicationState) => state.bitcoinGame);
+type MoneyWonSoFarProps = ConnectedProps<typeof connector>
+
+class MoneyWonSoFar extends React.Component<MoneyWonSoFarProps> {
     public render() {
-
         let headerText = this.props.gameHasFinished
             ? "In totaal verdiend:"
             : "Tot nu toe verdiend:";
@@ -24,8 +24,4 @@ class MoneyWonSoFar extends React.Component<BitcoinGameState> {
     }
 }
 
-// Wire up the React component to the Redux store
-export default connect(
-    (state: ApplicationState) => state.bitcoinGame, // Selects which state properties are merged into the component's props
-    BitcoinGameStore.actionCreators // Selects which action creators are merged into the component's props
-)(MoneyWonSoFar);// as typeof PlayerWallet;
+export default connector(MoneyWonSoFar)

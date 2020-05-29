@@ -9,5 +9,6 @@ namespace DeMol2018.BitcoinGame.Domain.Interfaces
         void Add(T t);
         void Update(T t);
         void Delete(T t);
+        void SaveChanges();
     }
 }

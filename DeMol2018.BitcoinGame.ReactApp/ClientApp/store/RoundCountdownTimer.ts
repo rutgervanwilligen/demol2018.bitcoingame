@@ -60,8 +60,13 @@ const unloadedState: RoundCountdownTimerState = {
     currentEndTime: new Date()
 };
 
-export const reducer: Reducer<RoundCountdownTimerState> = (state: RoundCountdownTimerState, incomingAction: Action) => {
+export const reducer: Reducer<RoundCountdownTimerState> = (state: RoundCountdownTimerState | undefined, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
+
+    if (state === undefined) {
+        state = unloadedState;
+    }
+
     switch (action.type) {
         case 'RECEIVE_LOGIN_RESULT':
             return {
@@ -81,11 +86,11 @@ export const reducer: Reducer<RoundCountdownTimerState> = (state: RoundCountdown
                 secondsLeft: action.secondsLeft
             };
         case 'FETCH_NEW_GAME_STATE':
-                return state;
+            return state;
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above
             const exhaustiveCheck: never = action;
     }
 
-    return state || unloadedState;
+    return state;
 };

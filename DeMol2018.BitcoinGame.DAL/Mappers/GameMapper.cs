@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using DeMol2018.BitcoinGame.DAL.Entities;
 using DeMol2018.BitcoinGame.Domain.Models;
 

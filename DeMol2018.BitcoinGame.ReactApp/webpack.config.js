@@ -3,13 +3,14 @@ const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 const merge = require('webpack-merge');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env) => {
-    const isDevBuild = !(env && env.prod);
+    const isDevBuild = true;// !(env && env.prod);
 
     // Configuration in common to both client-side and server-side bundles
     const sharedConfig = () => ({
+        mode: isDevBuild ? "development" : "production",
         stats: { modules: false },
         resolve: { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
         output: {
@@ -32,9 +33,12 @@ module.exports = (env) => {
         entry: { 'main-client': './ClientApp/boot-client.tsx' },
         module: {
             rules: [
-                { test: /\.css$/, use: ExtractTextPlugin.extract({ use: isDevBuild ? 'css-loader' : 'css-loader?minimize' }) }
+                {
+                    test: /\.css$/,
+                    use: ExtractTextPlugin.extract({ use: isDevBuild ? 'css-loader' : 'css-loader?minimize' })
+                }
             ]
-        },  
+        },
         output: { path: path.join(__dirname, clientBundleOutputDir) },
         plugins: [
             new ExtractTextPlugin('site.css'),
@@ -50,11 +54,11 @@ module.exports = (env) => {
             })
         ] : [
             // Plugins that apply in production builds only
-            new UglifyJSPlugin({
-                    parallel: {
-                        cache: true,
-                        workers: 2
-                    }
+            new TerserPlugin({
+                parallel: {
+                    cache: true,
+                    workers: 2
+                }
             })
         ])
     });

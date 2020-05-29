@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import * as RoundCountdownTimerStore from '../store/RoundCountdownTimer';
 import {ApplicationState} from "../store";
 
-type RoundCountdownTimerProps =
-    RoundCountdownTimerStore.RoundCountdownTimerState
-    & typeof RoundCountdownTimerStore.actionCreators;
+const connector = connect((state: ApplicationState) => state.roundCountdownTimer, RoundCountdownTimerStore.actionCreators);
+type RoundCountdownTimerProps = ConnectedProps<typeof connector>
 
 class RoundCountdownTimer extends React.Component<RoundCountdownTimerProps> {
     private timer: number;
@@ -68,12 +67,8 @@ class RoundCountdownTimer extends React.Component<RoundCountdownTimerProps> {
     };
 
     startTimer = () => {
-        this.timer = setInterval(this.countDown, 1000);
+        this.timer = window.setInterval(this.countDown, 1000);
     }
 }
 
-// Wire up the React component to the Redux store
-export default connect(
-    (state: ApplicationState) => state.roundCountdownTimer, // Selects which state properties are merged into the component's props
-    RoundCountdownTimerStore.actionCreators // Selects which action creators are merged into the component's props
-)(RoundCountdownTimer);//as typeof RoundCountdownTimer;
+export default connector(RoundCountdownTimer);

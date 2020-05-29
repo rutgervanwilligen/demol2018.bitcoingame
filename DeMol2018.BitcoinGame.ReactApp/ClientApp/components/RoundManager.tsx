@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import { ApplicationState }  from '../store';
 import * as BitcoinGameStore from '../store/BitcoinGame';
 import RoundCountdownTimer from "./RoundCountdownTimer";
 
-type RoundManagerProps =
-    BitcoinGameStore.BitcoinGameState
-    & typeof BitcoinGameStore.actionCreators;
+const connector = connect((state: ApplicationState) => state.bitcoinGame, BitcoinGameStore.actionCreators);
+type RoundManagerProps = ConnectedProps<typeof connector>
 
 class RoundManager extends React.Component<RoundManagerProps> {
 
@@ -34,8 +33,4 @@ class RoundManager extends React.Component<RoundManagerProps> {
     }
 }
 
-// Wire up the React component to the Redux store
-export default connect(
-    (state: ApplicationState) => state.bitcoinGame, // Selects which state properties are merged into the component's props
-    BitcoinGameStore.actionCreators // Selects which action creators are merged into the component's props
-)(RoundManager);//as typeof RoundManager;
+export default connector(RoundManager);

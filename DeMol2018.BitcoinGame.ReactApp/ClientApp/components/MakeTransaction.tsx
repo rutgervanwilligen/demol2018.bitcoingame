@@ -1,39 +1,30 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
+import {connect, ConnectedProps} from 'react-redux';
 import { ApplicationState }  from '../store';
 import * as BitcoinGameStore from '../store/BitcoinGame';
 
-type MakeTransactionProps =
-    BitcoinGameStore.BitcoinGameState
-    & typeof BitcoinGameStore.actionCreators;
+const connector = connect((state: ApplicationState) => state.bitcoinGame, BitcoinGameStore.actionCreators);
+type MakeTransactionProps = ConnectedProps<typeof connector>
 
 class MakeTransaction extends React.Component<MakeTransactionProps> {
-    private amountInput: HTMLInputElement;
-    private receiverAddressInput: HTMLInputElement;
-
-    setAmountInputRef = (element: HTMLInputElement) => {
-        this.amountInput = element;
-    };
-
-    setReceiverAddressInputRef = (element: HTMLInputElement) => {
-        this.receiverAddressInput = element;
-    };
+    private readonly amountInput: React.RefObject<HTMLInputElement>;
+    private readonly receiverAddressInput: React.RefObject<HTMLInputElement>;
 
     constructor(props: MakeTransactionProps) {
         super(props);
 
-        this.setAmountInputRef = this.setAmountInputRef.bind(this);
-        this.setReceiverAddressInputRef = this.setReceiverAddressInputRef.bind(this);
+        this.amountInput = React.createRef();
+        this.receiverAddressInput = React.createRef();
     }
-    
+
     makeTransactionAndClearFields = () => {
-        let receiverAddress = +this.receiverAddressInput.value;
-        let amount = +this.amountInput.value;
+        let receiverAddress = +this.receiverAddressInput.current!.value;
+        let amount = +this.amountInput.current!.value;
 
         this.props.makeTransaction(this.props.playerGuid!, receiverAddress, amount);
 
-        this.receiverAddressInput.value = '';
-        this.amountInput.value = '';
+        this.receiverAddressInput.current!.value = '';
+        this.amountInput.current!.value = '';
     };
 
     public render() {
@@ -42,11 +33,11 @@ class MakeTransaction extends React.Component<MakeTransactionProps> {
                 <h2 className="makeTransactionHeader">Overmaken</h2>
                 <div className="amount">
                     <label>Hoeveelheid BTC</label>
-                    <input className="inputField" placeholder='Hoeveelheid' ref={this.setAmountInputRef} />
+                    <input className="inputField" placeholder='Hoeveelheid' ref={this.amountInput} />
                 </div>
                 <div className="receiverAddress">
                     <label>Ontvangstadres</label>
-                    <input className="inputField" placeholder='Ontvangstadres' ref={this.setReceiverAddressInputRef} />
+                    <input className="inputField" placeholder='Ontvangstadres' ref={this.receiverAddressInput} />
                 </div>
                 {this.props.currentRoundNumber !== undefined
                     ? <button className="button" onClick={this.makeTransactionAndClearFields}>Verstuur</button>
@@ -57,8 +48,4 @@ class MakeTransaction extends React.Component<MakeTransactionProps> {
     }
 }
 
-// Wire up the React component to the Redux store
-export default connect(
-    (state: ApplicationState) => state.bitcoinGame, // Selects which state properties are merged into the component's props
-    BitcoinGameStore.actionCreators // Selects which action creators are merged into the component's props
-)(MakeTransaction);// as typeof MakeTransaction;
+export default connector(MakeTransaction);

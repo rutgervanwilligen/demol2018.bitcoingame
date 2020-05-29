@@ -24,7 +24,7 @@ namespace DeMol2018.BitcoinGame.DAL
             modelBuilder
                 .Entity<PlayerEntity>()
                 .Property(x => x.Id)
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedNever();
 
             modelBuilder
                 .Entity<PlayerEntity>()
@@ -38,7 +38,7 @@ namespace DeMol2018.BitcoinGame.DAL
             modelBuilder
                 .Entity<RoundEntity>()
                 .Property(x => x.Id)
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedNever();
 
             modelBuilder
                 .Entity<RoundEntity>()
@@ -57,7 +57,7 @@ namespace DeMol2018.BitcoinGame.DAL
                 .HasOne(x => x.Game)
                 .WithMany(x => x.Rounds)
                 .HasForeignKey(x => x.GameId);
-            
+
             modelBuilder
                 .Entity<GameEntity>()
                 .HasKey(x => x.Id);
@@ -65,8 +65,8 @@ namespace DeMol2018.BitcoinGame.DAL
             modelBuilder
                 .Entity<GameEntity>()
                 .Property(x => x.Id)
-                .ValueGeneratedOnAdd();
-            
+                .ValueGeneratedNever();
+
             modelBuilder
                 .Entity<GameEntity>()
                 .Property(x => x.StartTime)
@@ -80,7 +80,7 @@ namespace DeMol2018.BitcoinGame.DAL
             modelBuilder
                 .Entity<WalletEntity>()
                 .Property(x => x.Id)
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedNever();
 
             modelBuilder
                 .Entity<WalletEntity>()
@@ -106,7 +106,7 @@ namespace DeMol2018.BitcoinGame.DAL
             modelBuilder
                 .Entity<OutgoingTransactionEntity>()
                 .Property(x => x.Id)
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedNever();
 
             modelBuilder
                 .Entity<OutgoingTransactionEntity>()
@@ -128,7 +128,7 @@ namespace DeMol2018.BitcoinGame.DAL
             modelBuilder
                 .Entity<IncomingTransactionEntity>()
                 .Property(x => x.Id)
-                .ValueGeneratedOnAdd();
+                .ValueGeneratedNever();
 
             modelBuilder
                 .Entity<IncomingTransactionEntity>()

@@ -5,7 +5,7 @@ import { AppThunkAction } from './';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface LoginState {
-    loggedIn: boolean, 
+    loggedIn: boolean,
     playerGuid: string;
 }
 
@@ -60,7 +60,7 @@ const unloadedState: LoginState = {
     playerGuid: ""
 };
 
-export const reducer: Reducer<LoginState> = (state: LoginState, incomingAction: Action) => {
+export const reducer: Reducer<LoginState> = (state: LoginState | undefined, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
     switch (action.type) {
         case 'RECEIVE_LOGIN_RESULT':
@@ -69,8 +69,6 @@ export const reducer: Reducer<LoginState> = (state: LoginState, incomingAction: 
                 playerGuid: action.loginSuccessful ? action.playerGuid : "",
                 usersWalletAddress: action.loginSuccessful ? action.usersWalletAddress : undefined
             };
-//            }
-//            break;
         default:
             // The following line guarantees that every action in the KnownAction union has been covered by a case above
             // const exhaustiveCheck: never = action;

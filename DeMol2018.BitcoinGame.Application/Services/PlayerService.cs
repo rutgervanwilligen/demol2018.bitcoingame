@@ -48,7 +48,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
                 };
 
                 player.Wallets.Add(newWallet.ToEntity());
-            } 
+            }
 
             PlayerRepository.SaveChanges();
 

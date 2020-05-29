@@ -4,6 +4,11 @@ namespace DeMol2018.BitcoinGame.Domain.Models
 {
     public class IncomingTransaction
     {
+        public IncomingTransaction()
+        {
+            Id = Guid.NewGuid();
+        }
+
         public Guid Id { get; set; }
         public Guid ReceiverWalletId { get; set; }
         public Guid SenderWalletId { get; set; }

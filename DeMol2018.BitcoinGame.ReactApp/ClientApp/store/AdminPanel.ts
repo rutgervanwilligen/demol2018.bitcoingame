@@ -5,7 +5,7 @@ import { AppThunkAction } from './';
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface AdminPanelState {
-    
+
 }
 
 // -----------------
@@ -62,10 +62,10 @@ export const actionCreators = {
 // REDUCER - For a given state and action, returns the new state. To support time travel, this must not mutate the old state.
 
 const unloadedState: AdminPanelState = {
-    
+
 };
 
-export const reducer: Reducer<AdminPanelState> = (state: AdminPanelState, incomingAction: Action) => {
+export const reducer: Reducer<AdminPanelState> = (state: AdminPanelState | undefined, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
     switch (action.type) {
         default:

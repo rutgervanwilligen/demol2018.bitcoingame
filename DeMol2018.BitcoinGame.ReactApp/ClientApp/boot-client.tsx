@@ -2,7 +2,7 @@ import './css/site.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import { ApplicationState, reducers }  from './store';
+import { ApplicationState }  from './store';
 import BitcoinGame from "./components/BitcoinGame";
 import configureStore from "./configureStore";
 

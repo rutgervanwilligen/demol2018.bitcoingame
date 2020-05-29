@@ -8,6 +8,7 @@ module.exports = (env) => {
     const extractCSS = new ExtractTextPlugin('vendor.css');
 
     const sharedConfig = {
+        mode: isDevBuild ? "development" : "production",
         stats: { modules: false },
         resolve: { extensions: [ '.js' ] },
         module: {

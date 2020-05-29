@@ -8,5 +8,10 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
         {
             return View();
         }
+
+        public IActionResult Test()
+        {
+            return View();
+        }
     }
 }

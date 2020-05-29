@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DeMol2018.BitcoinGame.Domain.Interfaces
+﻿namespace DeMol2018.BitcoinGame.Domain.Interfaces
 {
     public interface IWallet
     {

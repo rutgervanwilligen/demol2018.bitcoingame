@@ -7,17 +7,13 @@ using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace DeMol2018.BitcoinGame.ReactApp
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
-        public IConfiguration Configuration { get; }
+        private static readonly IConfigurationRoot Configuration = ConfigurationFactory.Create();
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -29,13 +25,13 @@ namespace DeMol2018.BitcoinGame.ReactApp
             services.AddTransient<PlayerService>();
             services.AddTransient<TransactionService>();
             services.AddTransient<WalletService>();
-            
+
             services.AddSignalR();
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -51,23 +47,20 @@ namespace DeMol2018.BitcoinGame.ReactApp
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            app.UseSignalR(routes =>
+            app.UseRouting();
+
+            app.UseEndpoints(routes =>
             {
                 routes.MapHub<BitcoinGameHub>("/bitcoinGameHub");
+
+                routes.MapControllerRoute(
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
+
+                routes.MapFallbackToController("Index", "Home");
             });
 
             app.UseStaticFiles();
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-
-                routes.MapSpaFallbackRoute(
-                    name: "spa-fallback",
-                    defaults: new { controller = "Home", action = "Index" });
-            });
         }
     }
 }

@@ -253,7 +253,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
 
             return Clients.All.SendAsync("AnnounceNewGameStateResult");
         }
-        
+
         public Task MakeTransaction(Guid invokerId, int receiverWalletAddress, int amount)
         {
             var currentGame = _gameService.FindCurrentGame();
@@ -273,7 +273,7 @@ namespace DeMol2018.BitcoinGame.ReactApp.Controllers
                 _transactionService.MakeTransaction(senderWallet.Address, receiverWalletAddress, amount);
             }
             catch (InvalidTransactionException)
-            {                
+            {
                 return Clients.Caller.SendAsync("MakeTransactionResult", new {
                     transactionSuccessful = false,
                     userCurrentBalance = senderWallet.GetBalanceAfterRound(currentRoundNumber - 1)

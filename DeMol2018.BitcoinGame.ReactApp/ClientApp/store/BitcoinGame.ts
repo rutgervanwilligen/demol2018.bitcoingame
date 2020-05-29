@@ -121,8 +121,12 @@ const unloadedState: BitcoinGameState = {
     jokerWinners: []
 };
 
-export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, incomingAction: Action) => {
+export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState | undefined, incomingAction: Action) => {
     const action = incomingAction as KnownAction;
+
+    if (state === undefined) {
+        state = unloadedState;
+    }
 
     switch (action.type) {
         case 'RECEIVE_NEW_GAME_STATE':
@@ -161,7 +165,7 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
         case 'MAKE_TRANSACTION':
             return {
                 ...state,
-                currentBalance: state.currentBalance === undefined
+                currentBalance: state === undefined || state.currentBalance === undefined
                     ? undefined
                     : state.currentBalance >= action.amount && action.amount > 0
                         ? state.currentBalance - action.amount
@@ -177,5 +181,5 @@ export const reducer: Reducer<BitcoinGameState> = (state: BitcoinGameState, inco
             const exhaustiveCheck: never = action;
     }
 
-    return state || unloadedState;
+    return state;
 };

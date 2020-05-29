@@ -1,0 +1,36 @@
+<div class="wrapper">
+    <h1>De Mol 2018 - Test</h1>
+</div>
+
+@section scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/3.1.3/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("http://localhost:5000/bitcoinGameHub")
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        async function start() {
+            try {
+                await connection.start();
+                console.log("connected");
+
+                connection.invoke("Login", "Rutger", 1234).then(function() {}).catch(
+                    function() {
+                        console.log("login rejected");
+                    }
+                )
+            } catch (err) {
+                console.log(err);
+                setTimeout(() => start(), 5000);
+            }
+        };
+
+        connection.onclose(async () => {
+            await start();
+        });
+
+        // Start the connection.
+        start();
+    </script>
+}

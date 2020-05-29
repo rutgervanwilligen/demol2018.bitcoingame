@@ -1,12 +1,14 @@
-﻿import * as signalR from "@aspnet/signalr";
+﻿import * as signalR from "@microsoft/signalr";
 
 import { ApplicationState } from "./index";
 import { Store } from "redux";
 import {JokerWinner, NonPlayerWalletState} from "./BitcoinGame";
 
 // Declare connection
-let connection = new signalR.HubConnection("http://localhost:63426/bitcoinGameHub");
-//let connection = new signalR.HubConnection("https://bitcoin.demol2018.nl/bitcoinGameHub");
+let connection = new signalR.HubConnectionBuilder()
+    .withUrl("http://localhost:5000/bitcoinGameHub")
+//    .withUrl("https://bitcoingame.rutgervanwilligen.nl/bitcoinGameHub")
+    .build();
 
 export function signalRInvokeMiddleware() {
     return (next: any) => async (action: any) => {
@@ -22,9 +24,13 @@ export function signalRInvokeMiddleware() {
                 break;
 
             case "LOGIN":
-                connection.invoke("Login", action.name, action.code).then(function () {
-                }).catch(function () {
+                console.log("ik ga login invoken met name = " + action.name + " en code is " + action.code);
+                let name = action.name;
+                let code = Number(action.code);
+                connection.invoke("Login", name, code).then(function () {
+                }).catch(error => function () {
                     console.log("login rejected");
+                    console.log(error);
                 });
                 break;
 
@@ -34,7 +40,7 @@ export function signalRInvokeMiddleware() {
                     console.log("fetch new game state rejected");
                 });
                 break;
-                
+
             case "START_NEW_ROUND":
                 connection.invoke("StartNewRound", action.invokerId, action.lengthOfNewRoundInMinutes).then(function () {
                 }).catch(function () {
@@ -68,7 +74,7 @@ export function signalRInvokeMiddleware() {
     }
 }
 
-export function signalRRegisterCommands(store: Store<ApplicationState>) {
+export async function signalRRegisterCommands(store: Store<ApplicationState>) {
 
     function sortWallets(wallets: NonPlayerWalletState[]): NonPlayerWalletState[] {
         return wallets != null
@@ -162,5 +168,6 @@ export function signalRRegisterCommands(store: Store<ApplicationState>) {
         });
     });
 
-    connection.start();
+    await connection.start().catch(error => console.log("Error! " + error));
+    console.log("connected");
 }

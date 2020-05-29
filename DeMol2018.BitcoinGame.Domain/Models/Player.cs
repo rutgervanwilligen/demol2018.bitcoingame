@@ -6,12 +6,17 @@ namespace DeMol2018.BitcoinGame.Domain.Models
 {
     public class Player
     {
+        public Player()
+        {
+            Id = Guid.NewGuid();
+        }
+
         public Guid Id { get; set; }
         public string Name { get; set; }
         public int LoginCode { get; set; }
         public bool IsAdmin { get; set; }
         public int WalletAddress { get; set; }
-        
+
         public IEnumerable<PlayerWallet> Wallets { get; set; }
     }
 }
