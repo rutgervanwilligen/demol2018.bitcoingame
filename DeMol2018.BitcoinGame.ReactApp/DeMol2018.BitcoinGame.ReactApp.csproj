@@ -31,6 +31,17 @@
   <ItemGroup>
     <Folder Include="Properties\PublishProfiles" />
   </ItemGroup>
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\dist\130fa79c8eef75219200dcf043ebd67b.ttf" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\85492460da4e95018d4e336509efb500.png" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\main-client.js" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\main-client.js.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\site.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\site.css.map" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\vendor-manifest.json" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\vendor.css" />
+    <_ContentIncludedByDefault Remove="wwwroot\dist\vendor.js" />
+  </ItemGroup>
 <!--  <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">-->
 <!--    &lt;!&ndash; Ensure Node.js is installed &ndash;&gt;-->
 <!--    <Exec Command="node &#45;&#45;version" ContinueOnError="true">-->

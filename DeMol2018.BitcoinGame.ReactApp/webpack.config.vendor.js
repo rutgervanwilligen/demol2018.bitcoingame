@@ -1,11 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const merge = require('webpack-merge');
 
 module.exports = (env) => {
     const isDevBuild = !(env && env.prod);
-    const extractCSS = new ExtractTextPlugin('vendor.css');
 
     const sharedConfig = {
         mode: isDevBuild ? "development" : "production",
@@ -51,11 +50,11 @@ module.exports = (env) => {
         output: { path: path.join(__dirname, 'wwwroot', 'dist') },
         module: {
             rules: [
-                { test: /\.css(\?|$)/, use: extractCSS.extract({ use: isDevBuild ? 'css-loader' : 'css-loader?minimize' }) }
+                { test: /\.css(\?|$)/, use: [ MiniCssExtractPlugin.loader, isDevBuild ? 'css-loader' : 'css-loader?minimize' ] }
             ]
         },
         plugins: [
-            extractCSS,
+            new MiniCssExtractPlugin(),
             new webpack.DllPlugin({
                 path: path.join(__dirname, 'wwwroot', 'dist', '[name]-manifest.json'),
                 name: '[name]_[hash]'

@@ -1,8 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
-const merge = require('webpack-merge');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const { merge } = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env) => {
@@ -19,12 +18,12 @@ module.exports = (env) => {
         },
         module: {
             rules: [
-                { test: /\.tsx?$/, include: /ClientApp/, use: 'awesome-typescript-loader?silent=true' },
+                { test: /\.tsx?$/, include: /ClientApp/, use: [{ loader: 'ts-loader', options: { transpileOnly: true }}] },
                 { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' },
                 { test: /\.ttf$/, use: 'url-loader?limit=25000&name=[hash].[ext]' }
             ]
         },
-        plugins: [new CheckerPlugin()]
+        // plugins: [new CheckerPlugin()]
     });
 
     // Configuration for client-side bundle suitable for running in browsers
@@ -35,17 +34,17 @@ module.exports = (env) => {
             rules: [
                 {
                     test: /\.css$/,
-                    use: ExtractTextPlugin.extract({ use: isDevBuild ? 'css-loader' : 'css-loader?minimize' })
+                    use: [ MiniCssExtractPlugin.loader, isDevBuild ? 'css-loader' : 'css-loader?minimize' ]
                 }
             ]
         },
         output: { path: path.join(__dirname, clientBundleOutputDir) },
         plugins: [
-            new ExtractTextPlugin('site.css'),
-            new webpack.DllReferencePlugin({
-                context: __dirname,
-                manifest: require('./wwwroot/dist/vendor-manifest.json')
-            })
+            new MiniCssExtractPlugin(),
+            // new webpack.DllReferencePlugin({
+            //     context: __dirname,
+            //     manifest: require('./wwwroot/dist/vendor-manifest.json')
+            // })
         ].concat(isDevBuild ? [
             // Plugins that apply in development builds only
             new webpack.SourceMapDevToolPlugin({
