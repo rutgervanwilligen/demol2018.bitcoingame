@@ -1,10 +1,10 @@
 import './css/site.css';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { ApplicationState }  from './store';
 import BitcoinGame from "./components/BitcoinGame";
 import configureStore from "./configureStore";
+import { createRoot } from 'react-dom/client';
 
 // Create browser history to use in the Redux store
 // const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href')!;
@@ -15,11 +15,13 @@ const initialState = (window as any).initialReduxState as ApplicationState;
 const store = configureStore(initialState);
 
 function renderApp() {
-    ReactDOM.render(
-            <Provider store={ store }>
-                <BitcoinGame />
-            </Provider>,
-        document.getElementById('react-app')
+    const container = document.getElementById('react-app');
+    const root = createRoot(container!);
+
+    root.render(
+        <Provider store={ store }>
+            <BitcoinGame />
+        </Provider>
     );
 }
 
