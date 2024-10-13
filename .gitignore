@@ -17,3 +17,4 @@ bin/
 **/appsettings.Production.json
 
 develop/mssql
+.DS_Store

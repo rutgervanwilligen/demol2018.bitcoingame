@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 
 module.exports = (env) => {
     const isDevBuild = !(env && env.prod);
@@ -17,9 +17,9 @@ module.exports = (env) => {
         },
         entry: {
             vendor: [
-                'bootstrap',
+                // 'bootstrap',
                 'bootstrap/dist/css/bootstrap.css',
-                'domain-task',
+                // 'domain-task',
                 'event-source-polyfill',
                 'history',
                 'react',
@@ -35,7 +35,7 @@ module.exports = (env) => {
         output: {
             publicPath: 'dist/',
             filename: '[name].js',
-            library: '[name]_[hash]',
+            library: '[name]_[fullhash]',
         },
         plugins: [
             new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
@@ -57,7 +57,7 @@ module.exports = (env) => {
             new MiniCssExtractPlugin(),
             new webpack.DllPlugin({
                 path: path.join(__dirname, 'wwwroot', 'dist', '[name]-manifest.json'),
-                name: '[name]_[hash]'
+                name: '[name]_[fullhash]'
             })
         ].concat(isDevBuild ? [] : [
             new webpack.optimize.UglifyJsPlugin()
@@ -74,11 +74,11 @@ module.exports = (env) => {
         module: {
             rules: [ { test: /\.css(\?|$)/, use: isDevBuild ? 'css-loader' : 'css-loader?minimize' } ]
         },
-        entry: { vendor: ['aspnet-prerendering', 'react-dom/server'] },
+        entry: { vendor: [/*'aspnet-prerendering', */'react-dom/server'] },
         plugins: [
             new webpack.DllPlugin({
                 path: path.join(__dirname, 'ClientApp', 'dist', '[name]-manifest.json'),
-                name: '[name]_[hash]'
+                name: '[name]_[fullhash]'
             })
         ]
     });
