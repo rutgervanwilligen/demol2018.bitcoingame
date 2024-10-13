@@ -6,9 +6,6 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="3.1.4" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.4" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="3.9.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -18,55 +15,9 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <!-- Files not to publish (note that the 'dist' subfolders are re-added below) -->
-    <Content Remove="ClientApp\**" />
-    <Content Update="Views\Home\Test.cshtml">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\DeMol2018.BitcoinGame.Application\DeMol2018.BitcoinGame.Application.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\PublishProfiles" />
   </ItemGroup>
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\dist\130fa79c8eef75219200dcf043ebd67b.ttf" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\85492460da4e95018d4e336509efb500.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\main-client.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\main-client.js.map" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\site.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\site.css.map" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\vendor-manifest.json" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\vendor.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\vendor.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\dist\main-client.css" />
-  </ItemGroup>
-<!--  <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">-->
-<!--    &lt;!&ndash; Ensure Node.js is installed &ndash;&gt;-->
-<!--    <Exec Command="node &#45;&#45;version" ContinueOnError="true">-->
-<!--      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />-->
-<!--    </Exec>-->
-<!--    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />-->
-<!--    &lt;!&ndash; In development, the dist files won't exist on the first run or when cloning to-->
-<!--         a different machine, so rebuild them if not already present. &ndash;&gt;-->
-<!--    <Message Importance="high" Text="Performing first-run Webpack build..." />-->
-<!--    <Exec Command="node node_modules/webpack/bin/webpack.js &#45;&#45;config webpack.config.vendor.js" />-->
-<!--    <Exec Command="node node_modules/webpack/bin/webpack.js" />-->
-<!--  </Target>-->
-<!--  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">-->
-<!--    &lt;!&ndash; As part of publishing, ensure the JS resources are freshly built in production mode &ndash;&gt;-->
-<!--    <Exec Command="npm install" />-->
-<!--    <Exec Command="node node_modules/webpack/bin/webpack.js &#45;&#45;config webpack.config.vendor.js &#45;&#45;env.prod" />-->
-<!--    <Exec Command="node node_modules/webpack/bin/webpack.js &#45;&#45;env.prod" />-->
-<!--    &lt;!&ndash; Include the newly-built files in the publish output &ndash;&gt;-->
-<!--    <ItemGroup>-->
-<!--      <DistFiles Include="wwwroot\dist\**; ClientApp\dist\**" />-->
-<!--      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">-->
-<!--        <RelativePath>%(DistFiles.Identity)</RelativePath>-->
-<!--        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>-->
-<!--      </ResolvedFileToPublish>-->
-<!--    </ItemGroup>-->
-<!--  </Target>-->
 </Project>

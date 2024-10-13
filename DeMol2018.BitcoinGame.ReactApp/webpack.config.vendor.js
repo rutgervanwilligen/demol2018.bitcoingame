@@ -33,7 +33,7 @@ module.exports = (env) => {
             ],
         },
         output: {
-            publicPath: 'dist/',
+            publicPath: 'public/dist/',
             filename: '[name].js',
             library: '[name]_[fullhash]',
         },
@@ -47,7 +47,7 @@ module.exports = (env) => {
     };
 
     const clientBundleConfig = merge(sharedConfig, {
-        output: { path: path.join(__dirname, 'wwwroot', 'dist') },
+        output: { path: path.join(__dirname, 'public', 'dist') },
         module: {
             rules: [
                 { test: /\.css(\?|$)/, use: [ MiniCssExtractPlugin.loader, isDevBuild ? 'css-loader' : 'css-loader?minimize' ] }
@@ -56,7 +56,7 @@ module.exports = (env) => {
         plugins: [
             new MiniCssExtractPlugin(),
             new webpack.DllPlugin({
-                path: path.join(__dirname, 'wwwroot', 'dist', '[name]-manifest.json'),
+                path: path.join(__dirname, 'public', 'dist', '[name]-manifest.json'),
                 name: '[name]_[fullhash]'
             })
         ].concat(isDevBuild ? [] : [
@@ -64,24 +64,24 @@ module.exports = (env) => {
         ])
     });
 
-    const serverBundleConfig = merge(sharedConfig, {
-        target: 'node',
-        resolve: { mainFields: ['main'] },
-        output: {
-            path: path.join(__dirname, 'ClientApp', 'dist'),
-            libraryTarget: 'commonjs2',
-        },
-        module: {
-            rules: [ { test: /\.css(\?|$)/, use: isDevBuild ? 'css-loader' : 'css-loader?minimize' } ]
-        },
-        entry: { vendor: [/*'aspnet-prerendering', */'react-dom/server'] },
-        plugins: [
-            new webpack.DllPlugin({
-                path: path.join(__dirname, 'ClientApp', 'dist', '[name]-manifest.json'),
-                name: '[name]_[fullhash]'
-            })
-        ]
-    });
+    // const serverBundleConfig = merge(sharedConfig, {
+    //     target: 'node',
+    //     resolve: { mainFields: ['main'] },
+    //     output: {
+    //         path: path.join(__dirname, 'ClientApp', 'dist'),
+    //         libraryTarget: 'commonjs2',
+    //     },
+    //     module: {
+    //         rules: [ { test: /\.css(\?|$)/, use: isDevBuild ? 'css-loader' : 'css-loader?minimize' } ]
+    //     },
+    //     entry: { vendor: [/*'aspnet-prerendering', */'react-dom/server'] },
+    //     plugins: [
+    //         new webpack.DllPlugin({
+    //             path: path.join(__dirname, 'ClientApp', 'dist', '[name]-manifest.json'),
+    //             name: '[name]_[fullhash]'
+    //         })
+    //     ]
+    // });
 
-    return [clientBundleConfig, serverBundleConfig];
+    return [clientBundleConfig];//, serverBundleConfig];
 };

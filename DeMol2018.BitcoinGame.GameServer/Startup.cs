@@ -3,7 +3,6 @@ using DeMol2018.BitcoinGame.DAL;
 using DeMol2018.BitcoinGame.GameServer.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +17,19 @@ namespace DeMol2018.BitcoinGame.GameServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        policy
+                            .WithOrigins("http://localhost:8080")
+                            .WithMethods("GET", "POST")
+                            .AllowAnyHeader()
+                            .AllowCredentials();
+                    });
+            });
+
             var connectionString = Configuration.GetConnectionString("BitcoinGameDatabase");
             services.AddDbContext<BitcoinGameDbContext>(options => options.UseSqlServer(connectionString));
 
@@ -33,6 +45,8 @@ namespace DeMol2018.BitcoinGame.GameServer
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors();
+
             using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
             {
                 var context = serviceScope.ServiceProvider.GetService<BitcoinGameDbContext>();
@@ -42,11 +56,6 @@ namespace DeMol2018.BitcoinGame.GameServer
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-                {
-                    HotModuleReplacement = true,
-                    ReactHotModuleReplacement = true
-                });
             }
             else
             {

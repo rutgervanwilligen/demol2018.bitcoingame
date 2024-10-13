@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { merge } = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = (env) => {
     const isDevBuild = true;// !(env && env.prod);
@@ -14,7 +15,7 @@ module.exports = (env) => {
         resolve: { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
         output: {
             filename: '[name].js',
-            publicPath: '/dist/' // Webpack dev middleware, if enabled, handles requests for this URL prefix
+            path: '/dist' // Webpack dev middleware, if enabled, handles requests for this URL prefix
         },
         module: {
             rules: [
@@ -27,7 +28,7 @@ module.exports = (env) => {
     });
 
     // Configuration for client-side bundle suitable for running in browsers
-    const clientBundleOutputDir = './wwwroot/dist';
+    const clientBundleOutputDir = './public/dist';
     const clientBundleConfig = merge(sharedConfig(), {
         entry: { 'main-client': './ClientApp/boot-client.tsx' },
         module: {
@@ -45,6 +46,9 @@ module.exports = (env) => {
             //     context: __dirname,
             //     manifest: require('./wwwroot/dist/vendor-manifest.json')
             // })
+            new HtmlWebpackPlugin({
+                template: "public/index.html",
+            }),
         ].concat(isDevBuild ? [
             // Plugins that apply in development builds only
             new webpack.SourceMapDevToolPlugin({
