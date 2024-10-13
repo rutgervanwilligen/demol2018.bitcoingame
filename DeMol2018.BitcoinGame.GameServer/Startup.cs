@@ -1,6 +1,6 @@
 using DeMol2018.BitcoinGame.Application.Services;
 using DeMol2018.BitcoinGame.DAL;
-using DeMol2018.BitcoinGame.ReactApp.Controllers;
+using DeMol2018.BitcoinGame.GameServer.Controllers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace DeMol2018.BitcoinGame.ReactApp
+namespace DeMol2018.BitcoinGame.GameServer
 {
     public class Startup
     {

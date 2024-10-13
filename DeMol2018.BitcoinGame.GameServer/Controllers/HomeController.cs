@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace DeMol2018.BitcoinGame.ReactApp.Controllers
+namespace DeMol2018.BitcoinGame.GameServer.Controllers
 {
     public class HomeController : Controller
     {

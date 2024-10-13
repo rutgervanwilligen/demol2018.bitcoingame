@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DeMol2018.BitcoinGame.Application.Services;
-using DeMol2018.BitcoinGame.ReactApp.ResultObjects;
+using DeMol2018.BitcoinGame.GameServer.ResultObjects;
 using Microsoft.AspNetCore.SignalR;
 
-namespace DeMol2018.BitcoinGame.ReactApp.Controllers
+namespace DeMol2018.BitcoinGame.GameServer.Controllers
 {
     public class BitcoinGameHub : Hub
     {

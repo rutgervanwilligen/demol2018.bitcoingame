@@ -4,7 +4,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 
-namespace DeMol2018.BitcoinGame.ReactApp
+namespace DeMol2018.BitcoinGame.GameServer
 {
     public class Program
     {

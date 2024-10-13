@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
 
-namespace DeMol2018.BitcoinGame.ReactApp
+namespace DeMol2018.BitcoinGame.GameServer
 {
     public static class ConfigurationFactory
     {
