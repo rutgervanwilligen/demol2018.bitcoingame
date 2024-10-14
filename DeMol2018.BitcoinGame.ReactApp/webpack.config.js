@@ -34,7 +34,7 @@ module.exports = (env) => {
             filename: '[name].js',
             path: path.join(__dirname, clientBundleOutputDir) },
         optimization: {
-            minimizer: isDevBuild ? [] : [new CssMinimizerPlugin()]
+            minimizer: isDevBuild ? [] : [new TerserPlugin(), new CssMinimizerPlugin()]
         },
         plugins: [
             new MiniCssExtractPlugin(),
