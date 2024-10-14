@@ -14,18 +14,17 @@ namespace DeMol2018.BitcoinGame.GameServer
     {
         private static readonly IConfigurationRoot Configuration = ConfigurationFactory.Create();
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(
-                    policy =>
+                    builder =>
                     {
-                        policy
-                            .WithOrigins("http://localhost:8080")
-                            .WithMethods("GET", "POST")
+                        builder
                             .AllowAnyHeader()
+                            .WithMethods("GET", "POST")
+                            .WithOrigins(Configuration["Cors:Origins"]!.Split(','))
                             .AllowCredentials();
                     });
             });
@@ -42,7 +41,6 @@ namespace DeMol2018.BitcoinGame.GameServer
             services.AddMvc();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseCors();
