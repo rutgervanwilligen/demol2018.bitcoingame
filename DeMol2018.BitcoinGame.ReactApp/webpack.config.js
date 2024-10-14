@@ -3,9 +3,10 @@ const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 
 module.exports = (env) => {
-    const isDevBuild = true;// !(env && env.prod);
+    const isDevBuild = false;//!(env && env.prod);
     const clientBundleOutputDir = './public/dist';
 
     const clientBundleConfig = {
@@ -23,7 +24,7 @@ module.exports = (env) => {
         },
         module: {
             rules: [
-                { test: /\.css$/, use: [ MiniCssExtractPlugin.loader, isDevBuild ? 'css-loader' : 'css-loader?minimize' ]},
+                { test: /\.css$/, use: [ MiniCssExtractPlugin.loader, 'css-loader' ]},
                 { test: /\.tsx?$/, include: /ClientApp/, use: [{ loader: 'ts-loader', options: { transpileOnly: true }}] },
                 { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' },
                 { test: /\.ttf$/, use: 'url-loader?limit=25000&name=[hash].[ext]' }
@@ -32,7 +33,9 @@ module.exports = (env) => {
         output: {
             filename: '[name].js',
             path: path.join(__dirname, clientBundleOutputDir) },
-
+        optimization: {
+            minimizer: isDevBuild ? [] : [new CssMinimizerPlugin()]
+        },
         plugins: [
             new MiniCssExtractPlugin(),
             new HtmlWebpackPlugin({
@@ -53,10 +56,7 @@ module.exports = (env) => {
         ] : [
             // Plugins that apply in production builds only
             new TerserPlugin({
-                parallel: {
-                    cache: true,
-                    workers: 2
-                }
+                parallel: 2
             })
         ]),
         stats: { modules: false },
