@@ -13,7 +13,6 @@ module.exports = (env) => {
         entry: {
             'vendor': [
                 'bootstrap/dist/css/bootstrap.css',
-                'event-source-polyfill',
                 'react',
                 'react-redux',
                 'redux',
