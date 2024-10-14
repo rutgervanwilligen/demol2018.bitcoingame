@@ -4,28 +4,46 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const ReactRefreshTypeScript = require('react-refresh-typescript');
 
 module.exports = (env) => {
-    const isDevBuild = false;//!(env && env.prod);
+    const isDevBuild = true;//!(env && env.prod);
     const clientBundleOutputDir = './public/dist';
 
     const clientBundleConfig = {
         mode: isDevBuild ? "development" : "production",
         entry: {
-            'vendor': [
+            // 'vendor': [
+            //     'bootstrap/dist/css/bootstrap.css',
+                // 'react',
+                // 'react-redux',
+                // 'redux',
+                // 'redux-thunk',
+                // 'jquery'
+            // ],
+            'main-client': [
                 'bootstrap/dist/css/bootstrap.css',
-                'react',
-                'react-redux',
-                'redux',
-                'redux-thunk',
-                'jquery'
-            ],
-            'main-client': './ClientApp/boot-client.tsx',
+                './ClientApp/boot-client.tsx',
+            ]
+        },
+        devServer: {
+            hot: true,
         },
         module: {
             rules: [
                 { test: /\.css$/, use: [ MiniCssExtractPlugin.loader, 'css-loader' ]},
-                { test: /\.tsx?$/, include: /ClientApp/, use: [{ loader: 'ts-loader', options: { transpileOnly: true }}] },
+                { test: /\.tsx?$/, include: /ClientApp/, use: [
+                    {
+                        loader: require.resolve('ts-loader'),
+                        options: {
+                            getCustomTransformers: () => ({
+                                before: [isDevBuild && ReactRefreshTypeScript()].filter(Boolean),
+                            }),
+                            transpileOnly: isDevBuild,
+                        },
+                    }
+                ]},
                 { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' },
                 { test: /\.ttf$/, use: 'url-loader?limit=25000&name=[hash].[ext]' }
             ]
@@ -52,13 +70,14 @@ module.exports = (env) => {
                 filename: '[file].map', // Remove this line if you prefer inline source maps
                 moduleFilenameTemplate: path.relative(clientBundleOutputDir, '[resourcePath]'), // Point sourcemap entries to the original file locations on disk
                 exclude: ['vendor.js']
-            })
+            }),
+            new ReactRefreshWebpackPlugin()
         ] : [
             // Plugins that apply in production builds only
             new TerserPlugin({
                 parallel: 2
             })
-        ]),
+        ].filter(Boolean)),
         stats: { modules: false },
         resolve: { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
     };
