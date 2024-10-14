@@ -49,6 +49,7 @@
     "web-vitals": "^2.1.0"
   },
   "scripts": {
-    "build": "webpack --config webpack.config.vendor.js && webpack"
+    "build": "webpack",
+    "start": "webpack serve"
   }
 }
