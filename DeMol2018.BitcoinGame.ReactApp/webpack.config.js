@@ -15,12 +15,9 @@ module.exports = (env) => {
                 'bootstrap/dist/css/bootstrap.css',
                 'event-source-polyfill',
                 'react',
-                'react-dom',
-                'react-router-dom',
                 'react-redux',
                 'redux',
                 'redux-thunk',
-                'react-router-redux',
                 'jquery'
             ],
             'main-client': './ClientApp/boot-client.tsx',
