@@ -14,7 +14,6 @@ module.exports = (env) => {
             'vendor': [
                 'bootstrap/dist/css/bootstrap.css',
                 'event-source-polyfill',
-                'history',
                 'react',
                 'react-dom',
                 'react-router-dom',
