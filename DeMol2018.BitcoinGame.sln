@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeMol2018.BitcoinGame.Domai
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeMol2018.BitcoinGame.DAL", "DeMol2018.BitcoinGame.DAL\DeMol2018.BitcoinGame.DAL.csproj", "{1FD2A686-B327-4264-BF8F-C464DDFEE69D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeMol2018.BitcoinGame.ReactApp", "DeMol2018.BitcoinGame.ReactApp\DeMol2018.BitcoinGame.ReactApp.csproj", "{AB5DEEA8-5D8D-4371-B2C2-31E4AB638CC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeMol2018.BitcoinGame.GameServer", "DeMol2018.BitcoinGame.GameServer\DeMol2018.BitcoinGame.GameServer.csproj", "{AB5DEEA8-5D8D-4371-B2C2-31E4AB638CC8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeMol2018.BitcoinGame.Application", "DeMol2018.BitcoinGame.Application\DeMol2018.BitcoinGame.Application.csproj", "{24252488-D54B-42B7-88CD-2B54C70A34C9}"
 EndProject

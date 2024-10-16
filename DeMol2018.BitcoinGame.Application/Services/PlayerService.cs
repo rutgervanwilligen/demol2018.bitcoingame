@@ -23,7 +23,7 @@ namespace DeMol2018.BitcoinGame.Application.Services
         public Player Login(string name, int code)
         {
             return PlayerRepository.FindBy(x => x.Name == name
-                                         && x.LoginCode == code).ToDomainModel();
+                                         && x.LoginCode == code)?.ToDomainModel();
         }
 
         public Player GetById(Guid invokerId)

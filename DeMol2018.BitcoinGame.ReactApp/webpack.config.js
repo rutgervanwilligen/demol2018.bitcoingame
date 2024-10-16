@@ -1,87 +1,77 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
-const merge = require('webpack-merge');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const TerserPlugin = require('terser-webpack-plugin');
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const ReactRefreshTypeScript = require('react-refresh-typescript');
 
 module.exports = (env) => {
-    const isDevBuild = true;// !(env && env.prod);
+    const isDevBuild = true;//!(env && env.prod);
+    const clientBundleOutputDir = './public/dist';
 
-    // Configuration in common to both client-side and server-side bundles
-    const sharedConfig = () => ({
+    const clientBundleConfig = {
         mode: isDevBuild ? "development" : "production",
-        stats: { modules: false },
-        resolve: { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
-        output: {
-            filename: '[name].js',
-            publicPath: '/dist/' // Webpack dev middleware, if enabled, handles requests for this URL prefix
+        entry: {
+            'main-client': [
+                'bootstrap/dist/css/bootstrap.css',
+                './ClientApp/ClientApp.tsx',
+            ]
+        },
+        devServer: {
+            hot: true,
         },
         module: {
             rules: [
-                { test: /\.tsx?$/, include: /ClientApp/, use: 'awesome-typescript-loader?silent=true' },
+                { test: /\.css$/, use: [ MiniCssExtractPlugin.loader, 'css-loader' ]},
+                { test: /\.tsx?$/, include: /ClientApp/, use: [
+                    {
+                        loader: require.resolve('ts-loader'),
+                        options: {
+                            getCustomTransformers: () => ({
+                                before: [isDevBuild && ReactRefreshTypeScript()].filter(Boolean),
+                            }),
+                            transpileOnly: isDevBuild,
+                        },
+                    }
+                ]},
                 { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' },
                 { test: /\.ttf$/, use: 'url-loader?limit=25000&name=[hash].[ext]' }
             ]
         },
-        plugins: [new CheckerPlugin()]
-    });
-
-    // Configuration for client-side bundle suitable for running in browsers
-    const clientBundleOutputDir = './wwwroot/dist';
-    const clientBundleConfig = merge(sharedConfig(), {
-        entry: { 'main-client': './ClientApp/boot-client.tsx' },
-        module: {
-            rules: [
-                {
-                    test: /\.css$/,
-                    use: ExtractTextPlugin.extract({ use: isDevBuild ? 'css-loader' : 'css-loader?minimize' })
-                }
-            ]
+        output: {
+            filename: '[name].js',
+            path: path.join(__dirname, clientBundleOutputDir) },
+        optimization: {
+            minimizer: isDevBuild ? [] : [new TerserPlugin(), new CssMinimizerPlugin()]
         },
-        output: { path: path.join(__dirname, clientBundleOutputDir) },
         plugins: [
-            new ExtractTextPlugin('site.css'),
-            new webpack.DllReferencePlugin({
-                context: __dirname,
-                manifest: require('./wwwroot/dist/vendor-manifest.json')
-            })
+            new MiniCssExtractPlugin(),
+            new HtmlWebpackPlugin({
+                template: "public/index.html",
+            }),
+            new webpack.ProvidePlugin({ $: 'jquery', jQuery: 'jquery' }), // Maps these identifiers to the jQuery package (because Bootstrap expects it to be a global variable)
+            new webpack.NormalModuleReplacementPlugin(/\/iconv-loader$/, require.resolve('node-noop')), // Workaround for https://github.com/andris9/encoding/issues/16
+            new webpack.DefinePlugin({
+                'process.env.NODE_ENV': isDevBuild ? '"development"' : '"production"'
+            }),
         ].concat(isDevBuild ? [
             // Plugins that apply in development builds only
             new webpack.SourceMapDevToolPlugin({
                 filename: '[file].map', // Remove this line if you prefer inline source maps
-                moduleFilenameTemplate: path.relative(clientBundleOutputDir, '[resourcePath]') // Point sourcemap entries to the original file locations on disk
-            })
+                moduleFilenameTemplate: path.relative(clientBundleOutputDir, '[resourcePath]'), // Point sourcemap entries to the original file locations on disk
+            }),
+            new ReactRefreshWebpackPlugin()
         ] : [
             // Plugins that apply in production builds only
             new TerserPlugin({
-                parallel: {
-                    cache: true,
-                    workers: 2
-                }
+                parallel: 2
             })
-        ])
-    });
+        ].filter(Boolean)),
+        stats: { modules: false },
+        resolve: { extensions: ['.js', '.jsx', '.ts', '.tsx'] },
+    };
 
-    // Configuration for server-side (prerendering) bundle suitable for running in Node
-    const serverBundleConfig = merge(sharedConfig(), {
-        resolve: { mainFields: ['main'] },
-        entry: { 'main-server': './ClientApp/boot-server.tsx' },
-        plugins: [
-            new webpack.DllReferencePlugin({
-                context: __dirname,
-                manifest: require('./ClientApp/dist/vendor-manifest.json'),
-                sourceType: 'commonjs2',
-                name: './vendor'
-            })
-        ],
-        output: {
-            libraryTarget: 'commonjs',
-            path: path.join(__dirname, './ClientApp/dist')
-        },
-        target: 'node',
-        devtool: 'inline-source-map'
-    });
-
-    return [clientBundleConfig, serverBundleConfig];
+    return [clientBundleConfig];
 };

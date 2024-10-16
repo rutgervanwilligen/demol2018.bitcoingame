@@ -1,7 +1,7 @@
 ﻿using System;
 using DeMol2018.BitcoinGame.Domain.Models.Wallets;
 
-namespace DeMol2018.BitcoinGame.ReactApp.ResultObjects
+namespace DeMol2018.BitcoinGame.GameServer.ResultObjects
 {
     public class NonPlayerWalletResult
     {

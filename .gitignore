@@ -14,4 +14,8 @@ node_modules/
 obj/
 bin/
 
+**/appsettings.json
 **/appsettings.Production.json
+
+develop/mssql
+.DS_Store
