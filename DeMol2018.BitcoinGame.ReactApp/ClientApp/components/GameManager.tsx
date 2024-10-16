@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {connect, ConnectedProps} from 'react-redux';
 import { ApplicationState }  from '../store';
-import * as BitcoinGameStore from '../store/BitcoinGame';
 import RoundManager from "./RoundManager";
 import NonPlayerWallet from "./NonPlayerWallet";
 import MoneyWonSoFar from "./MoneyWonSoFar";

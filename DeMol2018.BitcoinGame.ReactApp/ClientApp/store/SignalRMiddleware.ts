@@ -2,13 +2,24 @@
 
 import { ApplicationState } from "./index";
 import { Store } from "redux";
-import {JokerWinner, NonPlayerWalletState} from "./BitcoinGame";
+import { Middleware } from "@reduxjs/toolkit";
+import {sortJokerWinners, sortWallets} from "./Utils";
 
-// Declare connection
 let connection = new signalR.HubConnectionBuilder()
     .withUrl("http://localhost:5000/bitcoinGameHub")
 //    .withUrl("https://bitcoingame.rutgervanwilligen.nl/bitcoinGameHub")
     .build();
+
+await connection.start().catch(error => console.log("Error! " + error));
+console.log("connected");
+
+const websocketMiddleware: Middleware = store => next => action => {
+    console.log("Middleware werkt! Ontvangen action: " + action.type);
+
+    next(action);
+};
+
+export default websocketMiddleware;
 
 export function signalRInvokeMiddleware() {
     return (next: any) => async (action: any) => {
@@ -75,34 +86,6 @@ export function signalRInvokeMiddleware() {
 }
 
 export async function signalRRegisterCommands(store: Store<ApplicationState>) {
-
-    function sortWallets(wallets: NonPlayerWalletState[]): NonPlayerWalletState[] {
-        return wallets != null
-            ? wallets.sort((a: NonPlayerWalletState, b: NonPlayerWalletState) => {
-                return a.address - b.address
-            })
-            : [];
-    }
-
-    function sortJokerWinners(wallets: JokerWinner[]): JokerWinner[] {
-        return wallets != null
-            ? wallets.sort((a: JokerWinner, b: JokerWinner) => {
-                let nameA = a.name.toLowerCase();
-                let nameB = b.name.toLowerCase();
-
-                if (nameA < nameB) {
-                    return -1;
-                }
-
-                if (nameB < nameA) {
-                    return 1;
-                }
-
-                return 0;
-            })
-            : [];
-    }
-
     connection.on('LoginResult', loginResult => {
         let sortedWallets = sortWallets(loginResult.updatedState.nonPlayerWallets);
         let sortedJokerWinners = sortJokerWinners(loginResult.updatedState.jokerWinners);
