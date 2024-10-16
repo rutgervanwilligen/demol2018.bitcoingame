@@ -14,17 +14,9 @@ module.exports = (env) => {
     const clientBundleConfig = {
         mode: isDevBuild ? "development" : "production",
         entry: {
-            // 'vendor': [
-            //     'bootstrap/dist/css/bootstrap.css',
-                // 'react',
-                // 'react-redux',
-                // 'redux',
-                // 'redux-thunk',
-                // 'jquery'
-            // ],
             'main-client': [
                 'bootstrap/dist/css/bootstrap.css',
-                './ClientApp/boot-client.tsx',
+                './ClientApp/ClientApp.tsx',
             ]
         },
         devServer: {
@@ -69,7 +61,6 @@ module.exports = (env) => {
             new webpack.SourceMapDevToolPlugin({
                 filename: '[file].map', // Remove this line if you prefer inline source maps
                 moduleFilenameTemplate: path.relative(clientBundleOutputDir, '[resourcePath]'), // Point sourcemap entries to the original file locations on disk
-                exclude: ['vendor.js']
             }),
             new ReactRefreshWebpackPlugin()
         ] : [
