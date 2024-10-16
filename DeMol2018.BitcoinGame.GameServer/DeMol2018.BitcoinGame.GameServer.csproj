@@ -8,4 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DeMol2018.BitcoinGame.Application\DeMol2018.BitcoinGame.Application.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Remove="appsettings.Development.json" />
+  </ItemGroup>
 </Project>
