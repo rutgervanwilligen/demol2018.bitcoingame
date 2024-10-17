@@ -1,6 +1,5 @@
 ﻿import * as signalR from "@microsoft/signalr";
 
-import { ApplicationState } from "./index";
 import { Store } from "redux";
 import { Middleware } from "@reduxjs/toolkit";
 import {sortJokerWinners, sortWallets} from "./Utils";
@@ -85,7 +84,7 @@ export function signalRInvokeMiddleware() {
     }
 }
 
-export async function signalRRegisterCommands(store: Store<ApplicationState>) {
+export async function signalRRegisterCommands(store: Store) {
     connection.on('LoginResult', loginResult => {
         let sortedWallets = sortWallets(loginResult.updatedState.nonPlayerWallets);
         let sortedJokerWinners = sortJokerWinners(loginResult.updatedState.jokerWinners);

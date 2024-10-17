@@ -30,7 +30,8 @@ export const userSlice = createSlice({
         receiveLoginResult: (state, action: PayloadAction<ReceiveLoginResultAction>) => {
             state.isLoggedIn = action.payload.loginSuccessful;
             state.playerGuid = action.payload.loginSuccessful ? action.payload.playerGuid : undefined;
-            state.walletAddress = action.payload.loginSuccessful ? action.payload.userWalletAddress : undefined
+            state.walletAddress = action.payload.loginSuccessful ? action.payload.userWalletAddress : undefined;
+            state.isAdmin = action.payload.isAdmin;
         }
     },
     selectors: {

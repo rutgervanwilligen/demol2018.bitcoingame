@@ -1,5 +1,6 @@
-import {JokerWinner} from "../bitcoinGame/bitcoinGameSlice";
+import {JokerWinner, receiveNewGameState} from "../bitcoinGame/bitcoinGameSlice";
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {receiveLoginResult} from "../user/userSlice";
 
 export interface AdminPanelState {
     jokerWinners?: JokerWinner[];
@@ -35,6 +36,15 @@ export const adminPanelSlice = createSlice({
         finishCurrentGame: (state: AdminPanelState, action: PayloadAction<FinishCurrentGameAction>) => {
             // No-op; caught in websocketMiddleware
         }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(receiveLoginResult, (state: AdminPanelState, action) => {
+                state.jokerWinners = action.payload.jokerWinners;
+            })
+            .addCase(receiveNewGameState, (state: AdminPanelState, action) => {
+                state.jokerWinners = action.payload.jokerWinners;
+            })
     },
     selectors: {
         selectJokerWinners: (sliceState: AdminPanelState) => sliceState.jokerWinners,

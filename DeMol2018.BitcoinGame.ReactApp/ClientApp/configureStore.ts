@@ -4,6 +4,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import bitcoinGameReducer from "./store/bitcoinGame/bitcoinGameSlice";
 import roundCountdownTimerReducer from "./store/roundCountdownTimer/roundCountdownTimerSlice";
 import userReducer from "./store/user/userSlice";
+import adminPanelReducer from "./store/adminPanel/adminPanelSlice";
 import { useDispatch } from "react-redux";
 
 const store = configureStore({
@@ -11,6 +12,7 @@ const store = configureStore({
         user: userReducer,
         bitcoinGame: bitcoinGameReducer,
         roundCountdownTimer: roundCountdownTimerReducer,
+        adminPanel: adminPanelReducer,
     },
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware().concat([websocketMiddleware]);

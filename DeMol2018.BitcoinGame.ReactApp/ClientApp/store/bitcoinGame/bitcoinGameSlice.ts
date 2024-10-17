@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from '@reduxjs/toolkit';
+import {receiveLoginResult} from "../user/userSlice";
 
 export interface NonPlayerWalletState {
     address: number;
@@ -16,7 +17,7 @@ export interface BitcoinGameState {
     currentGameId?: string;
     lastRoundNumber?: number;
     currentRoundNumber?: number;
-    currentRoundEndTime?: Date;
+    currentRoundEndTime?: string;
     currentBalance?: number;
     usersWalletAddress?: number;
     nonPlayerWallets: NonPlayerWalletState[];
@@ -29,6 +30,10 @@ interface MakeTransactionAction {
     invokerId: string;
     receiverAddress: number;
     amount: number;
+}
+
+interface FetchNewGameStateAction {
+    playerGuid: string;
 }
 
 export interface ReceiveLoginResultAction {
@@ -84,35 +89,20 @@ export const bitcoinGameSlice = createSlice({
     name: 'bitcoinGame',
     initialState,
     reducers: {
-        receiveNewGameState: (state, action: PayloadAction<ReceiveNewGameStateAction>) => {
-            state.currentGameId = action.payload.currentGameId;
-            state.gameHasFinished = action.payload.gameHasFinished;
-            state.currentBalance = action.payload.userCurrentBalance;
-            state.usersWalletAddress = action.payload.userWalletAddress;
-            state.lastRoundNumber = action.payload.lastRoundNumber != null ? action.payload.lastRoundNumber : undefined;
-            state.currentRoundNumber = action.payload.currentRoundNumber != null ? action.payload.currentRoundNumber : undefined;
-            state.currentRoundEndTime = action.payload.currentRoundEndTime != null ? new Date(action.payload.currentRoundEndTime) : undefined;
-            state.nonPlayerWallets = action.payload.nonPlayerWallets != null ? action.payload.nonPlayerWallets : [];
-            state.moneyWonSoFar = action.payload.moneyWonSoFar;
-            state.numberOfJokersWon = action.payload.numberOfJokersWon != null ? action.payload.numberOfJokersWon : undefined;
-            state.jokerWinners = action.payload.jokerWinners != null ? action.payload.jokerWinners : [];
+        fetchNewGameState: (state: BitcoinGameState, action: PayloadAction<FetchNewGameStateAction>) => {
+            // No-op; caught in websocketMiddleware
         },
-
-        receiveLoginResult: (state,  action: PayloadAction<ReceiveLoginResultAction>) => {
-            state.isLoggedIn = action.payload.loginSuccessful;
-            state.isAdmin = action.payload.isAdmin;
-            state.playerGuid = action.payload.loginSuccessful ? action.payload.playerGuid : '';
-            state.usersWalletAddress = action.payload.userWalletAddress;
+        receiveNewGameState: (state: BitcoinGameState, action: PayloadAction<ReceiveNewGameStateAction>) => {
             state.currentGameId = action.payload.currentGameId;
             state.gameHasFinished = action.payload.gameHasFinished;
             state.currentBalance = action.payload.userCurrentBalance;
+            state.usersWalletAddress = action.payload.userWalletAddress;
             state.lastRoundNumber = action.payload.lastRoundNumber != null ? action.payload.lastRoundNumber : undefined;
-            state.currentRoundEndTime = action.payload.currentRoundEndTime != null ? new Date(action.payload.currentRoundEndTime) : undefined;
             state.currentRoundNumber = action.payload.currentRoundNumber != null ? action.payload.currentRoundNumber : undefined;
+            state.currentRoundEndTime = action.payload.currentRoundEndTime;
             state.nonPlayerWallets = action.payload.nonPlayerWallets != null ? action.payload.nonPlayerWallets : [];
             state.moneyWonSoFar = action.payload.moneyWonSoFar;
             state.numberOfJokersWon = action.payload.numberOfJokersWon != null ? action.payload.numberOfJokersWon : undefined;
-            state.jokerWinners = action.payload.jokerWinners != null ? action.payload.jokerWinners : [];
         },
         makeTransaction: (state, action: PayloadAction<MakeTransactionAction>) => {
             state.currentBalance = state.currentBalance === undefined
@@ -124,6 +114,21 @@ export const bitcoinGameSlice = createSlice({
         receiveMakeTransactionResult: (state, action: PayloadAction<ReceiveMakeTransactionResult>) => {
             state.currentBalance = action.payload.userCurrentBalance;
         }
+    },
+    extraReducers: (builder) => {
+        builder
+            .addCase(receiveLoginResult, (state: BitcoinGameState, action) => {
+                state.usersWalletAddress = action.payload.userWalletAddress;
+                state.currentGameId = action.payload.currentGameId;
+                state.gameHasFinished = action.payload.gameHasFinished;
+                state.currentBalance = action.payload.userCurrentBalance;
+                state.lastRoundNumber = action.payload.lastRoundNumber != null ? action.payload.lastRoundNumber : undefined;
+                state.currentRoundEndTime = action.payload.currentRoundEndTime;
+                state.currentRoundNumber = action.payload.currentRoundNumber != null ? action.payload.currentRoundNumber : undefined;
+                state.nonPlayerWallets = action.payload.nonPlayerWallets != null ? action.payload.nonPlayerWallets : [];
+                state.moneyWonSoFar = action.payload.moneyWonSoFar;
+                state.numberOfJokersWon = action.payload.numberOfJokersWon != null ? action.payload.numberOfJokersWon : undefined;
+            });
     },
     selectors: {
         selectCurrentRoundNumber: (sliceState: BitcoinGameState) => sliceState.currentRoundNumber,
@@ -140,9 +145,9 @@ export const bitcoinGameSlice = createSlice({
 });
 
 export const {
+    fetchNewGameState,
     receiveNewGameState,
     receiveMakeTransactionResult,
-    receiveLoginResult,
     makeTransaction
 } = bitcoinGameSlice.actions;
 
