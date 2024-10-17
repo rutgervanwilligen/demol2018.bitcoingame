@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ReceiveLoginResultAction, ReceiveNewGameStateAction} from "../bitcoinGame/bitcoinGameSlice";
+import {BitcoinGameState, ReceiveLoginResultAction, ReceiveNewGameStateAction} from "../bitcoinGame/bitcoinGameSlice";
 
 export interface RoundCountdownTimerState {
     playerGuid: string;
@@ -9,13 +9,11 @@ export interface RoundCountdownTimerState {
 }
 
 interface UpdateTimeLeftAction {
-    type: 'UPDATE_TIME_LEFT';
     secondsLeft: number;
     minutesLeft: number;
 }
 
 interface FetchNewGameStateAction {
-    type: 'FETCH_NEW_GAME_STATE';
     playerGuid: string;
 }
 
@@ -45,6 +43,10 @@ export const roundCountdownTimerSlice = createSlice({
             // No-op
         }
     },
+    selectors: {
+        selectMinutesLeft: (sliceState: RoundCountdownTimerState) => sliceState.minutesLeft,
+        selectSecondsLeft: (sliceState: RoundCountdownTimerState) => sliceState.secondsLeft,
+    }
 });
 
 export const {
@@ -53,5 +55,10 @@ export const {
     updateTimeLeft,
     fetchNewGameState
 } = roundCountdownTimerSlice.actions;
+
+export const {
+    selectMinutesLeft,
+    selectSecondsLeft,
+} = roundCountdownTimerSlice.selectors;
 
 export default roundCountdownTimerSlice.reducer;

@@ -1,7 +1,7 @@
 import './css/site.css';
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import BitcoinGame from "./components/BitcoinGame";
+import { BitcoinGame } from "./components/BitcoinGame";
 import store from "./configureStore";
 import { createRoot } from 'react-dom/client';
 

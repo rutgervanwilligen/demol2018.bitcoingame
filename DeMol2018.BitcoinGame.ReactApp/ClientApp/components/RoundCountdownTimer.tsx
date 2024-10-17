@@ -1,39 +1,27 @@
 import * as React from 'react';
-import {connect, ConnectedProps} from 'react-redux';
-import * as RoundCountdownTimerStore from '../store/RoundCountdownTimer';
-import {ApplicationState} from "../store";
+import { useSelector } from "react-redux";
+import {
+    fetchNewGameState,
+    selectMinutesLeft,
+    selectSecondsLeft,
+    updateTimeLeft
+} from "../store/roundCountdownTimer/roundCountdownTimerSlice";
+import { selectCurrentRoundEndTime } from "../store/bitcoinGame/bitcoinGameSlice";
+import { useAppDispatch } from "../configureStore";
+import { selectPlayerGuid } from "../store/user/userSlice";
 
-const connector = connect((state: ApplicationState) => state.roundCountdownTimer, RoundCountdownTimerStore.actionCreators);
-type RoundCountdownTimerProps = ConnectedProps<typeof connector>
+export const RoundCountdownTimer = () => {
+    let timer: number = 0;
 
-class RoundCountdownTimer extends React.Component<RoundCountdownTimerProps> {
-    private timer: number;
+    const minutesLeft = useSelector(selectMinutesLeft);
+    const secondsLeft = useSelector(selectSecondsLeft);
+    const currentEndTime = useSelector(selectCurrentRoundEndTime);
+    const playerGuid = useSelector(selectPlayerGuid);
 
-    constructor(props: RoundCountdownTimerProps) {
-        super(props);
+    const dispatch = useAppDispatch();
 
-        this.timer = 0;
-
-        this.countDown();
-
-        this.startTimer();
-    }
-
-    public render() {
-        return (
-            <span className="roundCountdownTimer">
-                {
-                    this.props.minutesLeft > 9 ? this.props.minutesLeft : '0' + this.props.minutesLeft
-                }:{
-                    this.props.secondsLeft > 9 ? this.props.secondsLeft : '0' + this.props.secondsLeft
-                }
-            </span>
-        );
-    }
-
-    getUpdatedClockValues = () => {
-
-        let timeDiff = (this.props.currentEndTime.getTime() - new Date().getTime());
+    const getUpdatedClockValues = () => {
+        let timeDiff = (currentEndTime!.getTime() - new Date().getTime());
         let totalSecondsLeft = Math.ceil(timeDiff / 1000);
 
         let minuteDivisor = totalSecondsLeft % (60 * 60);
@@ -49,26 +37,39 @@ class RoundCountdownTimer extends React.Component<RoundCountdownTimerProps> {
         };
     };
 
-    countDown = () => {
-        let updatedClockValues = this.getUpdatedClockValues();
+    const countDown = () => {
+        let updatedClockValues = getUpdatedClockValues();
 
-        this.props.updateTimeLeft(updatedClockValues.minutesLeft, updatedClockValues.secondsLeft);
+        dispatch(updateTimeLeft({
+            minutesLeft: updatedClockValues.minutesLeft,
+            secondsLeft: updatedClockValues.secondsLeft
+        }));
 
         if (updatedClockValues.totalSecondsLeft <= 0) {
-            clearInterval(this.timer);
-
-            let fetchNewGameState = this.props.fetchNewGameState;
-            let playerGuid = this.props.playerGuid;
+            clearInterval(timer);
 
             setTimeout(function () {
-                fetchNewGameState(playerGuid)
+                dispatch(fetchNewGameState({
+                    playerGuid: playerGuid!
+                }));
             }, 1000);
         }
     };
 
-    startTimer = () => {
-        this.timer = window.setInterval(this.countDown, 1000);
+    const startTimer = () => {
+        this.timer = window.setInterval(countDown, 1000);
     }
-}
 
-export default connector(RoundCountdownTimer);
+    countDown();
+    startTimer();
+
+    return (
+        <span className="roundCountdownTimer">
+            {
+                minutesLeft > 9 ? minutesLeft : '0' + minutesLeft
+            }:{
+                secondsLeft > 9 ? secondsLeft : '0' + secondsLeft
+            }
+        </span>
+    );
+}

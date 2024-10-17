@@ -3,10 +3,12 @@ import websocketMiddleware, { signalRInvokeMiddleware, signalRRegisterCommands }
 import { configureStore } from '@reduxjs/toolkit';
 import bitcoinGameReducer from "./store/bitcoinGame/bitcoinGameSlice";
 import roundCountdownTimerReducer from "./store/roundCountdownTimer/roundCountdownTimerSlice";
+import userReducer from "./store/user/userSlice";
 import { useDispatch } from "react-redux";
 
 const store = configureStore({
     reducer: {
+        user: userReducer,
         bitcoinGame: bitcoinGameReducer,
         roundCountdownTimer: roundCountdownTimerReducer,
     },

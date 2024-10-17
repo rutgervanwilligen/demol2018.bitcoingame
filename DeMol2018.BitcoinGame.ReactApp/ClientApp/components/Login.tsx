@@ -1,14 +1,9 @@
 import * as React from 'react';
-import {connect, ConnectedProps} from 'react-redux';
-import { ApplicationState }  from '../store';
-import * as LoginStore from '../store/Login';
 import { useState } from "react";
 import { useAppDispatch } from "../configureStore";
+import { login } from "../store/user/userSlice";
 
-const connector = connect((state: ApplicationState) => state.bitcoinGame, LoginStore.actionCreators);
-type LoginProps = ConnectedProps<typeof connector>
-
-const Login2 = (loginProps: LoginProps) => {
+export const Login = () => {
     const [username, setUsername] = useState('');
     const [code, setCode] = useState('');
     const dispatch = useAppDispatch();
@@ -17,8 +12,6 @@ const Login2 = (loginProps: LoginProps) => {
         <h2>Login</h2>
         <input className="inputField" placeholder='Naam' value={username} onChange={e => setUsername(e.target.value)} />
         <input className="inputField" placeholder='Code' value={code} onChange={e => setCode(e.target.value)} />
-        <button onClick={() => dispatch(login(username,  code))}>Login</button>
+        <button onClick={() => dispatch(login({ name: username, code: code }))}>Login</button>
     </div>;
 }
-
-export default connector(Login2);

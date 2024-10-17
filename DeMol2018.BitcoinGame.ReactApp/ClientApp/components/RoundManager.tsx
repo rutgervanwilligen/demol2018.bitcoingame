@@ -1,36 +1,35 @@
 import * as React from 'react';
-import {connect, ConnectedProps} from 'react-redux';
-import { ApplicationState }  from '../store';
-import * as BitcoinGameStore from '../store/BitcoinGame';
-import RoundCountdownTimer from "./RoundCountdownTimer";
+import { RoundCountdownTimer } from "./RoundCountdownTimer";
+import { useSelector } from "react-redux";
+import {
+    selectCurrentRoundEndTime,
+    selectCurrentRoundNumber,
+    selectLastRoundNumber
+} from "../store/bitcoinGame/bitcoinGameSlice";
 
-const connector = connect((state: ApplicationState) => state.bitcoinGame, BitcoinGameStore.actionCreators);
-type RoundManagerProps = ConnectedProps<typeof connector>
+export const RoundManager = () => {
+    const lastRoundNumber = useSelector(selectLastRoundNumber);
+    const currentRoundNumber = useSelector(selectCurrentRoundNumber);
+    const currentRoundEndTime = useSelector(selectCurrentRoundEndTime);
 
-class RoundManager extends React.Component<RoundManagerProps> {
-
-    public render() {
-        if (this.props.currentRoundNumber != null && this.props.currentRoundEndTime != null) {
-            return (
-                <div className="roundManager">
-                    <div className="roundNumber">Ronde {this.props.currentRoundNumber}</div>
-                    <div className="timeLeft">Transacties worden verwerkt over: <RoundCountdownTimer/></div>
-                </div>
-            );
-        } else if (this.props.lastRoundNumber != null) {
-            return (
-                <div className="roundManager noRoundActive">
-                    Geen ronde actief. Laatst gespeelde ronde: {this.props.lastRoundNumber}
-                </div>
-            );
-        } else {
-            return (
-                <div className="roundManager noRoundActive">
-                     Geen ronde actief. De eerste ronde begint binnenkort.
-                </div>
-            );
-        }
+    if (currentRoundNumber != null && currentRoundEndTime != null) {
+        return (
+            <div className="roundManager">
+                <div className="roundNumber">Ronde {currentRoundNumber}</div>
+                <div className="timeLeft">Transacties worden verwerkt over: <RoundCountdownTimer /></div>
+            </div>
+        );
+    } else if (lastRoundNumber != null) {
+        return (
+            <div className="roundManager noRoundActive">
+                Geen ronde actief. Laatst gespeelde ronde: {lastRoundNumber}
+            </div>
+        );
+    } else {
+        return (
+            <div className="roundManager noRoundActive">
+                 Geen ronde actief. De eerste ronde begint binnenkort.
+            </div>
+        );
     }
 }
-
-export default connector(RoundManager);

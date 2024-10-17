@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
 import { useState } from "react";
-import { makeTransaction, selectCurrentRoundNumber, selectPlayerGuid } from "../store/bitcoinGame/bitcoinGameSlice";
+import { makeTransaction, selectCurrentRoundNumber } from "../store/bitcoinGame/bitcoinGameSlice";
 import { useAppDispatch } from "../configureStore";
+import { selectPlayerGuid } from "../store/user/userSlice";
 
 export const MakeTransaction = () => {
     const [amount, setAmount] = useState<number | undefined>(undefined);
