@@ -16,7 +16,7 @@ export const websocketConnectionSlice = createSlice({
     name: 'websocketConnection',
     initialState,
     reducers: {
-        connect: (state, action) => {
+        connectWebsocket: () => {
             // No-op; caught in websocketMiddleware
         },
         updateConnectionStatus: (state: WebsocketConnectionState, action: PayloadAction<UpdateConnectionStatusAction>) => {
@@ -29,7 +29,7 @@ export const websocketConnectionSlice = createSlice({
 });
 
 export const {
-    connect,
+    connectWebsocket,
     updateConnectionStatus,
 } = websocketConnectionSlice.actions;
 

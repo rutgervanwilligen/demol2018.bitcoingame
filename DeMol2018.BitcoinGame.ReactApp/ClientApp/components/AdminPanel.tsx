@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { useSelector } from "react-redux";
 import { selectCurrentGameId, selectGameHasFinished, selectLastRoundNumber } from "../store/bitcoinGame/bitcoinGameSlice";
 import { useAppDispatch } from "../configureStore";

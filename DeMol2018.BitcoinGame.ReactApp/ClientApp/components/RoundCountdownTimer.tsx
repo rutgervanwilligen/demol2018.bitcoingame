@@ -56,7 +56,7 @@ export const RoundCountdownTimer = () => {
     };
 
     const startTimer = () => {
-        this.timer = window.setInterval(countDown, 1000);
+        timer = window.setInterval(countDown, 1000);
     }
 
     countDown();

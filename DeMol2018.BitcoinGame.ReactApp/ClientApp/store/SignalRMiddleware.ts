@@ -1,37 +1,66 @@
 ﻿import * as signalR from "@microsoft/signalr";
-import { Middleware, MiddlewareAPI, PayloadAction } from "@reduxjs/toolkit";
-import { sortJokerWinners, sortWallets } from "./Utils";
+import {HubConnection, HubConnectionState} from "@microsoft/signalr";
+import {Middleware, MiddlewareAPI, PayloadAction} from "@reduxjs/toolkit";
+import {sortJokerWinners, sortWallets} from "./Utils";
 import {
     fetchNewGameState,
     makeTransaction,
     receiveMakeTransactionResult,
     receiveNewGameState
 } from "./bitcoinGame/bitcoinGameSlice";
-import { login, receiveLoginResult } from "./user/userSlice";
-import { finishCurrentGame, startNewGame, startNewRound } from "./adminPanel/adminPanelSlice";
-import { HubConnection } from "@microsoft/signalr";
+import {login, receiveLoginResult} from "./user/userSlice";
+import {finishCurrentGame, startNewGame, startNewRound} from "./adminPanel/adminPanelSlice";
+import {connectWebsocket, updateConnectionStatus} from "./websocketConnection/websocketConnectionSlice";
+import {AppDispatch} from "../configureStore";
 
 export const websocketMiddleware: Middleware = store => {
+    const { dispatch } = store;
+
     let connection = new signalR.HubConnectionBuilder()
         .withUrl("http://localhost:5000/bitcoinGameHub")
         //    .withUrl("https://bitcoingame.rutgervanwilligen.nl/bitcoinGameHub")
+        .withAutomaticReconnect()
         .build();
 
-    connection.start()
-        .then(() => {
-            console.log("Websocket started!")
-        })
-        .catch(error => console.log("Error! " + error));
-
     return next => async (action: PayloadAction) => {
-        registerOutgoingWebsocketCommands(connection, action);
+        registerWebsocketConnection(connection, dispatch, action);
+        registerOutgoingWebsocketCommands(connection, dispatch, action);
         await registerIncomingWebsocketMessages(connection, store);
 
         next(action);
     };
 }
 
-const registerOutgoingWebsocketCommands = (connection: HubConnection, action: PayloadAction) => {
+const registerWebsocketConnection = (connection: HubConnection, dispatch: AppDispatch, action: PayloadAction) => {
+    if (connectWebsocket.match(action)) {
+        if (connection.state == HubConnectionState.Connected) {
+            return;
+        }
+
+        connection.start()
+            .then(() => {
+                dispatch(updateConnectionStatus({ isConnected: true }));
+            })
+            .catch(error => {
+                console.log("Error while connecting websocket: " + error);
+                dispatch(updateConnectionStatus({ isConnected: false }));
+            });
+
+        connection.onreconnecting(() => {
+            dispatch(updateConnectionStatus({ isConnected: false }));
+        })
+
+        connection.onreconnected(() => {
+            dispatch(updateConnectionStatus({ isConnected: true }));
+        })
+
+        connection.onclose(() => {
+            dispatch(updateConnectionStatus({ isConnected: false }));
+        });
+    }
+}
+
+const registerOutgoingWebsocketCommands = (connection: HubConnection, dispatch: AppDispatch, action: PayloadAction) => {
     let ignoredActionTypes = ['UPDATE_TIME_LEFT'];
 
     if (makeTransaction.match(action)) {

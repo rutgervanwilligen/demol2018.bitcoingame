@@ -1,6 +1,6 @@
 import * as React from 'react';
-import {useSelector} from "react-redux";
-import {selectIsConnected} from "../store/websocketConnection/websocketConnectionSlice";
+import { useSelector } from "react-redux";
+import { selectIsConnected } from "../store/websocketConnection/websocketConnectionSlice";
 
 export const ConnectionStatus = () => {
     const isConnected = useSelector(selectIsConnected);
