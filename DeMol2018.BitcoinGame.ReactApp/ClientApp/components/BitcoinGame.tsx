@@ -1,45 +1,41 @@
 import * as React from 'react';
-import {connect, ConnectedProps} from "react-redux";
-import {ApplicationState} from "../store";
-import Login from "./Login";
-import PlayerWallet from "./PlayerWallet";
-import AdminPanel from "./AdminPanel";
-import GameManager from "./GameManager";
-import PlayerResult from "./PlayerResult";
+import { PlayerWallet } from "./PlayerWallet";
+import { AdminPanel } from "./AdminPanel";
+import { PlayerResult } from "./PlayerResult";
+import { GameManager } from "./GameManager";
+import { useSelector } from "react-redux";
+import { selectIsAdmin, selectIsLoggedIn } from "../store/user/userSlice";
+import { selectCurrentGameId, selectGameHasFinished } from "../store/bitcoinGame/bitcoinGameSlice";
+import { Login } from "./Login";
 
-const connector = connect((state: ApplicationState) => state.bitcoinGame);
-type BitcoinGameProps = ConnectedProps<typeof connector>
+export const BitcoinGame = () => {
+    const isLoggedIn = useSelector(selectIsLoggedIn);
+    const isAdmin = useSelector(selectIsAdmin);
+    const currentGameId = useSelector(selectCurrentGameId);
+    const gameHasFinished = useSelector(selectGameHasFinished);
 
-class BitcoinGame extends React.Component<BitcoinGameProps> {
-    public render() {
-        const isLoggedIn = this.props.isLoggedIn;
-        const isAdmin = this.props.isAdmin;
-
-        if (!isLoggedIn) {
-            return (
-                <Login />
-            )
-        }
-
-        let gameContent;
-
-        if (isAdmin) {
-            gameContent = <AdminPanel />;
-        } else if (this.props.currentGameId != null) {
-            if (this.props.gameHasFinished) {
-                gameContent = <PlayerResult />;
-            } else {
-                gameContent = <PlayerWallet />;
-            }
-        }
-
+    if (!isLoggedIn) {
         return (
-            <div className="bitcoinGame">
-                <GameManager />
-                { gameContent }
-            </div>
-        );
+            <Login />
+        )
     }
-}
 
-export default connector(BitcoinGame);
+    let gameContent;
+
+    if (isAdmin) {
+        gameContent = <AdminPanel />;
+    } else if (currentGameId != null) {
+        if (gameHasFinished) {
+            gameContent = <PlayerResult />;
+        } else {
+            gameContent = <PlayerWallet />;
+        }
+    }
+
+    return (
+        <div className="bitcoinGame">
+            <GameManager />
+            { gameContent }
+        </div>
+    );
+};

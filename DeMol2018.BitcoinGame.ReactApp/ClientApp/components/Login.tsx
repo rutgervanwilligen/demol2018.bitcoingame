@@ -1,30 +1,17 @@
 import * as React from 'react';
-import {connect, ConnectedProps} from 'react-redux';
-import { ApplicationState }  from '../store';
-import * as LoginStore from '../store/Login';
+import { useState } from "react";
+import { useAppDispatch } from "../configureStore";
+import { login } from "../store/user/userSlice";
 
-const connector = connect((state: ApplicationState) => state.bitcoinGame, LoginStore.actionCreators);
-type LoginProps = ConnectedProps<typeof connector>
+export const Login = () => {
+    const [username, setUsername] = useState('');
+    const [code, setCode] = useState('');
+    const dispatch = useAppDispatch();
 
-class Login extends React.Component<LoginProps> {
-    private readonly setNameInput: React.RefObject<HTMLInputElement>;
-    private readonly setCodeInput: React.RefObject<HTMLInputElement>;
-
-    constructor(props: LoginProps) {
-        super(props);
-
-        this.setNameInput = React.createRef();
-        this.setCodeInput = React.createRef();
-    }
-
-    public render() {
-        return <div className="login">
-                    <h2>Login</h2>
-                    <input className="inputField" placeholder='Naam' ref={this.setNameInput} />
-                    <input className="inputField" placeholder='Code' ref={this.setCodeInput} />
-                    <button onClick={() => this.props.login(this.setNameInput.current!.value, this.setCodeInput.current!.value)}>Login</button>
-                </div>;
-    }
+    return <div className="login">
+        <h2>Login</h2>
+        <input className="inputField" placeholder='Naam' value={username} onChange={e => setUsername(e.target.value)} />
+        <input className="inputField" placeholder='Code' type={"number"} value={code} onChange={e => setCode(e.target.value)} />
+        <button onClick={() => dispatch(login({ name: username, code: parseInt(code) }))}>Login</button>
+    </div>;
 }
-
-export default connector(Login);
