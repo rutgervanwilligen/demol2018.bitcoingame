@@ -100,7 +100,7 @@ export const bitcoinGameSlice = createSlice({
             state.lastRoundNumber = action.payload.lastRoundNumber != null ? action.payload.lastRoundNumber : undefined;
             state.currentRoundNumber = action.payload.currentRoundNumber != null ? action.payload.currentRoundNumber : undefined;
             state.currentRoundEndTime = action.payload.currentRoundEndTime;
-            state.nonPlayerWallets = action.payload.nonPlayerWallets != null ? action.payload.nonPlayerWallets : [];
+            state.nonPlayerWallets = action.payload.nonPlayerWallets != undefined ? action.payload.nonPlayerWallets : [];
             state.moneyWonSoFar = action.payload.moneyWonSoFar;
             state.numberOfJokersWon = action.payload.numberOfJokersWon != null ? action.payload.numberOfJokersWon : undefined;
         },
@@ -125,7 +125,7 @@ export const bitcoinGameSlice = createSlice({
                 state.lastRoundNumber = action.payload.lastRoundNumber != null ? action.payload.lastRoundNumber : undefined;
                 state.currentRoundEndTime = action.payload.currentRoundEndTime;
                 state.currentRoundNumber = action.payload.currentRoundNumber != null ? action.payload.currentRoundNumber : undefined;
-                state.nonPlayerWallets = action.payload.nonPlayerWallets != null ? action.payload.nonPlayerWallets : [];
+                state.nonPlayerWallets = action.payload.nonPlayerWallets != undefined ? action.payload.nonPlayerWallets : [];
                 state.moneyWonSoFar = action.payload.moneyWonSoFar;
                 state.numberOfJokersWon = action.payload.numberOfJokersWon != null ? action.payload.numberOfJokersWon : undefined;
             });

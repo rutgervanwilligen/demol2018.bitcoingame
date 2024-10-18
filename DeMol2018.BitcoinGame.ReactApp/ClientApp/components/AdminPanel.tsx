@@ -6,7 +6,7 @@ import { selectPlayerGuid } from "../store/user/userSlice";
 import { useState } from "react";
 
 export const AdminPanel = () => {
-    const [newRoundLength, setNewRoundLength] = useState<number | undefined>(undefined);
+    const [newRoundLength, setNewRoundLength] = useState("");
 
     const playerGuid = useSelector(selectPlayerGuid);
     const currentGameId = useSelector(selectCurrentGameId);
@@ -65,12 +65,12 @@ export const AdminPanel = () => {
                 placeholder='Lengte van nieuwe ronde (min)'
                 type={"number"}
                 value={newRoundLength}
-                onChange={e => setNewRoundLength(parseInt(e.target.value))}/>
+                onChange={e => setNewRoundLength(e.target.value)}/>
             <button
                 className="button"
                 onClick={() => dispatch(startNewRound({
                     invokerId: playerGuid!,
-                    lengthOfNewRoundInMinutes: newRoundLength!,
+                    lengthOfNewRoundInMinutes: parseInt(newRoundLength),
                 }))}
             >Start nieuwe ronde</button>
             <h3>Rond huidig spel af</h3>

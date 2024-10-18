@@ -6,8 +6,8 @@ import { useAppDispatch } from "../configureStore";
 import { selectPlayerGuid } from "../store/user/userSlice";
 
 export const MakeTransaction = () => {
-    const [amount, setAmount] = useState<number | undefined>(undefined);
-    const [receiverAddress, setReceiverAddress] = useState<number | undefined>(undefined);
+    const [amount, setAmount] = useState("");
+    const [receiverAddress, setReceiverAddress] = useState("");
 
     const currentRoundNumber = useSelector(selectCurrentRoundNumber);
     const playerGuid = useSelector(selectPlayerGuid);
@@ -24,8 +24,8 @@ export const MakeTransaction = () => {
             receiverAddress: receiverAddress
         }));
 
-        setReceiverAddress(undefined);
-        setAmount(undefined);
+        setReceiverAddress("");
+        setAmount("");
     };
 
     return (
@@ -33,14 +33,14 @@ export const MakeTransaction = () => {
             <h2 className="makeTransactionHeader">Overmaken</h2>
             <div className="amount">
                 <label>Hoeveelheid BTC</label>
-                <input className="inputField" placeholder='Hoeveelheid' type={"number"} value={amount} onChange={e => setAmount(parseInt(e.target.value))} />
+                <input className="inputField" placeholder='Hoeveelheid' type={"number"} value={amount} onChange={e => setAmount(e.target.value)} />
             </div>
             <div className="receiverAddress">
                 <label>Ontvangstadres</label>
-                <input className="inputField" placeholder='Ontvangstadres' type={"number"} value={receiverAddress} onChange={e => setReceiverAddress(parseInt(e.target.value))} />
+                <input className="inputField" placeholder='Ontvangstadres' type={"number"} value={receiverAddress} onChange={e => setReceiverAddress(e.target.value)} />
             </div>
-            {currentRoundNumber !== undefined
-                ? <button className="button" onClick={() => makeTransactionAndClearFields(playerGuid, amount, receiverAddress)}>Verstuur</button>
+            {currentRoundNumber !== undefined && amount !== "" && receiverAddress !== ""
+                ? <button className="button" onClick={() => makeTransactionAndClearFields(playerGuid, parseInt(amount), parseInt(receiverAddress))}>Verstuur</button>
                 : <button className="button" disabled>Verstuur</button>
             }
     </div>
