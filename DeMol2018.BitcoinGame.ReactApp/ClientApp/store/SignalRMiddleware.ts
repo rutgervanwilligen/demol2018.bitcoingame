@@ -11,7 +11,7 @@ import {
 import {login, receiveLoginResult} from "./user/userSlice";
 import {finishCurrentGame, startNewGame, startNewRound} from "./adminPanel/adminPanelSlice";
 import {connectWebsocket, updateConnectionStatus} from "./websocketConnection/websocketConnectionSlice";
-import {AppDispatch} from "../configureStore";
+import {AppDispatch, RootState} from "../configureStore";
 
 export const websocketMiddleware: Middleware = store => {
     const { dispatch } = store;
@@ -23,15 +23,17 @@ export const websocketMiddleware: Middleware = store => {
         .build();
 
     return next => async (action: PayloadAction) => {
-        registerWebsocketConnection(connection, dispatch, action);
-        registerOutgoingWebsocketCommands(connection, dispatch, action);
-        await registerIncomingWebsocketMessages(connection, store);
+        console.log("Action binnengekomen! " + action.type);
+        await registerWebsocketConnection(connection, store, action);
+        invokeWebsocketIfNecessary(connection, dispatch, action);
 
         next(action);
     };
 }
 
-const registerWebsocketConnection = (connection: HubConnection, dispatch: AppDispatch, action: PayloadAction) => {
+const registerWebsocketConnection = async (connection: HubConnection, store: MiddlewareAPI<AppDispatch, RootState>, action: PayloadAction) => {
+    const { dispatch } = store;
+
     if (connectWebsocket.match(action)) {
         if (connection.state == HubConnectionState.Connected) {
             return;
@@ -57,10 +59,12 @@ const registerWebsocketConnection = (connection: HubConnection, dispatch: AppDis
         connection.onclose(() => {
             dispatch(updateConnectionStatus({ isConnected: false }));
         });
+
+        await registerIncomingWebsocketMessages(connection, store);
     }
 }
 
-const registerOutgoingWebsocketCommands = (connection: HubConnection, dispatch: AppDispatch, action: PayloadAction) => {
+const invokeWebsocketIfNecessary = (connection: HubConnection, dispatch: AppDispatch, action: PayloadAction) => {
     let ignoredActionTypes = ['UPDATE_TIME_LEFT'];
 
     if (makeTransaction.match(action)) {
@@ -120,7 +124,7 @@ const registerOutgoingWebsocketCommands = (connection: HubConnection, dispatch: 
     }
 }
 
-const registerIncomingWebsocketMessages = async (connection: HubConnection, store: MiddlewareAPI) => {
+const registerIncomingWebsocketMessages = async (connection: HubConnection, store: MiddlewareAPI<AppDispatch, RootState>) => {
     const { dispatch } = store;
 
     connection.on('LoginResult', loginResult => {
@@ -147,7 +151,7 @@ const registerIncomingWebsocketMessages = async (connection: HubConnection, stor
 
     connection.on('AnnounceNewGameStateResult', () => {
         dispatch(fetchNewGameState({
-            playerGuid: store.getState().bitcoinGame.playerGuid
+            playerGuid: store.getState().user.playerGuid
         }));
     });
 
