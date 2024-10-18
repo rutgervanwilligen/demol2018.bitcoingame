@@ -27,12 +27,15 @@ export const adminPanelSlice = createSlice({
     name: 'adminPanel',
     initialState,
     reducers: {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         startNewRound: (state: AdminPanelState, action: PayloadAction<StartNewRoundAction>) => {
             // No-op; caught in websocketMiddleware
         },
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         startNewGame: (state: AdminPanelState, action: PayloadAction<StartNewGameAction>) => {
             // No-op; caught in websocketMiddleware
         },
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         finishCurrentGame: (state: AdminPanelState, action: PayloadAction<FinishCurrentGameAction>) => {
             // No-op; caught in websocketMiddleware
         }

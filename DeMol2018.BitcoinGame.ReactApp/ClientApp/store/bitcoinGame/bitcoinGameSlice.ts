@@ -89,6 +89,7 @@ export const bitcoinGameSlice = createSlice({
     name: 'bitcoinGame',
     initialState,
     reducers: {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         fetchNewGameState: (state: BitcoinGameState, action: PayloadAction<FetchNewGameStateAction>) => {
             // No-op; caught in websocketMiddleware
         },

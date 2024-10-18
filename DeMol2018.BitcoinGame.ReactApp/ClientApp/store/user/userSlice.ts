@@ -8,7 +8,7 @@ export interface UserState {
     walletAddress: string | undefined,
 }
 
-interface LoginAction {
+export interface LoginAction {
     name: string,
     code: number;
 }
@@ -24,6 +24,7 @@ export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         login: (state, action: PayloadAction<LoginAction>) => {
             // No-op; caught in websocketMiddleware
         },

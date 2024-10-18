@@ -26,11 +26,11 @@ export const RoundCountdownTimer = () => {
     }, []);
 
     const getUpdatedClockValues = () => {
-        let timeDiff = (new Date(currentEndTime!).getTime() - new Date().getTime());
-        let totalSecondsLeft = Math.ceil(timeDiff / 1000);
+        const timeDiff = (new Date(currentEndTime!).getTime() - new Date().getTime());
+        const totalSecondsLeft = Math.ceil(timeDiff / 1000);
 
-        let minutesLeft = Math.floor(totalSecondsLeft / 60);
-        let secondsLeft = Math.ceil(totalSecondsLeft % 60);
+        const minutesLeft = Math.floor(totalSecondsLeft / 60);
+        const secondsLeft = Math.ceil(totalSecondsLeft % 60);
 
         return {
             totalSecondsLeft: totalSecondsLeft,
@@ -40,7 +40,7 @@ export const RoundCountdownTimer = () => {
     };
 
     const countDown = () => {
-        let updatedClockValues = getUpdatedClockValues();
+        const updatedClockValues = getUpdatedClockValues();
 
         dispatch(updateTimeLeft({
             minutesLeft: updatedClockValues.minutesLeft,
