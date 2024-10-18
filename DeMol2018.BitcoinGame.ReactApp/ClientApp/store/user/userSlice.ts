@@ -10,7 +10,7 @@ export interface UserState {
 
 interface LoginAction {
     name: string,
-    code: string;
+    code: number;
 }
 
 const initialState: UserState = {

@@ -1,96 +1,104 @@
 ﻿import * as signalR from "@microsoft/signalr";
+import { Middleware, MiddlewareAPI, PayloadAction } from "@reduxjs/toolkit";
+import { sortJokerWinners, sortWallets } from "./Utils";
+import {
+    fetchNewGameState,
+    makeTransaction,
+    receiveMakeTransactionResult,
+    receiveNewGameState
+} from "./bitcoinGame/bitcoinGameSlice";
+import { login, receiveLoginResult } from "./user/userSlice";
+import { finishCurrentGame, startNewGame, startNewRound } from "./adminPanel/adminPanelSlice";
+import { HubConnection } from "@microsoft/signalr";
 
-import { Store } from "redux";
-import { Middleware } from "@reduxjs/toolkit";
-import {sortJokerWinners, sortWallets} from "./Utils";
+export const websocketMiddleware: Middleware = store => {
+    let connection = new signalR.HubConnectionBuilder()
+        .withUrl("http://localhost:5000/bitcoinGameHub")
+        //    .withUrl("https://bitcoingame.rutgervanwilligen.nl/bitcoinGameHub")
+        .build();
 
-let connection = new signalR.HubConnectionBuilder()
-    .withUrl("http://localhost:5000/bitcoinGameHub")
-//    .withUrl("https://bitcoingame.rutgervanwilligen.nl/bitcoinGameHub")
-    .build();
+    connection.start()
+        .then(() => {
+            console.log("Websocket started!")
+        })
+        .catch(error => console.log("Error! " + error));
 
-await connection.start().catch(error => console.log("Error! " + error));
-console.log("connected");
+    return next => async (action: PayloadAction) => {
+        registerOutgoingWebsocketCommands(connection, action);
+        await registerIncomingWebsocketMessages(connection, store);
 
-const websocketMiddleware: Middleware = store => next => action => {
-    console.log("Middleware werkt! Ontvangen action: " + action.type);
+        next(action);
+    };
+}
 
-    next(action);
-};
+const registerOutgoingWebsocketCommands = (connection: HubConnection, action: PayloadAction) => {
+    let ignoredActionTypes = ['UPDATE_TIME_LEFT'];
 
-export default websocketMiddleware;
+    if (makeTransaction.match(action)) {
+        const { invokerId, receiverAddress, amount } = action.payload;
+        connection.invoke("MakeTransaction", invokerId, receiverAddress, amount).then(function () {
+        }).catch(function () {
+            console.log("make transaction rejected");
+        });
+        return;
+    }
 
-export function signalRInvokeMiddleware() {
-    return (next: any) => async (action: any) => {
+    if (login.match(action)) {
+        const { name, code } = action.payload;
+        console.log("ik ga login invoken met name = " + name + " en code = " + code);
+        connection.invoke("Login", name, code).then(function () {
+        }).catch(error => function () {
+            console.log("login rejected");
+            console.log(error);
+        });
+        return;
+    }
 
-        let ignoredActionTypes = ['UPDATE_TIME_LEFT'];
+    if (fetchNewGameState.match(action)) {
+        const { playerGuid } = action.payload;
+        connection.invoke("FetchNewGameState", playerGuid).then(function () {
+        }).catch(function () {
+            console.log("fetch new game state rejected");
+        });
+        return;
+    }
 
-        switch (action.type) {
-            case "MAKE_TRANSACTION":
-                connection.invoke("MakeTransaction", action.invokerId, action.receiverAddress, action.amount).then(function () {
-                }).catch(function () {
-                    console.log("make transaction rejected");
-                });
-                break;
+    if (startNewRound.match(action)) {
+        const { invokerId, lengthOfNewRoundInMinutes } = action.payload;
+        connection.invoke("StartNewRound", invokerId, lengthOfNewRoundInMinutes).then(function () {
+        }).catch(function () {
+            console.log("start new round rejected");
+        });
+        return;
+    }
 
-            case "LOGIN":
-                console.log("ik ga login invoken met name = " + action.name + " en code is " + action.code);
-                let name = action.name;
-                let code = Number(action.code);
-                connection.invoke("Login", name, code).then(function () {
-                }).catch(error => function () {
-                    console.log("login rejected");
-                    console.log(error);
-                });
-                break;
+    if (startNewGame.match(action)) {
+        const { invokerId } = action.payload;
+        connection.invoke("StartNewGame", invokerId).then(function () {
+        }).catch(function () {
+            console.log("start new game rejected");
+        });
+        return;
+    }
 
-            case "FETCH_NEW_GAME_STATE":
-                connection.invoke("FetchNewGameState", action.playerGuid).then(function () {
-                }).catch(function () {
-                    console.log("fetch new game state rejected");
-                });
-                break;
-
-            case "START_NEW_ROUND":
-                connection.invoke("StartNewRound", action.invokerId, action.lengthOfNewRoundInMinutes).then(function () {
-                }).catch(function () {
-                    console.log("start new round rejected");
-                });
-                break;
-
-            case "START_NEW_GAME":
-                connection.invoke("StartNewGame", action.invokerId).then(function () {
-                }).catch(function () {
-                    console.log("start new game rejected");
-                });
-                break;
-
-            case "FINISH_CURRENT_GAME":
-                connection.invoke("FinishCurrentGame", action.invokerId).then(function () {
-                }).catch(function () {
-                    console.log("finish current game rejected");
-                });
-                break;
-
-            default:
-                if (!action.type.startsWith('RECEIVE') && ignoredActionTypes.indexOf(action.type) == -1 ) {
-                    console.log("Unknown action (" + action.type + "). SignalR hub is not invoked.");
-                }
-
-                break;
-        }
-
-        return next(action);
+    if (finishCurrentGame.match(action)) {
+        const { invokerId } = action.payload;
+        connection.invoke("FinishCurrentGame", invokerId).then(function () {
+        }).catch(function () {
+            console.log("finish current game rejected");
+        });
+        return;
     }
 }
 
-export async function signalRRegisterCommands(store: Store) {
+const registerIncomingWebsocketMessages = async (connection: HubConnection, store: MiddlewareAPI) => {
+    const { dispatch } = store;
+
     connection.on('LoginResult', loginResult => {
         let sortedWallets = sortWallets(loginResult.updatedState.nonPlayerWallets);
         let sortedJokerWinners = sortJokerWinners(loginResult.updatedState.jokerWinners);
 
-        store.dispatch({
-            type: 'RECEIVE_LOGIN_RESULT',
+        dispatch(receiveLoginResult({
             loginSuccessful: loginResult.loginSuccessful,
             playerGuid: loginResult.playerGuid,
             isAdmin: loginResult.isAdmin,
@@ -105,22 +113,20 @@ export async function signalRRegisterCommands(store: Store) {
             gameHasFinished: loginResult.updatedState.gameHasFinished,
             numberOfJokersWon: loginResult.updatedState.numberOfJokersWon,
             jokerWinners: sortedJokerWinners
-        });
+        }));
     });
 
     connection.on('AnnounceNewGameStateResult', () => {
-        store.dispatch({
-            type: 'FETCH_NEW_GAME_STATE',
+        dispatch(fetchNewGameState({
             playerGuid: store.getState().bitcoinGame.playerGuid
-        });
+        }));
     });
 
     connection.on('FetchNewGameStateResult', fetchNewGameStateResult => {
         let sortedWallets = sortWallets(fetchNewGameStateResult.updatedState.nonPlayerWallets);
         let sortedJokerWinners = sortJokerWinners(fetchNewGameStateResult.updatedState.jokerWinners);
 
-        store.dispatch({
-            type: 'RECEIVE_NEW_GAME_STATE',
+        dispatch(receiveNewGameState({
             currentGameId: fetchNewGameStateResult.updatedState.currentGameId,
             lastRoundNumber: fetchNewGameStateResult.updatedState.lastRoundNumber,
             currentRoundNumber: fetchNewGameStateResult.updatedState.currentRoundNumber,
@@ -132,24 +138,20 @@ export async function signalRRegisterCommands(store: Store) {
             gameHasFinished: fetchNewGameStateResult.updatedState.gameHasFinished,
             numberOfJokersWon: fetchNewGameStateResult.updatedState.numberOfJokersWon,
             jokerWinners: sortedJokerWinners
-        });
+        }));
     });
 
-    connection.on('StartNewRoundResult', data => {
-        store.dispatch({
-            type: 'RECEIVE_NEW_ROUND_RESULT',
-            callSuccessful: data.callSuccessful
-        });
-    });
+    // connection.on('StartNewRoundResult', data => {
+    //     dispatch(receiveNewR{
+    //         type: 'RECEIVE_NEW_ROUND_RESULT',
+    //         callSuccessful: data.callSuccessful
+    //     });
+    // });
 
     connection.on('MakeTransactionResult', makeTransactionResult => {
-        store.dispatch({
-            type: 'RECEIVE_MAKE_TRANSACTION_RESULT',
+        dispatch(receiveMakeTransactionResult({
             transactionSuccessful: makeTransactionResult.transactionSuccessful,
             userCurrentBalance: makeTransactionResult.userCurrentBalance
-        });
+        }));
     });
-
-    await connection.start().catch(error => console.log("Error! " + error));
-    console.log("connected");
 }

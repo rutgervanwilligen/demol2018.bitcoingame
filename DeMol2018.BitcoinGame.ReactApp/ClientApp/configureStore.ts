@@ -1,4 +1,4 @@
-import websocketMiddleware, { signalRInvokeMiddleware, signalRRegisterCommands } from "./store/SignalRMiddleware";
+import { websocketMiddleware } from "./store/SignalRMiddleware";
 
 import { configureStore } from '@reduxjs/toolkit';
 import bitcoinGameReducer from "./store/bitcoinGame/bitcoinGameSlice";

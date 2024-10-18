@@ -11,7 +11,7 @@ export const Login = () => {
     return <div className="login">
         <h2>Login</h2>
         <input className="inputField" placeholder='Naam' value={username} onChange={e => setUsername(e.target.value)} />
-        <input className="inputField" placeholder='Code' value={code} onChange={e => setCode(e.target.value)} />
-        <button onClick={() => dispatch(login({ name: username, code: code }))}>Login</button>
+        <input className="inputField" placeholder='Code' type={"number"} value={code} onChange={e => setCode(e.target.value)} />
+        <button onClick={() => dispatch(login({ name: username, code: parseInt(code) }))}>Login</button>
     </div>;
 }
