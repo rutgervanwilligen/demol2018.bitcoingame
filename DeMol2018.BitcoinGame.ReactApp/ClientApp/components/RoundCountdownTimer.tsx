@@ -11,7 +11,7 @@ import { selectPlayerGuid } from "../store/user/userSlice";
 import { useEffect } from "react";
 
 export const RoundCountdownTimer = () => {
-    let timer: number = 0;
+    let interval: number = 0;
 
     const minutesLeft = Math.max(useSelector(selectMinutesLeft), 0);
     const secondsLeft = Math.max(useSelector(selectSecondsLeft), 0);
@@ -21,7 +21,7 @@ export const RoundCountdownTimer = () => {
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        const interval = setInterval(countDown, 1000);
+        interval = setInterval(countDown, 1000);
         return () => clearInterval(interval);
     }, []);
 
@@ -29,11 +29,8 @@ export const RoundCountdownTimer = () => {
         let timeDiff = (new Date(currentEndTime!).getTime() - new Date().getTime());
         let totalSecondsLeft = Math.ceil(timeDiff / 1000);
 
-        let minuteDivisor = totalSecondsLeft % (60 * 60);
-        let minutesLeft = Math.floor(minuteDivisor / 60);
-
-        let secondDivisor = minuteDivisor % 60;
-        let secondsLeft = Math.ceil(secondDivisor);
+        let minutesLeft = Math.floor(totalSecondsLeft / 60);
+        let secondsLeft = Math.ceil(totalSecondsLeft % 60);
 
         return {
             totalSecondsLeft: totalSecondsLeft,
@@ -51,7 +48,7 @@ export const RoundCountdownTimer = () => {
         }));
 
         if (updatedClockValues.totalSecondsLeft <= 0) {
-            clearInterval(timer);
+            clearInterval(interval);
 
             setTimeout(function () {
                 dispatch(fetchNewGameState({
