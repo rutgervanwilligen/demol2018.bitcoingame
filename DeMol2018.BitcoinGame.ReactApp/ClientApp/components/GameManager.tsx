@@ -26,15 +26,13 @@ export const GameManager = () => {
         );
     }
 
-    let gameStatusTag = gameHasFinished
-        ? <div className="gameStatusText error">Afgelopen</div>
-        : <div className="gameStatusText">Gestart</div>;
-
     return (
         <div className="gameManager">
             <div className="gameStatus">
                 <div className="gameStatusHeader">Spelstatus</div>
-                { gameStatusTag }
+                { gameHasFinished
+                    ? <div className="gameStatusText error">Afgelopen</div>
+                    : <div className="gameStatusText">Gestart</div> }
             </div>
             <MoneyWonSoFar />
             <div className="nonPlayerWallets">

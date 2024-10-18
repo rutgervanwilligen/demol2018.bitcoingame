@@ -6,11 +6,11 @@ export const MoneyWonSoFar = () => {
     const gameHasFinished = useSelector(selectGameHasFinished);
     const moneyWonSoFar = useSelector(selectMoneyWonSoFar);
 
-    let headerText = gameHasFinished
+    const headerText = gameHasFinished
         ? "In totaal verdiend:"
         : "Tot nu toe verdiend:";
 
-    let moneyClass = moneyWonSoFar < 0 ? " negative" : "";
+    const moneyClass = moneyWonSoFar < 0 ? " negative" : "";
 
     return (
         <div className="moneyWonSoFar">

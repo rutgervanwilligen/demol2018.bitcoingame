@@ -16,7 +16,7 @@ import {AppDispatch, RootState} from "../configureStore";
 export const websocketMiddleware: Middleware = store => {
     const { dispatch } = store;
 
-    let connection = new signalR.HubConnectionBuilder()
+    const connection = new signalR.HubConnectionBuilder()
         .withUrl("http://localhost:5000/bitcoinGameHub")
         //    .withUrl("https://bitcoingame.rutgervanwilligen.nl/bitcoinGameHub")
         .withAutomaticReconnect()
@@ -65,8 +65,6 @@ const registerWebsocketConnection = async (connection: HubConnection, store: Mid
 }
 
 const invokeWebsocketIfNecessary = (connection: HubConnection, dispatch: AppDispatch, action: PayloadAction) => {
-    let ignoredActionTypes = ['UPDATE_TIME_LEFT'];
-
     if (makeTransaction.match(action)) {
         const { invokerId, receiverAddress, amount } = action.payload;
         connection.invoke("MakeTransaction", invokerId, receiverAddress, amount).then(function () {
@@ -128,8 +126,8 @@ const registerIncomingWebsocketMessages = async (connection: HubConnection, stor
     const { dispatch } = store;
 
     connection.on('LoginResult', loginResult => {
-        let sortedWallets = sortWallets(loginResult.updatedState.nonPlayerWallets);
-        let sortedJokerWinners = sortJokerWinners(loginResult.updatedState.jokerWinners);
+        const sortedWallets = sortWallets(loginResult.updatedState.nonPlayerWallets);
+        const sortedJokerWinners = sortJokerWinners(loginResult.updatedState.jokerWinners);
 
         dispatch(receiveLoginResult({
             loginSuccessful: loginResult.loginSuccessful,
@@ -156,8 +154,8 @@ const registerIncomingWebsocketMessages = async (connection: HubConnection, stor
     });
 
     connection.on('FetchNewGameStateResult', fetchNewGameStateResult => {
-        let sortedWallets = sortWallets(fetchNewGameStateResult.updatedState.nonPlayerWallets);
-        let sortedJokerWinners = sortJokerWinners(fetchNewGameStateResult.updatedState.jokerWinners);
+        const sortedWallets = sortWallets(fetchNewGameStateResult.updatedState.nonPlayerWallets);
+        const sortedJokerWinners = sortJokerWinners(fetchNewGameStateResult.updatedState.jokerWinners);
 
         dispatch(receiveNewGameState({
             currentGameId: fetchNewGameStateResult.updatedState.currentGameId,
