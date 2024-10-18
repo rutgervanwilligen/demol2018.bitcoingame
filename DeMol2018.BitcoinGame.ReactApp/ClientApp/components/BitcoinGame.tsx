@@ -7,6 +7,10 @@ import { useSelector } from "react-redux";
 import { selectIsAdmin, selectIsLoggedIn } from "../store/user/userSlice";
 import { selectCurrentGameId, selectGameHasFinished } from "../store/bitcoinGame/bitcoinGameSlice";
 import { Login } from "./Login";
+import { ConnectionStatus } from "./ConnectionStatus";
+import { useEffect } from "react";
+import { useAppDispatch } from "../configureStore";
+import { connectWebsocket } from "../store/websocketConnection/websocketConnectionSlice";
 
 export const BitcoinGame = () => {
     const isLoggedIn = useSelector(selectIsLoggedIn);
@@ -14,9 +18,18 @@ export const BitcoinGame = () => {
     const currentGameId = useSelector(selectCurrentGameId);
     const gameHasFinished = useSelector(selectGameHasFinished);
 
+    const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        dispatch(connectWebsocket());
+    });
+
     if (!isLoggedIn) {
         return (
+        <>
             <Login />
+            <ConnectionStatus />
+        </>
         )
     }
 
@@ -33,9 +46,14 @@ export const BitcoinGame = () => {
     }
 
     return (
-        <div className="bitcoinGame">
-            <GameManager />
-            { gameContent }
-        </div>
+        <>
+            <div className="bitcoinGame">
+                <GameManager />
+                { gameContent }
+            </div>
+            <div className="connectionStatus">
+                <ConnectionStatus />
+            </div>
+        </>
     );
 };

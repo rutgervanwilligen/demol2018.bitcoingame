@@ -8,16 +8,22 @@ import {
 import { fetchNewGameState, selectCurrentRoundEndTime } from "../store/bitcoinGame/bitcoinGameSlice";
 import { useAppDispatch } from "../configureStore";
 import { selectPlayerGuid } from "../store/user/userSlice";
+import { useEffect } from "react";
 
 export const RoundCountdownTimer = () => {
     let timer: number = 0;
 
-    const minutesLeft = useSelector(selectMinutesLeft);
-    const secondsLeft = useSelector(selectSecondsLeft);
+    const minutesLeft = Math.max(useSelector(selectMinutesLeft), 0);
+    const secondsLeft = Math.max(useSelector(selectSecondsLeft), 0);
     const currentEndTime = useSelector(selectCurrentRoundEndTime);
     const playerGuid = useSelector(selectPlayerGuid);
 
     const dispatch = useAppDispatch();
+
+    useEffect(() => {
+        const interval = setInterval(countDown, 1000);
+        return () => clearInterval(interval);
+    }, []);
 
     const getUpdatedClockValues = () => {
         let timeDiff = (new Date(currentEndTime!).getTime() - new Date().getTime());
@@ -54,13 +60,6 @@ export const RoundCountdownTimer = () => {
             }, 1000);
         }
     };
-
-    const startTimer = () => {
-        this.timer = window.setInterval(countDown, 1000);
-    }
-
-    countDown();
-    startTimer();
 
     return (
         <span className="roundCountdownTimer">
