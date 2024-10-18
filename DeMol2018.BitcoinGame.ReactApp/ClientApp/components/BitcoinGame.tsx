@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { selectIsAdmin, selectIsLoggedIn } from "../store/user/userSlice";
 import { selectCurrentGameId, selectGameHasFinished } from "../store/bitcoinGame/bitcoinGameSlice";
 import { Login } from "./Login";
+import { ConnectionStatus } from "./ConnectionStatus";
 
 export const BitcoinGame = () => {
     const isLoggedIn = useSelector(selectIsLoggedIn);
@@ -16,7 +17,10 @@ export const BitcoinGame = () => {
 
     if (!isLoggedIn) {
         return (
+        <>
             <Login />
+            <ConnectionStatus />
+        </>
         )
     }
 
@@ -33,9 +37,14 @@ export const BitcoinGame = () => {
     }
 
     return (
-        <div className="bitcoinGame">
-            <GameManager />
-            { gameContent }
-        </div>
+        <>
+            <div className="bitcoinGame">
+                <GameManager />
+                { gameContent }
+            </div>
+            <div className="connectionStatus">
+                <ConnectionStatus />
+            </div>
+        </>
     );
 };

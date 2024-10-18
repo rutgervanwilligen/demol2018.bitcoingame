@@ -67,6 +67,7 @@ body h1 {
     margin-left: auto;
     margin-right: auto;
     padding: 20px;
+    margin-bottom: 10px;
 }
 
 .login h2 {
@@ -295,4 +296,18 @@ body h1 {
     padding-left: 20px;
 }
 
+.connected {
+    color: #90ee90;
+}
 
+.connected::before {
+    content: "🟢 "
+}
+
+.disconnected {
+    color: #ff0000;
+}
+
+.disconnected::before {
+    content: "🔴 "
+}
