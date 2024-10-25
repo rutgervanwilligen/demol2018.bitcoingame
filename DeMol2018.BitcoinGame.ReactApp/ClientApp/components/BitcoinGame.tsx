@@ -1,11 +1,14 @@
-import * as React from 'react';
+import * as React from "react";
 import { PlayerWallet } from "./PlayerWallet";
 import { AdminPanel } from "./AdminPanel";
 import { PlayerResult } from "./PlayerResult";
 import { GameManager } from "./GameManager";
 import { useSelector } from "react-redux";
 import { selectIsAdmin, selectIsLoggedIn } from "../store/user/userSlice";
-import { selectCurrentGameId, selectGameHasFinished } from "../store/bitcoinGame/bitcoinGameSlice";
+import {
+    selectCurrentGameId,
+    selectGameHasFinished,
+} from "../store/bitcoinGame/bitcoinGameSlice";
 import { Login } from "./Login";
 import { ConnectionStatus } from "./ConnectionStatus";
 import { useEffect } from "react";
@@ -26,11 +29,11 @@ export const BitcoinGame = () => {
 
     if (!isLoggedIn) {
         return (
-        <>
-            <Login />
-            <ConnectionStatus />
-        </>
-        )
+            <>
+                <Login />
+                <ConnectionStatus />
+            </>
+        );
     }
 
     let gameContent;
@@ -49,7 +52,7 @@ export const BitcoinGame = () => {
         <>
             <div className="bitcoinGame">
                 <GameManager />
-                { gameContent }
+                {gameContent}
             </div>
             <div className="connectionStatus">
                 <ConnectionStatus />

@@ -4,6 +4,7 @@
   "private": true,
   "version": "0.1.0",
   "devDependencies": {
+    "@eslint/js": "^9.12.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^5.14.1",
@@ -14,18 +15,25 @@
     "@types/webpack": "^5.28.5",
     "@types/webpack-env": "^1.18.5",
     "command-line-args": "^5.1.1",
-    "css-loader": "3.5.3",
+    "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.0",
+    "eslint": "^9.13.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "eslint-plugin-react": "^7.24.0",
+    "globals": "^15.11.0",
     "html-webpack-plugin": "^5.6.0",
     "jquery": "3.5.1",
     "mini-css-extract-plugin": "^2.9.1",
     "node-noop": "1.0.0",
+    "prettier": "^3.3.3",
     "react-refresh": "^0.14.2",
     "react-refresh-typescript": "^2.0.9",
     "style-loader": "1.2.1",
     "terser-webpack-plugin": "^5.3.10",
     "ts-loader": "^9.5.1",
     "typescript": "^5.6.3",
+    "typescript-eslint": "^8.11.0",
     "webpack": "^5.95.0",
     "webpack-cli": "^5.1.4",
     "webpack-dev-server": "^5.1.0",
@@ -43,6 +51,7 @@
   },
   "scripts": {
     "build": "webpack --config webpack.prod.js",
-    "start": "webpack serve --config webpack.dev.js"
+    "start": "webpack serve --config webpack.dev.js",
+    "lint": "eslint"
   }
 }

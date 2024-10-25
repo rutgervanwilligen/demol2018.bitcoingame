@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface WebsocketConnectionState {
-    isConnected: boolean,
+    isConnected: boolean;
 }
 
 interface UpdateConnectionStatusAction {
-    isConnected: boolean,
+    isConnected: boolean;
 }
 
 const initialState: WebsocketConnectionState = {
@@ -13,28 +13,28 @@ const initialState: WebsocketConnectionState = {
 };
 
 export const websocketConnectionSlice = createSlice({
-    name: 'websocketConnection',
+    name: "websocketConnection",
     initialState,
     reducers: {
         connectWebsocket: () => {
             // No-op; caught in websocketMiddleware
         },
-        updateConnectionStatus: (state: WebsocketConnectionState, action: PayloadAction<UpdateConnectionStatusAction>) => {
+        updateConnectionStatus: (
+            state: WebsocketConnectionState,
+            action: PayloadAction<UpdateConnectionStatusAction>,
+        ) => {
             state.isConnected = action.payload.isConnected;
-        }
+        },
     },
     selectors: {
-        selectIsConnected: (sliceState: WebsocketConnectionState) => sliceState.isConnected,
-    }
+        selectIsConnected: (sliceState: WebsocketConnectionState) =>
+            sliceState.isConnected,
+    },
 });
 
-export const {
-    connectWebsocket,
-    updateConnectionStatus,
-} = websocketConnectionSlice.actions;
+export const { connectWebsocket, updateConnectionStatus } =
+    websocketConnectionSlice.actions;
 
-export const {
-    selectIsConnected
-} = websocketConnectionSlice.selectors;
+export const { selectIsConnected } = websocketConnectionSlice.selectors;
 
 export default websocketConnectionSlice.reducer;
