@@ -1,10 +1,10 @@
-import * as React from 'react';
+import * as React from "react";
 import { RoundCountdownTimer } from "./RoundCountdownTimer";
 import { useSelector } from "react-redux";
 import {
     selectCurrentRoundEndTime,
     selectCurrentRoundNumber,
-    selectLastRoundNumber
+    selectLastRoundNumber,
 } from "../store/bitcoinGame/bitcoinGameSlice";
 
 export const RoundManager = () => {
@@ -16,7 +16,9 @@ export const RoundManager = () => {
         return (
             <div className="roundManager">
                 <div className="roundNumber">Ronde {currentRoundNumber}</div>
-                <div className="timeLeft">Transacties worden verwerkt over: <RoundCountdownTimer /></div>
+                <div className="timeLeft">
+                    Transacties worden verwerkt over: <RoundCountdownTimer />
+                </div>
             </div>
         );
     } else if (lastRoundNumber != null) {
@@ -28,8 +30,8 @@ export const RoundManager = () => {
     } else {
         return (
             <div className="roundManager noRoundActive">
-                 Geen ronde actief. De eerste ronde begint binnenkort.
+                Geen ronde actief. De eerste ronde begint binnenkort.
             </div>
         );
     }
-}
+};

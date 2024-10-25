@@ -1,19 +1,26 @@
 ﻿import * as signalR from "@microsoft/signalr";
-import {HubConnection, HubConnectionState} from "@microsoft/signalr";
-import {Middleware, MiddlewareAPI, PayloadAction} from "@reduxjs/toolkit";
-import {sortJokerWinners, sortWallets} from "./Utils";
+import { HubConnection, HubConnectionState } from "@microsoft/signalr";
+import { Middleware, MiddlewareAPI, PayloadAction } from "@reduxjs/toolkit";
+import { sortJokerWinners, sortWallets } from "./Utils";
 import {
     fetchNewGameState,
     makeTransaction,
     receiveMakeTransactionResult,
-    receiveNewGameState
+    receiveNewGameState,
 } from "./bitcoinGame/bitcoinGameSlice";
-import {login, receiveLoginResult} from "./user/userSlice";
-import {finishCurrentGame, startNewGame, startNewRound} from "./adminPanel/adminPanelSlice";
-import {connectWebsocket, updateConnectionStatus} from "./websocketConnection/websocketConnectionSlice";
-import {AppDispatch, RootState} from "../configureStore";
+import { login, receiveLoginResult } from "./user/userSlice";
+import {
+    finishCurrentGame,
+    startNewGame,
+    startNewRound,
+} from "./adminPanel/adminPanelSlice";
+import {
+    connectWebsocket,
+    updateConnectionStatus,
+} from "./websocketConnection/websocketConnectionSlice";
+import { AppDispatch, RootState } from "../configureStore";
 
-export const websocketMiddleware: Middleware = store => {
+export const websocketMiddleware: Middleware = (store) => {
     const { dispatch } = store;
 
     const connection = new signalR.HubConnectionBuilder()
@@ -22,16 +29,20 @@ export const websocketMiddleware: Middleware = store => {
         .withAutomaticReconnect()
         .build();
 
-    return next => async (action: PayloadAction) => {
+    return (next) => async (action: PayloadAction) => {
         console.log("Action binnengekomen! " + action.type);
         await registerWebsocketConnection(connection, store, action);
         invokeWebsocketIfNecessary(connection, dispatch, action);
 
         next(action);
     };
-}
+};
 
-const registerWebsocketConnection = async (connection: HubConnection, store: MiddlewareAPI<AppDispatch, RootState>, action: PayloadAction) => {
+const registerWebsocketConnection = async (
+    connection: HubConnection,
+    store: MiddlewareAPI<AppDispatch, RootState>,
+    action: PayloadAction,
+) => {
     const { dispatch } = store;
 
     if (connectWebsocket.match(action)) {
@@ -39,22 +50,23 @@ const registerWebsocketConnection = async (connection: HubConnection, store: Mid
             return;
         }
 
-        connection.start()
+        connection
+            .start()
             .then(() => {
                 dispatch(updateConnectionStatus({ isConnected: true }));
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log("Error while connecting websocket: " + error);
                 dispatch(updateConnectionStatus({ isConnected: false }));
             });
 
         connection.onreconnecting(() => {
             dispatch(updateConnectionStatus({ isConnected: false }));
-        })
+        });
 
         connection.onreconnected(() => {
             dispatch(updateConnectionStatus({ isConnected: true }));
-        })
+        });
 
         connection.onclose(() => {
             dispatch(updateConnectionStatus({ isConnected: false }));
@@ -62,114 +74,162 @@ const registerWebsocketConnection = async (connection: HubConnection, store: Mid
 
         await registerIncomingWebsocketMessages(connection, store);
     }
-}
+};
 
-const invokeWebsocketIfNecessary = (connection: HubConnection, dispatch: AppDispatch, action: PayloadAction) => {
+const invokeWebsocketIfNecessary = (
+    connection: HubConnection,
+    dispatch: AppDispatch,
+    action: PayloadAction,
+) => {
     if (makeTransaction.match(action)) {
         const { invokerId, receiverAddress, amount } = action.payload;
-        connection.invoke("MakeTransaction", invokerId, receiverAddress, amount).then(function () {
-        }).catch(function () {
-            console.log("make transaction rejected");
-        });
+        connection
+            .invoke("MakeTransaction", invokerId, receiverAddress, amount)
+            .then(function () {})
+            .catch(function () {
+                console.log("make transaction rejected");
+            });
         return;
     }
 
     if (login.match(action)) {
         const { name, code } = action.payload;
-        console.log("ik ga login invoken met name = " + name + " en code = " + code);
-        connection.invoke("Login", name, code).then(function () {
-        }).catch(error => function () {
-            console.log("login rejected");
-            console.log(error);
-        });
+        console.log(
+            "ik ga login invoken met name = " + name + " en code = " + code,
+        );
+        connection
+            .invoke("Login", name, code)
+            .then(function () {})
+            .catch(
+                (error) =>
+                    function () {
+                        console.log("login rejected");
+                        console.log(error);
+                    },
+            );
         return;
     }
 
     if (fetchNewGameState.match(action)) {
         const { playerGuid } = action.payload;
-        connection.invoke("FetchNewGameState", playerGuid).then(function () {
-        }).catch(function () {
-            console.log("fetch new game state rejected");
-        });
+        connection
+            .invoke("FetchNewGameState", playerGuid)
+            .then(function () {})
+            .catch(function () {
+                console.log("fetch new game state rejected");
+            });
         return;
     }
 
     if (startNewRound.match(action)) {
         const { invokerId, lengthOfNewRoundInMinutes } = action.payload;
-        connection.invoke("StartNewRound", invokerId, lengthOfNewRoundInMinutes).then(function () {
-        }).catch(function () {
-            console.log("start new round rejected");
-        });
+        connection
+            .invoke("StartNewRound", invokerId, lengthOfNewRoundInMinutes)
+            .then(function () {})
+            .catch(function () {
+                console.log("start new round rejected");
+            });
         return;
     }
 
     if (startNewGame.match(action)) {
         const { invokerId } = action.payload;
-        connection.invoke("StartNewGame", invokerId).then(function () {
-        }).catch(function () {
-            console.log("start new game rejected");
-        });
+        connection
+            .invoke("StartNewGame", invokerId)
+            .then(function () {})
+            .catch(function () {
+                console.log("start new game rejected");
+            });
         return;
     }
 
     if (finishCurrentGame.match(action)) {
         const { invokerId } = action.payload;
-        connection.invoke("FinishCurrentGame", invokerId).then(function () {
-        }).catch(function () {
-            console.log("finish current game rejected");
-        });
+        connection
+            .invoke("FinishCurrentGame", invokerId)
+            .then(function () {})
+            .catch(function () {
+                console.log("finish current game rejected");
+            });
         return;
     }
-}
+};
 
-const registerIncomingWebsocketMessages = async (connection: HubConnection, store: MiddlewareAPI<AppDispatch, RootState>) => {
+const registerIncomingWebsocketMessages = async (
+    connection: HubConnection,
+    store: MiddlewareAPI<AppDispatch, RootState>,
+) => {
     const { dispatch } = store;
 
-    connection.on('LoginResult', loginResult => {
-        const sortedWallets = sortWallets(loginResult.updatedState.nonPlayerWallets);
-        const sortedJokerWinners = sortJokerWinners(loginResult.updatedState.jokerWinners);
+    connection.on("LoginResult", (loginResult) => {
+        const sortedWallets = sortWallets(
+            loginResult.updatedState.nonPlayerWallets,
+        );
+        const sortedJokerWinners = sortJokerWinners(
+            loginResult.updatedState.jokerWinners,
+        );
 
-        dispatch(receiveLoginResult({
-            loginSuccessful: loginResult.loginSuccessful,
-            playerGuid: loginResult.playerGuid,
-            isAdmin: loginResult.isAdmin,
-            userWalletAddress: loginResult.updatedState.userWalletAddress,
-            userCurrentBalance: loginResult.updatedState.userCurrentBalance,
-            currentGameId: loginResult.updatedState.currentGameId,
-            lastRoundNumber: loginResult.updatedState.lastRoundNumber,
-            currentRoundNumber: loginResult.updatedState.currentRoundNumber,
-            currentRoundEndTime: loginResult.updatedState.currentRoundEndTime,
-            nonPlayerWallets: sortedWallets,
-            moneyWonSoFar: loginResult.updatedState.moneyWonSoFar,
-            gameHasFinished: loginResult.updatedState.gameHasFinished,
-            numberOfJokersWon: loginResult.updatedState.numberOfJokersWon,
-            jokerWinners: sortedJokerWinners
-        }));
+        dispatch(
+            receiveLoginResult({
+                loginSuccessful: loginResult.loginSuccessful,
+                playerGuid: loginResult.playerGuid,
+                isAdmin: loginResult.isAdmin,
+                userWalletAddress: loginResult.updatedState.userWalletAddress,
+                userCurrentBalance: loginResult.updatedState.userCurrentBalance,
+                currentGameId: loginResult.updatedState.currentGameId,
+                lastRoundNumber: loginResult.updatedState.lastRoundNumber,
+                currentRoundNumber: loginResult.updatedState.currentRoundNumber,
+                currentRoundEndTime:
+                    loginResult.updatedState.currentRoundEndTime,
+                nonPlayerWallets: sortedWallets,
+                moneyWonSoFar: loginResult.updatedState.moneyWonSoFar,
+                gameHasFinished: loginResult.updatedState.gameHasFinished,
+                numberOfJokersWon: loginResult.updatedState.numberOfJokersWon,
+                jokerWinners: sortedJokerWinners,
+            }),
+        );
     });
 
-    connection.on('AnnounceNewGameStateResult', () => {
-        dispatch(fetchNewGameState({
-            playerGuid: store.getState().user.playerGuid
-        }));
+    connection.on("AnnounceNewGameStateResult", () => {
+        dispatch(
+            fetchNewGameState({
+                playerGuid: store.getState().user.playerGuid,
+            }),
+        );
     });
 
-    connection.on('FetchNewGameStateResult', fetchNewGameStateResult => {
-        const sortedWallets = sortWallets(fetchNewGameStateResult.updatedState.nonPlayerWallets);
-        const sortedJokerWinners = sortJokerWinners(fetchNewGameStateResult.updatedState.jokerWinners);
+    connection.on("FetchNewGameStateResult", (fetchNewGameStateResult) => {
+        const sortedWallets = sortWallets(
+            fetchNewGameStateResult.updatedState.nonPlayerWallets,
+        );
+        const sortedJokerWinners = sortJokerWinners(
+            fetchNewGameStateResult.updatedState.jokerWinners,
+        );
 
-        dispatch(receiveNewGameState({
-            currentGameId: fetchNewGameStateResult.updatedState.currentGameId,
-            lastRoundNumber: fetchNewGameStateResult.updatedState.lastRoundNumber,
-            currentRoundNumber: fetchNewGameStateResult.updatedState.currentRoundNumber,
-            currentRoundEndTime: fetchNewGameStateResult.updatedState.currentRoundEndTime,
-            userWalletAddress: fetchNewGameStateResult.updatedState.userWalletAddress,
-            userCurrentBalance: fetchNewGameStateResult.updatedState.userCurrentBalance,
-            nonPlayerWallets: sortedWallets,
-            moneyWonSoFar: fetchNewGameStateResult.updatedState.moneyWonSoFar,
-            gameHasFinished: fetchNewGameStateResult.updatedState.gameHasFinished,
-            numberOfJokersWon: fetchNewGameStateResult.updatedState.numberOfJokersWon,
-            jokerWinners: sortedJokerWinners
-        }));
+        dispatch(
+            receiveNewGameState({
+                currentGameId:
+                    fetchNewGameStateResult.updatedState.currentGameId,
+                lastRoundNumber:
+                    fetchNewGameStateResult.updatedState.lastRoundNumber,
+                currentRoundNumber:
+                    fetchNewGameStateResult.updatedState.currentRoundNumber,
+                currentRoundEndTime:
+                    fetchNewGameStateResult.updatedState.currentRoundEndTime,
+                userWalletAddress:
+                    fetchNewGameStateResult.updatedState.userWalletAddress,
+                userCurrentBalance:
+                    fetchNewGameStateResult.updatedState.userCurrentBalance,
+                nonPlayerWallets: sortedWallets,
+                moneyWonSoFar:
+                    fetchNewGameStateResult.updatedState.moneyWonSoFar,
+                gameHasFinished:
+                    fetchNewGameStateResult.updatedState.gameHasFinished,
+                numberOfJokersWon:
+                    fetchNewGameStateResult.updatedState.numberOfJokersWon,
+                jokerWinners: sortedJokerWinners,
+            }),
+        );
     });
 
     // connection.on('StartNewRoundResult', data => {
@@ -179,10 +239,13 @@ const registerIncomingWebsocketMessages = async (connection: HubConnection, stor
     //     });
     // });
 
-    connection.on('MakeTransactionResult', makeTransactionResult => {
-        dispatch(receiveMakeTransactionResult({
-            transactionSuccessful: makeTransactionResult.transactionSuccessful,
-            userCurrentBalance: makeTransactionResult.userCurrentBalance
-        }));
+    connection.on("MakeTransactionResult", (makeTransactionResult) => {
+        dispatch(
+            receiveMakeTransactionResult({
+                transactionSuccessful:
+                    makeTransactionResult.transactionSuccessful,
+                userCurrentBalance: makeTransactionResult.userCurrentBalance,
+            }),
+        );
     });
-}
+};

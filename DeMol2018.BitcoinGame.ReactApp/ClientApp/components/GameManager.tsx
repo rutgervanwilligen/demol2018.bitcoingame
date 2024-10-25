@@ -1,4 +1,4 @@
-import * as React from 'react';
+import * as React from "react";
 import { RoundManager } from "./RoundManager";
 import { NonPlayerWallet } from "./NonPlayerWallet";
 import { MoneyWonSoFar } from "./MoneyWonSoFar";
@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import {
     selectCurrentGameId,
     selectGameHasFinished,
-    selectNonPlayerWallets
+    selectNonPlayerWallets,
 } from "../store/bitcoinGame/bitcoinGameSlice";
 
 export const GameManager = () => {
@@ -30,20 +30,24 @@ export const GameManager = () => {
         <div className="gameManager">
             <div className="gameStatus">
                 <div className="gameStatusHeader">Spelstatus</div>
-                { gameHasFinished
-                    ? <div className="gameStatusText error">Afgelopen</div>
-                    : <div className="gameStatusText">Gestart</div> }
+                {gameHasFinished ? (
+                    <div className="gameStatusText error">Afgelopen</div>
+                ) : (
+                    <div className="gameStatusText">Gestart</div>
+                )}
             </div>
             <MoneyWonSoFar />
             <div className="nonPlayerWallets">
-                {nonPlayerWallets.map((wallet, i) => <NonPlayerWallet
-                    key = {i}
-                    name = {wallet.name}
-                    currentBalance = {wallet.currentBalance}
-                    address = {wallet.address}
-                />)}
+                {nonPlayerWallets.map((wallet, i) => (
+                    <NonPlayerWallet
+                        key={i}
+                        name={wallet.name}
+                        currentBalance={wallet.currentBalance}
+                        address={wallet.address}
+                    />
+                ))}
             </div>
-            { gameHasFinished ? null : <RoundManager /> }
+            {gameHasFinished ? null : <RoundManager />}
         </div>
     );
-}
+};

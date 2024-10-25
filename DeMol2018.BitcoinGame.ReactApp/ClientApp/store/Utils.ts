@@ -1,10 +1,15 @@
-import { JokerWinner, NonPlayerWalletState } from "./bitcoinGame/bitcoinGameSlice";
+import {
+    JokerWinner,
+    NonPlayerWalletState,
+} from "./bitcoinGame/bitcoinGameSlice";
 
-export const sortWallets = (wallets: NonPlayerWalletState[]): NonPlayerWalletState[] => {
+export const sortWallets = (
+    wallets: NonPlayerWalletState[],
+): NonPlayerWalletState[] => {
     return wallets.sort((a: NonPlayerWalletState, b: NonPlayerWalletState) => {
-        return a.address - b.address
+        return a.address - b.address;
     });
-}
+};
 
 export const sortJokerWinners = (wallets: JokerWinner[]): JokerWinner[] => {
     return wallets.sort((a: JokerWinner, b: JokerWinner) => {
@@ -21,4 +26,4 @@ export const sortJokerWinners = (wallets: JokerWinner[]): JokerWinner[] => {
 
         return 0;
     });
-}
+};

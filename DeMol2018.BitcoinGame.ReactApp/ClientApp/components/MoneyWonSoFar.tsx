@@ -1,6 +1,9 @@
-import * as React from 'react';
+import * as React from "react";
 import { useSelector } from "react-redux";
-import { selectGameHasFinished, selectMoneyWonSoFar } from "../store/bitcoinGame/bitcoinGameSlice";
+import {
+    selectGameHasFinished,
+    selectMoneyWonSoFar,
+} from "../store/bitcoinGame/bitcoinGameSlice";
 
 export const MoneyWonSoFar = () => {
     const gameHasFinished = useSelector(selectGameHasFinished);
@@ -14,8 +17,8 @@ export const MoneyWonSoFar = () => {
 
     return (
         <div className="moneyWonSoFar">
-            <div className="moneyWonSoFarHeader">{ headerText }</div>
-            <div className={ "moneyWonSoFarText" + moneyClass }>
+            <div className="moneyWonSoFarHeader">{headerText}</div>
+            <div className={"moneyWonSoFarText" + moneyClass}>
                 &euro; {moneyWonSoFar}
             </div>
         </div>

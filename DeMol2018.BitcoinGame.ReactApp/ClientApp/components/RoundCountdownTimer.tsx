@@ -1,11 +1,14 @@
-import * as React from 'react';
+import * as React from "react";
 import { useSelector } from "react-redux";
 import {
     selectMinutesLeft,
     selectSecondsLeft,
-    updateTimeLeft
+    updateTimeLeft,
 } from "../store/roundCountdownTimer/roundCountdownTimerSlice";
-import { fetchNewGameState, selectCurrentRoundEndTime } from "../store/bitcoinGame/bitcoinGameSlice";
+import {
+    fetchNewGameState,
+    selectCurrentRoundEndTime,
+} from "../store/bitcoinGame/bitcoinGameSlice";
 import { useAppDispatch } from "../configureStore";
 import { selectPlayerGuid } from "../store/user/userSlice";
 import { useEffect } from "react";
@@ -26,7 +29,8 @@ export const RoundCountdownTimer = () => {
     }, []);
 
     const getUpdatedClockValues = () => {
-        const timeDiff = (new Date(currentEndTime!).getTime() - new Date().getTime());
+        const timeDiff =
+            new Date(currentEndTime!).getTime() - new Date().getTime();
         const totalSecondsLeft = Math.ceil(timeDiff / 1000);
 
         const minutesLeft = Math.floor(totalSecondsLeft / 60);
@@ -35,36 +39,37 @@ export const RoundCountdownTimer = () => {
         return {
             totalSecondsLeft: totalSecondsLeft,
             minutesLeft: minutesLeft,
-            secondsLeft: secondsLeft
+            secondsLeft: secondsLeft,
         };
     };
 
     const countDown = () => {
         const updatedClockValues = getUpdatedClockValues();
 
-        dispatch(updateTimeLeft({
-            minutesLeft: updatedClockValues.minutesLeft,
-            secondsLeft: updatedClockValues.secondsLeft
-        }));
+        dispatch(
+            updateTimeLeft({
+                minutesLeft: updatedClockValues.minutesLeft,
+                secondsLeft: updatedClockValues.secondsLeft,
+            }),
+        );
 
         if (updatedClockValues.totalSecondsLeft <= 0) {
             clearInterval(interval);
 
             setTimeout(function () {
-                dispatch(fetchNewGameState({
-                    playerGuid: playerGuid!
-                }));
+                dispatch(
+                    fetchNewGameState({
+                        playerGuid: playerGuid!,
+                    }),
+                );
             }, 1000);
         }
     };
 
     return (
         <span className="roundCountdownTimer">
-            {
-                minutesLeft > 9 ? minutesLeft : '0' + minutesLeft
-            }:{
-                secondsLeft > 9 ? secondsLeft : '0' + secondsLeft
-            }
+            {minutesLeft > 9 ? minutesLeft : "0" + minutesLeft}:
+            {secondsLeft > 9 ? secondsLeft : "0" + secondsLeft}
         </span>
     );
-}
+};
