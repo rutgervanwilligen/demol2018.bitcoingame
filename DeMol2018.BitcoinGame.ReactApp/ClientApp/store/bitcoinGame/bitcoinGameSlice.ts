@@ -85,6 +85,7 @@ const initialState: BitcoinGameState = {
     numberOfJokersWon: undefined,
 };
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export const bitcoinGameSlice = createSlice({
     name: "bitcoinGame",
     initialState,
@@ -193,6 +194,7 @@ export const bitcoinGameSlice = createSlice({
             sliceState.numberOfJokersWon,
     },
 });
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 export const {
     fetchNewGameState,

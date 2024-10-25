@@ -26,6 +26,7 @@ const initialState: AdminPanelState = {
     jokerWinners: undefined,
 };
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export const adminPanelSlice = createSlice({
     name: "adminPanel",
     initialState,
@@ -65,6 +66,7 @@ export const adminPanelSlice = createSlice({
             sliceState.jokerWinners,
     },
 });
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 export const { startNewRound, startNewGame, finishCurrentGame } =
     adminPanelSlice.actions;
