@@ -28,8 +28,7 @@ module.exports = merge(common, {
                         },
                     }
                 ]},
-            { test: /\.(png|jpg|jpeg|gif|svg)$/, use: 'url-loader?limit=25000' },
-            { test: /\.ttf$/, use: 'url-loader?limit=25000&name=[hash].[ext]' }
+            { test: /\.(png|jpg|jpeg|gif|svg|ttf)$/, type: "asset/resource" },
         ]
     },
     plugins: [
