@@ -15,7 +15,7 @@
     "@types/webpack": "^5.28.5",
     "@types/webpack-env": "^1.18.5",
     "command-line-args": "^5.1.1",
-    "css-loader": "3.5.3",
+    "css-loader": "^7.1.2",
     "css-minimizer-webpack-plugin": "^7.0.0",
     "eslint": "^9.13.0",
     "eslint-config-prettier": "^9.1.0",
