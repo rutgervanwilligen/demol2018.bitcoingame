@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import { receiveLoginResult } from "../user/userSlice";
 
 export interface NonPlayerWalletState {
     address: number;
@@ -19,7 +18,7 @@ export interface BitcoinGameState {
     currentRoundNumber?: number;
     currentRoundEndTime?: string;
     currentBalance?: number;
-    usersWalletAddress?: number;
+    userWalletAddress?: number;
     nonPlayerWallets: NonPlayerWalletState[];
     moneyWonSoFar: number;
     gameHasFinished?: boolean;
@@ -34,23 +33,6 @@ interface MakeTransactionAction {
 
 interface FetchNewGameStateAction {
     playerGuid: string;
-}
-
-export interface ReceiveLoginResultAction {
-    loginSuccessful: boolean;
-    isAdmin: boolean;
-    playerGuid: string;
-    currentGameId?: string;
-    userWalletAddress?: number;
-    userCurrentBalance?: number;
-    lastRoundNumber?: number;
-    currentRoundNumber?: number;
-    currentRoundEndTime?: string;
-    nonPlayerWallets?: NonPlayerWalletState[];
-    moneyWonSoFar: number;
-    gameHasFinished?: boolean;
-    numberOfJokersWon?: number;
-    jokerWinners?: JokerWinner[];
 }
 
 export interface ReceiveNewGameStateAction {
@@ -77,7 +59,7 @@ const initialState: BitcoinGameState = {
     currentRoundNumber: undefined,
     currentRoundEndTime: undefined,
     currentBalance: undefined,
-    usersWalletAddress: undefined,
+    userWalletAddress: undefined,
     nonPlayerWallets: [],
     moneyWonSoFar: 0,
     lastRoundNumber: undefined,
@@ -103,7 +85,7 @@ export const bitcoinGameSlice = createSlice({
             state.currentGameId = action.payload.currentGameId;
             state.gameHasFinished = action.payload.gameHasFinished;
             state.currentBalance = action.payload.userCurrentBalance;
-            state.usersWalletAddress = action.payload.userWalletAddress;
+            state.userWalletAddress = action.payload.userWalletAddress;
             state.lastRoundNumber =
                 action.payload.lastRoundNumber != null
                     ? action.payload.lastRoundNumber
@@ -142,35 +124,6 @@ export const bitcoinGameSlice = createSlice({
             state.currentBalance = action.payload.userCurrentBalance;
         },
     },
-    extraReducers: (builder) => {
-        builder.addCase(
-            receiveLoginResult,
-            (state: BitcoinGameState, action) => {
-                state.usersWalletAddress = action.payload.userWalletAddress;
-                state.currentGameId = action.payload.currentGameId;
-                state.gameHasFinished = action.payload.gameHasFinished;
-                state.currentBalance = action.payload.userCurrentBalance;
-                state.lastRoundNumber =
-                    action.payload.lastRoundNumber != null
-                        ? action.payload.lastRoundNumber
-                        : undefined;
-                state.currentRoundEndTime = action.payload.currentRoundEndTime;
-                state.currentRoundNumber =
-                    action.payload.currentRoundNumber != null
-                        ? action.payload.currentRoundNumber
-                        : undefined;
-                state.nonPlayerWallets =
-                    action.payload.nonPlayerWallets != undefined
-                        ? action.payload.nonPlayerWallets
-                        : [];
-                state.moneyWonSoFar = action.payload.moneyWonSoFar;
-                state.numberOfJokersWon =
-                    action.payload.numberOfJokersWon != null
-                        ? action.payload.numberOfJokersWon
-                        : undefined;
-            },
-        );
-    },
     selectors: {
         selectCurrentRoundNumber: (sliceState: BitcoinGameState) =>
             sliceState.currentRoundNumber,
@@ -186,10 +139,10 @@ export const bitcoinGameSlice = createSlice({
             sliceState.currentRoundEndTime,
         selectCurrentBalance: (sliceState: BitcoinGameState) =>
             sliceState.currentBalance,
-        selectUsersWalletAddress: (sliceState: BitcoinGameState) =>
-            sliceState.usersWalletAddress,
         selectMoneyWonSoFar: (sliceState: BitcoinGameState) =>
             sliceState.moneyWonSoFar,
+        selectUsersWalletAddress: (sliceState: BitcoinGameState) =>
+            sliceState.userWalletAddress,
         selectNumberOfJokersWon: (sliceState: BitcoinGameState) =>
             sliceState.numberOfJokersWon,
     },

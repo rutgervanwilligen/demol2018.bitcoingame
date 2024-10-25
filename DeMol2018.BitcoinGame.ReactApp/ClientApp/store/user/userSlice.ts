@@ -1,11 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ReceiveLoginResultAction } from "../bitcoinGame/bitcoinGameSlice";
 
 export interface UserState {
     isLoggedIn: boolean;
     isAdmin: boolean;
     playerGuid: string | undefined;
-    walletAddress: string | undefined;
 }
 
 export interface LoginAction {
@@ -13,11 +11,16 @@ export interface LoginAction {
     code: number;
 }
 
+export interface ReceiveLoginResultAction {
+    loginSuccessful: boolean;
+    isAdmin: boolean;
+    playerGuid: string;
+}
+
 const initialState: UserState = {
     isLoggedIn: false,
     isAdmin: false,
     playerGuid: undefined,
-    walletAddress: undefined,
 };
 
 export const userSlice = createSlice({
@@ -35,9 +38,6 @@ export const userSlice = createSlice({
             state.isLoggedIn = action.payload.loginSuccessful;
             state.playerGuid = action.payload.loginSuccessful
                 ? action.payload.playerGuid
-                : undefined;
-            state.walletAddress = action.payload.loginSuccessful
-                ? action.payload.userWalletAddress
                 : undefined;
             state.isAdmin = action.payload.isAdmin;
         },

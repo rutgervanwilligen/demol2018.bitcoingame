@@ -160,30 +160,17 @@ const registerIncomingWebsocketMessages = async (
     const { dispatch } = store;
 
     connection.on("LoginResult", (loginResult) => {
-        const sortedWallets = sortWallets(
-            loginResult.updatedState.nonPlayerWallets,
-        );
-        const sortedJokerWinners = sortJokerWinners(
-            loginResult.updatedState.jokerWinners,
-        );
-
         dispatch(
             receiveLoginResult({
                 loginSuccessful: loginResult.loginSuccessful,
                 playerGuid: loginResult.playerGuid,
                 isAdmin: loginResult.isAdmin,
-                userWalletAddress: loginResult.updatedState.userWalletAddress,
-                userCurrentBalance: loginResult.updatedState.userCurrentBalance,
-                currentGameId: loginResult.updatedState.currentGameId,
-                lastRoundNumber: loginResult.updatedState.lastRoundNumber,
-                currentRoundNumber: loginResult.updatedState.currentRoundNumber,
-                currentRoundEndTime:
-                    loginResult.updatedState.currentRoundEndTime,
-                nonPlayerWallets: sortedWallets,
-                moneyWonSoFar: loginResult.updatedState.moneyWonSoFar,
-                gameHasFinished: loginResult.updatedState.gameHasFinished,
-                numberOfJokersWon: loginResult.updatedState.numberOfJokersWon,
-                jokerWinners: sortedJokerWinners,
+            }),
+        );
+
+        dispatch(
+            fetchNewGameState({
+                playerGuid: loginResult.playerGuid,
             }),
         );
     });
@@ -214,10 +201,10 @@ const registerIncomingWebsocketMessages = async (
                     fetchNewGameStateResult.updatedState.currentRoundNumber,
                 currentRoundEndTime:
                     fetchNewGameStateResult.updatedState.currentRoundEndTime,
-                userWalletAddress:
-                    fetchNewGameStateResult.updatedState.userWalletAddress,
                 userCurrentBalance:
                     fetchNewGameStateResult.updatedState.userCurrentBalance,
+                userWalletAddress:
+                    fetchNewGameStateResult.updatedState.userWalletAddress,
                 nonPlayerWallets: sortedWallets,
                 moneyWonSoFar:
                     fetchNewGameStateResult.updatedState.moneyWonSoFar,

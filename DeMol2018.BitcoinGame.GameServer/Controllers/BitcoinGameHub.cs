@@ -38,75 +38,10 @@ namespace DeMol2018.BitcoinGame.GameServer.Controllers
                 });
             }
 
-            var currentGame = _gameService.FindCurrentGame();
-
-            if (currentGame == null)
-            {
-                return Clients.Caller.SendAsync("LoginResult", new LoginResult {
-                    LoginSuccessful = true,
-                    IsAdmin = player.IsAdmin,
-                    PlayerGuid = player.Id,
-                    UpdatedState = new UpdatedStateResult()
-                });
-            }
-
-            var currentRound = currentGame.GetCurrentRound();
-            var lastRoundNumber = currentGame.GetLastFinishedRoundNumber();
-
-            var userWalletAddress = 0;
-            var userCurrentBalance = 0;
-            int? numberOfJokersWon = null;
-
-            var nonPlayerWallets = _walletService.GetNonPlayerWalletsByGameId(currentGame.Id);
-            var nonPlayerWalletsState = nonPlayerWallets
-                .Select(x => NonPlayerWalletResult.GetNonPlayerWalletStatesAfterRound(x, lastRoundNumber))
-                .ToArray();
-
-            var moneyWonSoFar =
-                _walletService.GetMoneyWonSoFarInGameIdUpUntilRound(currentGame.Id, lastRoundNumber);
-
-            if (!player.IsAdmin)
-            {
-                var wallet = _walletService.GetWalletByGameIdAndPlayerId(currentGame.Id, player.Id);
-                userWalletAddress = wallet.Address;
-                userCurrentBalance = lastRoundNumber == null
-                    ? wallet.GetBalanceAfterRound(0)
-                    : wallet.GetBalanceAfterRound(lastRoundNumber.Value);
-            }
-
-            var jokerWinnersResult = new List<JokerWinnerResult>();
-
-            if (currentGame.HasFinished)
-            {
-                if (player.IsAdmin)
-                {
-                    var jokerWinnerWallets = _walletService.GetJokerWinnersInGame(currentGame.Id);
-                    jokerWinnersResult = jokerWinnerWallets.Select(JokerWinnerResult.MapFrom).ToList();
-                }
-                else
-                {
-                    var jokerWinners = _walletService.GetJokerWinnersInGame(currentGame.Id);
-                    numberOfJokersWon = jokerWinners.Single(x => x.PlayerId == player.Id).NumberOfJokersWon;
-                }
-            }
-
             return Clients.Caller.SendAsync("LoginResult", new LoginResult {
                 LoginSuccessful = true,
                 IsAdmin = player.IsAdmin,
                 PlayerGuid = player.Id,
-                UpdatedState = new UpdatedStateResult {
-                    CurrentGameId = currentGame.Id,
-                    GameHasFinished = currentGame.HasFinished,
-                    LastRoundNumber = lastRoundNumber,
-                    UserWalletAddress = userWalletAddress,
-                    UserCurrentBalance = userCurrentBalance,
-                    CurrentRoundEndTime = currentRound?.EndTime.ToString("yyyy-MM-ddTHH:mm:ssZ"),
-                    CurrentRoundNumber = currentRound?.RoundNumber,
-                    NonPlayerWallets = nonPlayerWalletsState,
-                    MoneyWonSoFar = moneyWonSoFar,
-                    NumberOfJokersWon = numberOfJokersWon,
-                    JokerWinners = jokerWinnersResult.ToArray()
-                }
             });
         }
 
@@ -190,7 +125,6 @@ namespace DeMol2018.BitcoinGame.GameServer.Controllers
                     CurrentGameId = currentGame.Id,
                     GameHasFinished = currentGame.HasFinished,
                     LastRoundNumber = lastRoundNumber,
-                    UserWalletAddress = wallet.Address,
                     UserCurrentBalance = lastRoundNumber == null
                         ? wallet.GetBalanceAfterRound(0)
                         : wallet.GetBalanceAfterRound(lastRoundNumber.Value),
@@ -199,7 +133,8 @@ namespace DeMol2018.BitcoinGame.GameServer.Controllers
                     NonPlayerWallets = nonPlayerWalletsResult,
                     MoneyWonSoFar = moneyWonSoFar,
                     NumberOfJokersWon = numberOfJokersWon,
-                    JokerWinners = jokerWinnersResult.ToArray()
+                    JokerWinners = jokerWinnersResult.ToArray(),
+                    UserWalletAddress = wallet.Address,
                 }
             });
         }
