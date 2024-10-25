@@ -32,12 +32,14 @@ module.exports = merge(common, {
         ]
     },
     plugins: [
+        new webpack.EnvironmentPlugin({
+            NODE_ENV: "development",
+        }),
         new webpack.SourceMapDevToolPlugin({
             filename: '[file].map',
             moduleFilenameTemplate: path.relative(clientBundleOutputDir, '[resourcePath]'),
         }),
         new ReactRefreshWebpackPlugin(),
-        new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"development"' }),
     ].filter(Boolean)
 });
 

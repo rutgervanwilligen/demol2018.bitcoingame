@@ -5,7 +5,6 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const common = require("./webpack.common.js");
 const { merge } = require("webpack-merge");
 const webpack = require("webpack");
-const ReactRefreshTypeScript = require("react-refresh-typescript");
 
 module.exports = merge(common, {
     mode: "production",
@@ -25,10 +24,11 @@ module.exports = merge(common, {
         minimizer: [new TerserPlugin(), new CssMinimizerPlugin()]
     },
     plugins: [
-        // Plugins that apply in production builds only
+        new webpack.EnvironmentPlugin({
+            NODE_ENV: "production",
+        }),
         new TerserPlugin({
             parallel: 2
         }),
-        new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"production"' }),
     ],
 });

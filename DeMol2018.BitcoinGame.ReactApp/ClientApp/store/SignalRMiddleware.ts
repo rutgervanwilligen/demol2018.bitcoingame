@@ -24,8 +24,7 @@ export const websocketMiddleware: Middleware = (store) => {
     const { dispatch } = store;
 
     const connection = new signalR.HubConnectionBuilder()
-        .withUrl("http://localhost:5000/bitcoinGameHub")
-        //    .withUrl("https://bitcoingame.rutgervanwilligen.nl/bitcoinGameHub")
+        .withUrl(`${process.env.HUB_SERVER_BASE_URL}/bitcoinGameHub`)
         .withAutomaticReconnect()
         .build();
 

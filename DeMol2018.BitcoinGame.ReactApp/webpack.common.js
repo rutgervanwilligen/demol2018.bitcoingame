@@ -2,6 +2,7 @@ const path = require('path');
 const webpack = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const Dotenv = require('dotenv-webpack');
 
 const clientBundleOutputDir = './public/dist';
 
@@ -16,6 +17,7 @@ module.exports = {
         filename: '[name].js',
         path: path.join(__dirname, clientBundleOutputDir) },
     plugins: [
+        new Dotenv(),
         new MiniCssExtractPlugin(),
         new HtmlWebpackPlugin({
             template: "public/index.html",
