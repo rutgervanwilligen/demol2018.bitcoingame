@@ -19,3 +19,5 @@ bin/
 
 develop/mssql
 .DS_Store
+
+.env
