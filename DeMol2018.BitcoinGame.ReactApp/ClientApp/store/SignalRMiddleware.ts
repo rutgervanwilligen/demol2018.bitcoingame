@@ -20,18 +20,18 @@ import {
 } from "./websocketConnection/websocketConnectionSlice";
 import { AppDispatch, RootState } from "../configureStore";
 
-export const websocketMiddleware: Middleware = (store) => {
-    const { dispatch } = store;
-
+export const websocketMiddleware: Middleware = (store: MiddlewareAPI) => {
     const connection = new signalR.HubConnectionBuilder()
         .withUrl(`${process.env.HUB_SERVER_BASE_URL}/bitcoinGameHub`)
         .withAutomaticReconnect()
         .build();
 
-    return (next) => async (action: PayloadAction) => {
-        console.log("Action binnengekomen! " + action.type);
-        await registerWebsocketConnection(connection, store, action);
-        invokeWebsocketIfNecessary(connection, dispatch, action);
+    return (next) => async (action) => {
+        const typedAction = action as PayloadAction;
+
+        console.log("Action binnengekomen! " + typedAction.type);
+        await registerWebsocketConnection(connection, store, typedAction);
+        invokeWebsocketIfNecessary(connection, typedAction);
 
         next(action);
     };
@@ -77,7 +77,6 @@ const registerWebsocketConnection = async (
 
 const invokeWebsocketIfNecessary = (
     connection: HubConnection,
-    dispatch: AppDispatch,
     action: PayloadAction,
 ) => {
     if (makeTransaction.match(action)) {
@@ -161,30 +160,17 @@ const registerIncomingWebsocketMessages = async (
     const { dispatch } = store;
 
     connection.on("LoginResult", (loginResult) => {
-        const sortedWallets = sortWallets(
-            loginResult.updatedState.nonPlayerWallets,
-        );
-        const sortedJokerWinners = sortJokerWinners(
-            loginResult.updatedState.jokerWinners,
-        );
-
         dispatch(
             receiveLoginResult({
                 loginSuccessful: loginResult.loginSuccessful,
                 playerGuid: loginResult.playerGuid,
                 isAdmin: loginResult.isAdmin,
-                userWalletAddress: loginResult.updatedState.userWalletAddress,
-                userCurrentBalance: loginResult.updatedState.userCurrentBalance,
-                currentGameId: loginResult.updatedState.currentGameId,
-                lastRoundNumber: loginResult.updatedState.lastRoundNumber,
-                currentRoundNumber: loginResult.updatedState.currentRoundNumber,
-                currentRoundEndTime:
-                    loginResult.updatedState.currentRoundEndTime,
-                nonPlayerWallets: sortedWallets,
-                moneyWonSoFar: loginResult.updatedState.moneyWonSoFar,
-                gameHasFinished: loginResult.updatedState.gameHasFinished,
-                numberOfJokersWon: loginResult.updatedState.numberOfJokersWon,
-                jokerWinners: sortedJokerWinners,
+            }),
+        );
+
+        dispatch(
+            fetchNewGameState({
+                playerGuid: loginResult.playerGuid,
             }),
         );
     });
@@ -192,7 +178,7 @@ const registerIncomingWebsocketMessages = async (
     connection.on("AnnounceNewGameStateResult", () => {
         dispatch(
             fetchNewGameState({
-                playerGuid: store.getState().user.playerGuid,
+                playerGuid: store.getState().user.playerGuid!,
             }),
         );
     });
@@ -215,10 +201,10 @@ const registerIncomingWebsocketMessages = async (
                     fetchNewGameStateResult.updatedState.currentRoundNumber,
                 currentRoundEndTime:
                     fetchNewGameStateResult.updatedState.currentRoundEndTime,
-                userWalletAddress:
-                    fetchNewGameStateResult.updatedState.userWalletAddress,
                 userCurrentBalance:
                     fetchNewGameStateResult.updatedState.userCurrentBalance,
+                userWalletAddress:
+                    fetchNewGameStateResult.updatedState.userWalletAddress,
                 nonPlayerWallets: sortedWallets,
                 moneyWonSoFar:
                     fetchNewGameStateResult.updatedState.moneyWonSoFar,
@@ -230,13 +216,6 @@ const registerIncomingWebsocketMessages = async (
             }),
         );
     });
-
-    // connection.on('StartNewRoundResult', data => {
-    //     dispatch(receiveNewR{
-    //         type: 'RECEIVE_NEW_ROUND_RESULT',
-    //         callSuccessful: data.callSuccessful
-    //     });
-    // });
 
     connection.on("MakeTransactionResult", (makeTransactionResult) => {
         dispatch(
