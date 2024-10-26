@@ -3,13 +3,8 @@ import {
     receiveNewGameState,
     ReceiveNewGameStateAction,
 } from "../bitcoinGame/bitcoinGameSlice";
-import {
-    receiveLoginResult,
-    ReceiveLoginResultAction,
-} from "../user/userSlice";
 
 export interface RoundCountdownTimerState {
-    playerGuid: string;
     currentEndTime?: string;
     minutesLeft: number;
     secondsLeft: number;
@@ -21,7 +16,6 @@ interface UpdateTimeLeftAction {
 }
 
 const initialState: RoundCountdownTimerState = {
-    playerGuid: "",
     minutesLeft: 0,
     secondsLeft: 0,
     currentEndTime: undefined,
@@ -40,25 +34,15 @@ export const roundCountdownTimerSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        builder
-            .addCase(
-                receiveLoginResult,
-                (
-                    state: RoundCountdownTimerState,
-                    action: PayloadAction<ReceiveLoginResultAction>,
-                ) => {
-                    state.playerGuid = action.payload.playerGuid;
-                },
-            )
-            .addCase(
-                receiveNewGameState,
-                (
-                    state: RoundCountdownTimerState,
-                    action: PayloadAction<ReceiveNewGameStateAction>,
-                ) => {
-                    state.currentEndTime = action.payload.currentRoundEndTime;
-                },
-            );
+        builder.addCase(
+            receiveNewGameState,
+            (
+                state: RoundCountdownTimerState,
+                action: PayloadAction<ReceiveNewGameStateAction>,
+            ) => {
+                state.currentEndTime = action.payload.currentRoundEndTime;
+            },
+        );
     },
     selectors: {
         selectMinutesLeft: (sliceState: RoundCountdownTimerState) =>
