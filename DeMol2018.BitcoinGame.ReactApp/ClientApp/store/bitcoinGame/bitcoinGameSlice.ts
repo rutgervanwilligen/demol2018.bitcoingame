@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
-export interface NonPlayerWalletState {
+export interface NonPlayerWallet {
     address: number;
     currentBalance: number;
     name: string;
@@ -19,7 +19,7 @@ export interface BitcoinGameState {
     currentRoundEndTime?: string;
     currentBalance?: number;
     userWalletAddress?: number;
-    nonPlayerWallets: NonPlayerWalletState[];
+    nonPlayerWallets: NonPlayerWallet[];
     moneyWonSoFar: number;
     gameHasFinished?: boolean;
     numberOfJokersWon?: number;
@@ -42,7 +42,7 @@ export interface ReceiveNewGameStateAction {
     currentRoundEndTime?: string;
     userCurrentBalance?: number;
     userWalletAddress?: number;
-    nonPlayerWallets?: NonPlayerWalletState[];
+    nonPlayerWallets?: NonPlayerWallet[];
     moneyWonSoFar: number;
     gameHasFinished?: boolean;
     numberOfJokersWon?: number;
