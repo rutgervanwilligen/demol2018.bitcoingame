@@ -19,6 +19,21 @@ import {
     updateConnectionStatus,
 } from "./websocketConnection/websocketConnectionSlice";
 import { AppDispatch, RootState } from "../configureStore";
+import {
+    FetchNewGameStateResult,
+    FetchNewGameStateResultHubMethod,
+    MapJokerWinnerToDomain,
+    MapNonPlayerWalletToDomain,
+} from "../infrastructure/responses/FetchNewGameStateResult";
+import {
+    LoginResult,
+    LoginResultHubMethod,
+} from "../infrastructure/responses/LoginResult";
+import {
+    MakeTransactionResult,
+    MakeTransactionResultHubMethod,
+} from "../infrastructure/responses/MakeTransactionResult";
+import { AnnounceNewGameStateResultHubMethod } from "../infrastructure/responses/AnnounceNewGameStateResult";
 
 export const websocketMiddleware: Middleware = (store: MiddlewareAPI) => {
     const connection = new signalR.HubConnectionBuilder()
@@ -26,59 +41,60 @@ export const websocketMiddleware: Middleware = (store: MiddlewareAPI) => {
         .withAutomaticReconnect()
         .build();
 
-    return (next) => async (action) => {
+    registerIncomingWebsocketMessages(connection, store);
+
+    return (next) => (action) => {
         const typedAction = action as PayloadAction;
+        const { dispatch } = store;
 
         console.log("Action binnengekomen! " + typedAction.type);
-        await registerWebsocketConnection(connection, store, typedAction);
-        invokeWebsocketIfNecessary(connection, typedAction);
+        invokeWebsocketIfNecessary(connection, typedAction, dispatch);
 
         next(action);
     };
 };
 
-const registerWebsocketConnection = async (
+const connectWebsocketAndRegisterUpdates = (
     connection: HubConnection,
-    store: MiddlewareAPI<AppDispatch, RootState>,
-    action: PayloadAction,
+    dispatch: AppDispatch,
 ) => {
-    const { dispatch } = store;
-
-    if (connectWebsocket.match(action)) {
-        if (connection.state == HubConnectionState.Connected) {
-            return;
-        }
-
-        connection
-            .start()
-            .then(() => {
-                dispatch(updateConnectionStatus({ isConnected: true }));
-            })
-            .catch((error) => {
-                console.log("Error while connecting websocket: " + error);
-                dispatch(updateConnectionStatus({ isConnected: false }));
-            });
-
-        connection.onreconnecting(() => {
-            dispatch(updateConnectionStatus({ isConnected: false }));
-        });
-
-        connection.onreconnected(() => {
-            dispatch(updateConnectionStatus({ isConnected: true }));
-        });
-
-        connection.onclose(() => {
-            dispatch(updateConnectionStatus({ isConnected: false }));
-        });
-
-        await registerIncomingWebsocketMessages(connection, store);
+    if (connection.state == HubConnectionState.Connected) {
+        return;
     }
+
+    connection
+        .start()
+        .then(() => {
+            dispatch(updateConnectionStatus({ isConnected: true }));
+        })
+        .catch((error) => {
+            console.log("Error while connecting websocket: " + error);
+            dispatch(updateConnectionStatus({ isConnected: false }));
+        });
+
+    connection.onreconnecting(() => {
+        dispatch(updateConnectionStatus({ isConnected: false }));
+    });
+
+    connection.onreconnected(() => {
+        dispatch(updateConnectionStatus({ isConnected: true }));
+    });
+
+    connection.onclose(() => {
+        dispatch(updateConnectionStatus({ isConnected: false }));
+    });
 };
 
 const invokeWebsocketIfNecessary = (
     connection: HubConnection,
     action: PayloadAction,
+    dispatch: AppDispatch,
 ) => {
+    if (connectWebsocket.match(action)) {
+        connectWebsocketAndRegisterUpdates(connection, dispatch);
+        return;
+    }
+
     if (makeTransaction.match(action)) {
         const { invokerId, receiverAddress, amount } = action.payload;
         connection
@@ -153,13 +169,13 @@ const invokeWebsocketIfNecessary = (
     }
 };
 
-const registerIncomingWebsocketMessages = async (
+const registerIncomingWebsocketMessages = (
     connection: HubConnection,
     store: MiddlewareAPI<AppDispatch, RootState>,
 ) => {
     const { dispatch } = store;
 
-    connection.on("LoginResult", (loginResult) => {
+    connection.on(LoginResultHubMethod, (loginResult: LoginResult) => {
         dispatch(
             receiveLoginResult({
                 loginSuccessful: loginResult.loginSuccessful,
@@ -168,14 +184,16 @@ const registerIncomingWebsocketMessages = async (
             }),
         );
 
-        dispatch(
-            fetchNewGameState({
-                playerGuid: loginResult.playerGuid,
-            }),
-        );
+        if (loginResult.loginSuccessful && loginResult.playerGuid) {
+            dispatch(
+                fetchNewGameState({
+                    playerGuid: loginResult.playerGuid!,
+                }),
+            );
+        }
     });
 
-    connection.on("AnnounceNewGameStateResult", () => {
+    connection.on(AnnounceNewGameStateResultHubMethod, () => {
         dispatch(
             fetchNewGameState({
                 playerGuid: store.getState().user.playerGuid!,
@@ -183,47 +201,48 @@ const registerIncomingWebsocketMessages = async (
         );
     });
 
-    connection.on("FetchNewGameStateResult", (fetchNewGameStateResult) => {
-        const sortedWallets = sortWallets(
-            fetchNewGameStateResult.updatedState.nonPlayerWallets,
-        );
-        const sortedJokerWinners = sortJokerWinners(
-            fetchNewGameStateResult.updatedState.jokerWinners,
-        );
+    connection.on(
+        FetchNewGameStateResultHubMethod,
+        (result: FetchNewGameStateResult) => {
+            const sortedNonPlayerWallets = sortWallets(
+                result.updatedState.nonPlayerWallets.map(
+                    MapNonPlayerWalletToDomain,
+                ),
+            );
+            const sortedJokerWinners = sortJokerWinners(
+                result.updatedState.jokerWinners.map(MapJokerWinnerToDomain),
+            );
 
-        dispatch(
-            receiveNewGameState({
-                currentGameId:
-                    fetchNewGameStateResult.updatedState.currentGameId,
-                lastRoundNumber:
-                    fetchNewGameStateResult.updatedState.lastRoundNumber,
-                currentRoundNumber:
-                    fetchNewGameStateResult.updatedState.currentRoundNumber,
-                currentRoundEndTime:
-                    fetchNewGameStateResult.updatedState.currentRoundEndTime,
-                userCurrentBalance:
-                    fetchNewGameStateResult.updatedState.userCurrentBalance,
-                userWalletAddress:
-                    fetchNewGameStateResult.updatedState.userWalletAddress,
-                nonPlayerWallets: sortedWallets,
-                moneyWonSoFar:
-                    fetchNewGameStateResult.updatedState.moneyWonSoFar,
-                gameHasFinished:
-                    fetchNewGameStateResult.updatedState.gameHasFinished,
-                numberOfJokersWon:
-                    fetchNewGameStateResult.updatedState.numberOfJokersWon,
-                jokerWinners: sortedJokerWinners,
-            }),
-        );
-    });
+            dispatch(
+                receiveNewGameState({
+                    currentGameId: result.updatedState.currentGameId,
+                    lastRoundNumber: result.updatedState.lastRoundNumber,
+                    currentRoundNumber: result.updatedState.currentRoundNumber,
+                    currentRoundEndTime:
+                        result.updatedState.currentRoundEndTime,
+                    userCurrentBalance: result.updatedState.userCurrentBalance,
+                    userWalletAddress: result.updatedState.userWalletAddress,
+                    nonPlayerWallets: sortedNonPlayerWallets,
+                    moneyWonSoFar: result.updatedState.moneyWonSoFar,
+                    gameHasFinished: result.updatedState.gameHasFinished,
+                    numberOfJokersWon: result.updatedState.numberOfJokersWon,
+                    jokerWinners: sortedJokerWinners,
+                }),
+            );
+        },
+    );
 
-    connection.on("MakeTransactionResult", (makeTransactionResult) => {
-        dispatch(
-            receiveMakeTransactionResult({
-                transactionSuccessful:
-                    makeTransactionResult.transactionSuccessful,
-                userCurrentBalance: makeTransactionResult.userCurrentBalance,
-            }),
-        );
-    });
+    connection.on(
+        MakeTransactionResultHubMethod,
+        (makeTransactionResult: MakeTransactionResult) => {
+            dispatch(
+                receiveMakeTransactionResult({
+                    transactionSuccessful:
+                        makeTransactionResult.transactionSuccessful,
+                    userCurrentBalance:
+                        makeTransactionResult.userCurrentBalance,
+                }),
+            );
+        },
+    );
 };

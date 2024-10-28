@@ -14,7 +14,7 @@ export interface LoginAction {
 export interface ReceiveLoginResultAction {
     loginSuccessful: boolean;
     isAdmin: boolean;
-    playerGuid: string;
+    playerGuid?: string;
 }
 
 const initialState: UserState = {
