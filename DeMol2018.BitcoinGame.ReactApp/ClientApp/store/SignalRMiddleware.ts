@@ -5,10 +5,10 @@ import { sortJokerWinners, sortWallets } from "./Utils";
 import {
     fetchNewGameState,
     makeTransaction,
-    receiveMakeTransactionResult,
-    receiveNewGameState,
+    updateCurrentBalance,
+    updateGameState,
 } from "./bitcoinGame/bitcoinGameSlice";
-import { login, receiveLoginResult } from "./user/userSlice";
+import { login, updateLoginStatus } from "./user/userSlice";
 import {
     finishCurrentGame,
     startNewGame,
@@ -177,7 +177,7 @@ const registerIncomingWebsocketMessages = (
 
     connection.on(LoginResultHubMethod, (loginResult: LoginResult) => {
         dispatch(
-            receiveLoginResult({
+            updateLoginStatus({
                 loginSuccessful: loginResult.loginSuccessful,
                 playerGuid: loginResult.playerGuid,
                 isAdmin: loginResult.isAdmin,
@@ -214,7 +214,7 @@ const registerIncomingWebsocketMessages = (
             );
 
             dispatch(
-                receiveNewGameState({
+                updateGameState({
                     currentGameId: result.updatedState.currentGameId,
                     lastRoundNumber: result.updatedState.lastRoundNumber,
                     currentRoundNumber: result.updatedState.currentRoundNumber,
@@ -235,12 +235,14 @@ const registerIncomingWebsocketMessages = (
     connection.on(
         MakeTransactionResultHubMethod,
         (makeTransactionResult: MakeTransactionResult) => {
+            if (!makeTransactionResult.transactionSuccessful) {
+                console.log("Transaction niet gelukt");
+                return;
+            }
+
             dispatch(
-                receiveMakeTransactionResult({
-                    transactionSuccessful:
-                        makeTransactionResult.transactionSuccessful,
-                    userCurrentBalance:
-                        makeTransactionResult.userCurrentBalance,
+                updateCurrentBalance({
+                    newCurrentBalance: makeTransactionResult.userCurrentBalance,
                 }),
             );
         },

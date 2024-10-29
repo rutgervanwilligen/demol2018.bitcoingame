@@ -1,6 +1,7 @@
 import {
     JokerWinner,
-    receiveNewGameState,
+    updateGameState,
+    UpdateGameStateAction,
 } from "../bitcoinGame/bitcoinGameSlice";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
@@ -53,8 +54,11 @@ export const adminPanelSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(
-            receiveNewGameState,
-            (state: AdminPanelState, action) => {
+            updateGameState,
+            (
+                state: AdminPanelState,
+                action: PayloadAction<UpdateGameStateAction>,
+            ) => {
                 state.jokerWinners = action.payload.jokerWinners;
             },
         );

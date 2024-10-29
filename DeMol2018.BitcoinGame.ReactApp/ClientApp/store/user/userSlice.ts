@@ -11,7 +11,7 @@ export interface LoginAction {
     code: number;
 }
 
-export interface ReceiveLoginResultAction {
+export interface UpdateLoginStatusAction {
     loginSuccessful: boolean;
     isAdmin: boolean;
     playerGuid?: string;
@@ -31,9 +31,9 @@ export const userSlice = createSlice({
         login: (state, action: PayloadAction<LoginAction>) => {
             // No-op; caught in websocketMiddleware
         },
-        receiveLoginResult: (
+        updateLoginStatus: (
             state,
-            action: PayloadAction<ReceiveLoginResultAction>,
+            action: PayloadAction<UpdateLoginStatusAction>,
         ) => {
             state.isLoggedIn = action.payload.loginSuccessful;
             state.playerGuid = action.payload.loginSuccessful
@@ -49,7 +49,7 @@ export const userSlice = createSlice({
     },
 });
 
-export const { login, receiveLoginResult } = userSlice.actions;
+export const { login, updateLoginStatus } = userSlice.actions;
 
 export const { selectIsLoggedIn, selectIsAdmin, selectPlayerGuid } =
     userSlice.selectors;

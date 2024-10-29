@@ -12,7 +12,7 @@ export interface JokerWinner {
     numberOfJokersWon: number;
 }
 
-export interface BitcoinGameState {
+interface BitcoinGameState {
     currentGameId?: string;
     lastRoundNumber?: number;
     currentRoundNumber?: number;
@@ -35,7 +35,7 @@ interface FetchNewGameStateAction {
     playerGuid: string;
 }
 
-export interface ReceiveNewGameStateAction {
+export interface UpdateGameStateAction {
     currentGameId?: string;
     lastRoundNumber?: number;
     currentRoundNumber?: number;
@@ -49,9 +49,8 @@ export interface ReceiveNewGameStateAction {
     jokerWinners?: JokerWinner[];
 }
 
-interface ReceiveMakeTransactionResult {
-    transactionSuccessful: boolean;
-    userCurrentBalance: number;
+interface UpdateCurrentBalance {
+    newCurrentBalance: number;
 }
 
 const initialState: BitcoinGameState = {
@@ -78,50 +77,44 @@ export const bitcoinGameSlice = createSlice({
         ) => {
             // No-op; caught in websocketMiddleware
         },
-        receiveNewGameState: (
+        updateGameState: (
             state: BitcoinGameState,
-            action: PayloadAction<ReceiveNewGameStateAction>,
+            action: PayloadAction<UpdateGameStateAction>,
         ) => {
             state.currentGameId = action.payload.currentGameId;
             state.gameHasFinished = action.payload.gameHasFinished;
             state.currentBalance = action.payload.userCurrentBalance;
             state.userWalletAddress = action.payload.userWalletAddress;
-            state.lastRoundNumber =
-                action.payload.lastRoundNumber != null
-                    ? action.payload.lastRoundNumber
-                    : undefined;
-            state.currentRoundNumber =
-                action.payload.currentRoundNumber != null
-                    ? action.payload.currentRoundNumber
-                    : undefined;
+            state.lastRoundNumber = action.payload.lastRoundNumber;
+            state.currentRoundNumber = action.payload.currentRoundNumber;
             state.currentRoundEndTime = action.payload.currentRoundEndTime;
             state.nonPlayerWallets =
                 action.payload.nonPlayerWallets != undefined
                     ? action.payload.nonPlayerWallets
                     : [];
             state.moneyWonSoFar = action.payload.moneyWonSoFar;
-            state.numberOfJokersWon =
-                action.payload.numberOfJokersWon != null
-                    ? action.payload.numberOfJokersWon
-                    : undefined;
+            state.numberOfJokersWon = action.payload.numberOfJokersWon;
         },
         makeTransaction: (
             state,
             action: PayloadAction<MakeTransactionAction>,
         ) => {
-            state.currentBalance =
-                state.currentBalance === undefined
-                    ? undefined
-                    : state.currentBalance >= action.payload.amount &&
-                        action.payload.amount > 0
-                      ? state.currentBalance - action.payload.amount
-                      : state.currentBalance;
+            if (state.currentBalance === undefined) {
+                return;
+            }
+
+            if (
+                state.currentBalance >= action.payload.amount &&
+                action.payload.amount > 0
+            ) {
+                state.currentBalance -= action.payload.amount;
+            }
         },
-        receiveMakeTransactionResult: (
+        updateCurrentBalance: (
             state,
-            action: PayloadAction<ReceiveMakeTransactionResult>,
+            action: PayloadAction<UpdateCurrentBalance>,
         ) => {
-            state.currentBalance = action.payload.userCurrentBalance;
+            state.currentBalance = action.payload.newCurrentBalance;
         },
     },
     selectors: {
@@ -151,8 +144,8 @@ export const bitcoinGameSlice = createSlice({
 
 export const {
     fetchNewGameState,
-    receiveNewGameState,
-    receiveMakeTransactionResult,
+    updateGameState,
+    updateCurrentBalance,
     makeTransaction,
 } = bitcoinGameSlice.actions;
 
