@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-    receiveNewGameState,
-    ReceiveNewGameStateAction,
+    updateGameState,
+    UpdateGameStateAction,
 } from "../bitcoinGame/bitcoinGameSlice";
 
 export interface RoundCountdownTimerState {
@@ -35,10 +35,10 @@ export const roundCountdownTimerSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(
-            receiveNewGameState,
+            updateGameState,
             (
                 state: RoundCountdownTimerState,
-                action: PayloadAction<ReceiveNewGameStateAction>,
+                action: PayloadAction<UpdateGameStateAction>,
             ) => {
                 state.currentEndTime = action.payload.currentRoundEndTime;
             },

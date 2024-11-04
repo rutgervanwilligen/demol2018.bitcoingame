@@ -6,8 +6,10 @@ export const sortWallets = (wallets: NonPlayerWallet[]): NonPlayerWallet[] => {
     });
 };
 
-export const sortJokerWinners = (wallets: JokerWinner[]): JokerWinner[] => {
-    return wallets.sort((a: JokerWinner, b: JokerWinner) => {
+export const sortJokerWinners = (
+    jokerWinners: JokerWinner[],
+): JokerWinner[] => {
+    return jokerWinners.sort((a: JokerWinner, b: JokerWinner) => {
         const nameA = a.name.toLowerCase();
         const nameB = b.name.toLowerCase();
 

@@ -36,27 +36,47 @@ export const BitcoinGame = () => {
         );
     }
 
-    let gameContent;
+    const gameContent = getGameContent(isAdmin, currentGameId, gameHasFinished);
 
+    return (
+        <>
+            <div className="bitcoinGame">{gameContent}</div>
+            <ConnectionStatus />
+        </>
+    );
+};
+
+const getGameContent = (
+    isAdmin: boolean,
+    currentGameId?: string,
+    gameHasFinished?: boolean,
+) => {
     if (isAdmin) {
-        gameContent = <AdminPanel />;
-    } else if (currentGameId != null) {
-        if (gameHasFinished) {
-            gameContent = <PlayerResult />;
-        } else {
-            gameContent = <PlayerWallet />;
-        }
+        return (
+            <>
+                <GameManager />
+                <AdminPanel />
+            </>
+        );
+    }
+
+    if (currentGameId == undefined) {
+        return <></>;
+    }
+
+    if (gameHasFinished) {
+        return (
+            <>
+                <GameManager />
+                <PlayerResult />
+            </>
+        );
     }
 
     return (
         <>
-            <div className="bitcoinGame">
-                <GameManager />
-                {gameContent}
-            </div>
-            <div className="connectionStatus">
-                <ConnectionStatus />
-            </div>
+            <GameManager />
+            <PlayerWallet />
         </>
     );
 };
