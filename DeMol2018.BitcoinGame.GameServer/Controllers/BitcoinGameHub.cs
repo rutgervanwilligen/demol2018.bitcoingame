@@ -45,16 +45,9 @@ namespace DeMol2018.BitcoinGame.GameServer.Controllers
             });
         }
 
-        public Task FetchNewGameState(Guid? invokerId)
+        public Task FetchNewGameState(Guid invokerId)
         {
-            if (!invokerId.HasValue)
-            {
-                return Clients.Caller.SendAsync("FetchNewGameStateResult", new FetchNewGameStateResult {
-                    CallSuccessful = false
-                });
-            }
-
-            var player = _playerService.GetById(invokerId.Value);
+            var player = _playerService.GetById(invokerId);
 
             var currentGame = _gameService.FindCurrentGame();
 
@@ -195,8 +188,8 @@ namespace DeMol2018.BitcoinGame.GameServer.Controllers
 
             if (currentGame?.GetCurrentRound() == null)
             {
-                return Clients.Caller.SendAsync("MakeTransactionResult", new {
-                    transactionSuccessful = false
+                return Clients.Caller.SendAsync("MakeTransactionResult", new MakeTransactionResult {
+                    TransactionSuccessful = false
                 });
             }
 
@@ -209,17 +202,17 @@ namespace DeMol2018.BitcoinGame.GameServer.Controllers
             }
             catch (InvalidTransactionException)
             {
-                return Clients.Caller.SendAsync("MakeTransactionResult", new {
-                    transactionSuccessful = false,
-                    userCurrentBalance = senderWallet.GetBalanceAfterRound(currentRoundNumber - 1)
+                return Clients.Caller.SendAsync("MakeTransactionResult", new MakeTransactionResult {
+                    TransactionSuccessful = false,
+                    UserCurrentBalance = senderWallet.GetBalanceAfterRound(currentRoundNumber - 1)
                 });
             }
 
             var updatedSenderWallet = _walletService.GetWalletByGameIdAndPlayerId(currentGame.Id, invokerId);
 
-            return Clients.Caller.SendAsync("MakeTransactionResult", new {
-                transactionSuccessful = true,
-                userCurrentBalance = updatedSenderWallet.GetBalanceAfterRound(currentRoundNumber - 1)
+            return Clients.Caller.SendAsync("MakeTransactionResult", new MakeTransactionResult {
+                TransactionSuccessful = true,
+                UserCurrentBalance = updatedSenderWallet.GetBalanceAfterRound(currentRoundNumber - 1)
             });
         }
     }
