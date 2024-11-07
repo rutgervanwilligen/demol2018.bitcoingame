@@ -2,9 +2,9 @@
 
 ## Over
 
-Dit is een spel bedacht voor een (Wie is) de Mol-groep. Het wordt gespeeld met tien spelers, waaronder een Mol. De groep probeert geld te verdienen voor de pot, de Mol probeert -in het geheim- de groep te saboteren.
+Dit is een spel bedacht voor een (Wie is) de Mol-spel. Het wordt gespeeld met tien spelers, waaronder een Mol. De groep probeert geld te verdienen voor de pot, de Mol probeert -in het geheim- de groep te saboteren.
 
-Het spel wordt gespeeld met tien spelers, die in een kring zitten en allemaal op een eigen apparaat (laptop / tablet) op het spel inloggen. Zij spelen het spel door met elkaar te praten terwijl ze alleen hun eigen scherm kunnen zien. Ze zien dus niet andermans schermen.
+Het spel wordt gespeeld met tien spelers, die in een kring zitten en allemaal op een eigen apparaat (laptop / tablet) op het spel inloggen. Zij spelen het spel door met elkaar te praten terwijl ze alleen hun eigen scherm kunnen zien. Ze zien dus niet de schermen van de andere spelers.
 
 Er is een spelleider (admin) die het spel kan starten en beëindigen, nieuwe rondes kan starten, en na afloop het resultaat kan inzien.
 
@@ -32,7 +32,7 @@ Om de applicatie te kunnen draaien, zijn de volgende zaken nodig:
 
 ### Database
 
-Het database schema wordt bij de eerste keer dat de server opstart opgezet. Van tevoren moet er wel eerst een database aangemaakt worden.
+Het database schema wordt automatisch opgezet bij de eerste keer dat de server opstart. Van tevoren moet er wel eerst een database aangemaakt worden. Na het opzetten van het schema dien je handmatig de tabellen te vullen met gegevens om een spel te kunnen starten (automatische scripts hiervoor zijn TODO).
 
 ### Server
 
@@ -46,7 +46,7 @@ dotnet build
 dotnet run
 ```
 
-De applicatie draait vervolgens standaard op http://localhost:5000.
+De applicatie draait vervolgens standaard op http://localhost:5000 (ook aan te passen in `appsettings.json`).
 
 ### Client app
 
