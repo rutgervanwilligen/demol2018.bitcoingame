@@ -76,7 +76,8 @@ const connectWebsocketAndRegisterUpdates = (
             console.log("Error while connecting websocket: " + error);
             dispatch(
                 updateConnectionStatus({
-                    newConnectionStatus: WebsocketConnectionStatus.ConnectionError,
+                    newConnectionStatus:
+                        WebsocketConnectionStatus.ConnectionError,
                 }),
             );
         });

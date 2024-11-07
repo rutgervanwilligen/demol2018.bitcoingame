@@ -21,7 +21,11 @@ const getReadableStatusElement = (
         case WebsocketConnectionStatus.Disconnected:
             return <span className={"disconnected"}>Verbinding verbroken</span>;
         case WebsocketConnectionStatus.ConnectionError:
-            return <span className={"disconnected"}>Fout bij verbinden met server</span>;
+            return (
+                <span className={"disconnected"}>
+                    Fout bij verbinden met server
+                </span>
+            );
         case WebsocketConnectionStatus.Connected:
             return <span className={"connected"}>Verbonden met server</span>;
         case WebsocketConnectionStatus.NotConnected:
