@@ -17,6 +17,7 @@ import {
 import {
     connectWebsocket,
     updateConnectionStatus,
+    WebsocketConnectionStatus,
 } from "./websocketConnection/websocketConnectionSlice";
 import { AppDispatch, RootState } from "../configureStore";
 import {
@@ -65,23 +66,43 @@ const connectWebsocketAndRegisterUpdates = (
     connection
         .start()
         .then(() => {
-            dispatch(updateConnectionStatus({ isConnected: true }));
+            dispatch(
+                updateConnectionStatus({
+                    newConnectionStatus: WebsocketConnectionStatus.Connected,
+                }),
+            );
         })
         .catch((error) => {
             console.log("Error while connecting websocket: " + error);
-            dispatch(updateConnectionStatus({ isConnected: false }));
+            dispatch(
+                updateConnectionStatus({
+                    newConnectionStatus: WebsocketConnectionStatus.ConnectionError,
+                }),
+            );
         });
 
     connection.onreconnecting(() => {
-        dispatch(updateConnectionStatus({ isConnected: false }));
+        dispatch(
+            updateConnectionStatus({
+                newConnectionStatus: WebsocketConnectionStatus.Reconnecting,
+            }),
+        );
     });
 
     connection.onreconnected(() => {
-        dispatch(updateConnectionStatus({ isConnected: true }));
+        dispatch(
+            updateConnectionStatus({
+                newConnectionStatus: WebsocketConnectionStatus.Connected,
+            }),
+        );
     });
 
     connection.onclose(() => {
-        dispatch(updateConnectionStatus({ isConnected: false }));
+        dispatch(
+            updateConnectionStatus({
+                newConnectionStatus: WebsocketConnectionStatus.Disconnected,
+            }),
+        );
     });
 };
 

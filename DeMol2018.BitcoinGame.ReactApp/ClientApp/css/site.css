@@ -312,3 +312,11 @@ body h1 {
 .disconnected::before {
     content: "🔴 "
 }
+
+.reconnecting {
+    color: #ffff00;
+}
+
+.reconnecting::before {
+    content: "⚠️ "
+}
