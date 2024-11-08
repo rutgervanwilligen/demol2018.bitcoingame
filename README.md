@@ -1,6 +1,6 @@
 # De Mol 2018 - Bitcoin Game
 
-## Over
+## Over dit spel
 
 Dit is een spel bedacht voor een (Wie is) de Mol-spel. Het wordt gespeeld met tien spelers, waaronder een Mol. De groep probeert geld te verdienen voor de pot, de Mol probeert -in het geheim- de groep te saboteren.
 
@@ -8,7 +8,7 @@ Het spel wordt gespeeld met tien spelers, die in een kring zitten en allemaal op
 
 Er is een spelleider (admin) die het spel kan starten en beëindigen, nieuwe rondes kan starten, en na afloop het resultaat kan inzien.
 
-De spelregels die de spelers te zien krijgen, zijn in [SPELREGELS.md](SPELREGELS.md) te vinden.
+De tekst die de spelleider aan de deelnemers vertelt, en de spelregels die de spelers afgedrukt ontvangen, zijn in [SPELREGELS.md](SPELREGELS.md) te vinden.
 
 ## Applicatieoverzicht
 
